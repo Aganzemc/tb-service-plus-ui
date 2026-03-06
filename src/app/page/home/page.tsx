@@ -3,23 +3,6 @@ import type { ReactNode } from "react";
 
 const heroBadges = ["MOVING", "CLEANING", "DELIVERY", "JUNK REMOVAL", "SNOW REMOVAL"];
 
-const overviewCards = [
-  {
-    title: "Contact direct",
-    description: "Appelez ou ecrivez directement a TB Service Plus pour expliquer le travail a faire.",
-    icon: "phone",
-  },
-  {
-    title: "Services utiles",
-    description: "Le site met en avant les cinq services qui reviennent le plus souvent pour les clients.",
-    icon: "grid",
-  },
-  {
-    title: "Intervention locale",
-    description: "La page est organisee pour aider rapidement les maisons et petites entreprises.",
-    icon: "home",
-  },
-];
 
 const serviceCards = [
   {
@@ -155,27 +138,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="bg-[#f7f7f2]">
-        <div className="mx-auto max-w-[1280px] px-6 py-16 md:px-8 md:py-24">
-          <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-            <div className="max-w-xl">
-              <SectionLabel>TB Service Plus</SectionLabel>
-              <h2 className="mt-5 text-[clamp(2.3rem,4.8vw,4.3rem)] font-semibold leading-[0.98] tracking-[-0.06em] text-brand-ink">
-                Une page qui prend toute la largeur et qui annonce le service tout de suite.
-              </h2>
-              <p className="mt-6 text-[16px] leading-8 text-muted md:text-[18px]">
-                La maquette montre une structure directe. Le visiteur voit le service, comprend les prestations, puis passe rapidement vers un appel ou un devis.
-              </p>
-            </div>
-
-            <div className="grid gap-4 md:grid-cols-3">
-              {overviewCards.map((card) => (
-                <OverviewCard key={card.title} title={card.title} description={card.description} icon={card.icon} />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
 
       <section id="services" className="bg-white">
         <div className="mx-auto max-w-[1280px] px-6 py-16 md:px-8 md:py-24">
@@ -292,19 +254,6 @@ function HeroStat({ title, value }: { title: string; value: string }) {
     </div>
   );
 }
-
-function OverviewCard({ title, description, icon }: { title: string; description: string; icon: string }) {
-  return (
-    <article className="rounded-[28px] border border-border-soft bg-white p-6 shadow-[0_18px_40px_rgba(5,3,47,0.05)]">
-      <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-sand text-brand-primary">
-        <SupportIcon type={icon} className="h-6 w-6" />
-      </span>
-      <h3 className="mt-6 text-[1.35rem] font-semibold leading-[1.05] tracking-[-0.04em] text-brand-ink">{title}</h3>
-      <p className="mt-4 text-[15px] leading-7 text-muted">{description}</p>
-    </article>
-  );
-}
-
 function ServiceCard({
   service,
 }: {

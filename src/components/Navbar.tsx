@@ -47,6 +47,13 @@ export default function Navbar() {
 
         <div className="flex items-center gap-3">
           <Link
+            href="/page/admin/login"
+            className="hidden items-center justify-center rounded-xl border border-brand-primary/16 bg-white px-5 py-3 text-[15px] font-semibold text-brand-ink hover:border-brand-primary hover:text-brand-primary md:inline-flex"
+          >
+            Connexion
+          </Link>
+
+          <Link
             href="/page/contact"
             className="hidden items-center justify-center rounded-xl bg-brand-primary px-5 py-3 text-[15px] font-semibold text-white shadow-[0_14px_26px_rgba(15,73,191,0.22)] hover:bg-brand-primary-deep md:inline-flex"
           >
@@ -79,6 +86,13 @@ export default function Navbar() {
                   {item.label}
                 </Link>
               ))}
+              <Link
+                href="/page/admin/login"
+                className="inline-flex items-center justify-center rounded-xl border border-brand-primary/16 bg-white px-4 py-3 text-[15px] font-semibold text-brand-ink hover:border-brand-primary hover:text-brand-primary"
+                onClick={() => setMobileOpen(false)}
+              >
+                Connexion
+              </Link>
               <Link
                 href="/page/contact"
                 className="mt-2 inline-flex items-center justify-center rounded-xl bg-brand-primary px-4 py-3 text-[15px] font-semibold text-white"
