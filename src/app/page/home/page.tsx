@@ -103,7 +103,7 @@ export default function HomePage() {
               ))}
             </div>
 
-            <h1 className="mt-8 max-w-[820px] text-[clamp(3rem,8vw,6.1rem)] font-semibold leading-[0.93] tracking-[-0.08em] text-white">
+            <h1 className="mt-8 max-w-[820px] text-[clamp(2.6rem,6.9vw,5.2rem)] font-semibold leading-[0.93] tracking-[-0.08em] text-white">
               One call for moving, cleaning, delivery, junk removal, and snow removal.
             </h1>
 
@@ -112,27 +112,21 @@ export default function HomePage() {
               practical service for the jobs that need to get done.
             </p>
 
-            <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:flex-wrap">
-              <a
-                href="tel:4039264063"
-                className="inline-flex min-h-14 items-center justify-center gap-2 rounded-xl bg-white px-7 py-4 text-[15px] font-semibold text-brand-primary shadow-[0_18px_44px_rgba(255,255,255,0.18)]"
+            <div className="mt-12 flex flex-col gap-4 sm:flex-row sm:flex-wrap">
+              <Link
+                href="/page/contact"
+                className="inline-flex min-h-14 min-w-[250px] items-center justify-between gap-4 rounded-[14px] bg-white px-7 py-4 text-[15px] font-semibold text-brand-primary shadow-[0_18px_44px_rgba(255,255,255,0.18)]"
               >
-                Call 403-926-4063
-                <PhoneIcon className="h-4 w-4" />
-              </a>
+                Reservez maintenant
+                <ArrowRightIcon className="h-4 w-4" />
+              </Link>
               <a
                 href="#services"
-                className="inline-flex min-h-14 items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/8 px-7 py-4 text-[15px] font-semibold text-white backdrop-blur"
+                className="inline-flex min-h-14 min-w-[250px] items-center justify-between gap-4 rounded-[14px] border border-white/28 bg-white/6 px-7 py-4 text-[15px] font-semibold text-white backdrop-blur"
               >
-                Discover our services
+                Decouvrir nos services
                 <ArrowRightIcon className="h-4 w-4" />
               </a>
-            </div>
-
-            <div className="mt-12 grid gap-4 md:grid-cols-3">
-              <HeroStat title="Direct contact" value="Phone + email" />
-              <HeroStat title="Core offer" value="5 service lines" />
-              <HeroStat title="Best fit" value="Home + business" />
             </div>
           </div>
         </div>
@@ -141,16 +135,10 @@ export default function HomePage() {
 
       <section id="services" className="bg-white">
         <div className="mx-auto max-w-[1280px] px-6 py-16 md:px-8 md:py-24">
-          <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
-            <div>
-              <SectionLabel>Services</SectionLabel>
-              <h2 className="mt-5 text-[clamp(2.25rem,4.8vw,4.2rem)] font-semibold leading-[0.98] tracking-[-0.06em] text-brand-ink">
-                Vos services principaux, presentes dans une grille plus propre.
-              </h2>
-            </div>
-            <p className="max-w-2xl text-[16px] leading-8 text-muted md:text-[18px]">
-              Chaque carte met en avant une ligne de service claire. Cela rapproche la page du format d un vrai site de services, au lieu d une landing generique.
-            </p>
+          <div>
+            <h2 className="text-[clamp(2.25rem,4.8vw,4rem)] font-semibold leading-[0.98] tracking-[-0.06em] text-brand-ink">
+              Nos services
+            </h2>
           </div>
 
           <div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-5">
@@ -246,14 +234,6 @@ function SectionLabel({ children, tone = "light" }: { children: ReactNode; tone?
   return <span className={className}>{children}</span>;
 }
 
-function HeroStat({ title, value }: { title: string; value: string }) {
-  return (
-    <div className="rounded-[22px] border border-white/12 bg-white/8 px-5 py-4 backdrop-blur">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/58">{title}</p>
-      <p className="mt-2 text-[16px] font-semibold text-white">{value}</p>
-    </div>
-  );
-}
 function ServiceCard({
   service,
 }: {

@@ -18,7 +18,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             <Link href="/page/admin/services">Services</Link>
             <Link href="/page/admin/messages">Messages</Link>
             <button className="underline" onClick={logout} type="button">
-              Déconnexion
+              Deconnexion
             </button>
           </nav>
         </div>
