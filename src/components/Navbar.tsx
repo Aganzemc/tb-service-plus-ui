@@ -1,96 +1,124 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
+
+const navItems = [
+  { href: "/page/services", label: "Services" },
+  { href: "/page/about", label: "About" },
+  { href: "/page/contact", label: "Contact" },
+];
 
 export default function Navbar() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setMobileOpen(false);
+    }
+
+    if (mobileOpen) window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [mobileOpen]);
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-black/10 bg-white/80 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4">
-        <div className="flex items-center gap-3">
-          <Link href="/page/home" className="text-xl font-semibold tracking-tight text-slate-900">
-            <span className="text-slate-900">TB</span>
-            <span className="text-blue-600">Service</span>
-            <span className="text-slate-900">Plus</span>
+    <header className="sticky top-0 z-50 px-4 py-4 md:px-6">
+      <div className="mx-auto max-w-[1180px] rounded-[24px] border border-white/70 bg-surface/95 px-5 py-4 shadow-[0_18px_50px_rgba(5,3,47,0.08)] backdrop-blur">
+        <div className="flex items-center justify-between gap-4">
+          <Link href="/page/home" className="flex items-center gap-3">
+            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-primary text-sm font-semibold text-white shadow-[0_10px_24px_rgba(15,73,191,0.35)]">
+              TB
+            </span>
+            <div className="leading-tight">
+              <p className="text-[15px] font-semibold tracking-tight text-brand-ink md:text-base">TB Service Plus</p>
+              <p className="text-[12px] text-muted md:text-[13px]">Moving . Cleaning . Delivery</p>
+            </div>
           </Link>
 
-          <button
-            type="button"
-            className="hidden items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-700 shadow-sm sm:inline-flex"
-          >
-            <span className="h-2 w-2 rounded-full bg-emerald-500" />
-            <span>Tunis</span>
-            <svg
-              aria-hidden
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              className="h-4 w-4 text-slate-400"
+          <nav className="hidden items-center gap-8 text-[15px] font-medium text-brand-ink/80 md:flex">
+            {navItems.map((item) => (
+              <Link key={item.href} href={item.href} className="hover:text-brand-ink">
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="flex items-center gap-3">
+            <a
+              href="tel:4039264063"
+              className="hidden items-center gap-2 rounded-2xl bg-brand-primary px-5 py-3 text-[15px] font-semibold text-white shadow-[0_14px_30px_rgba(15,73,191,0.3)] hover:bg-brand-primary-deep sm:inline-flex"
             >
-              <path
-                fillRule="evenodd"
-                d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.94a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </button>
+              Call Now
+              <PhoneIcon className="h-4 w-4" />
+            </a>
+
+            <button
+              type="button"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-border-soft bg-white text-brand-ink md:hidden"
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileOpen}
+              onClick={() => setMobileOpen((current) => !current)}
+            >
+              {mobileOpen ? <CloseIcon className="h-5 w-5" /> : <MenuIcon className="h-5 w-5" />}
+            </button>
+          </div>
         </div>
 
-        <nav className="hidden items-center gap-6 text-sm font-medium text-slate-700 md:flex">
-          <Link className="hover:text-slate-900" href="/page/services">
-            Services
-          </Link>
-          <Link className="hover:text-slate-900" href="/page/about">
-            À propos
-          </Link>
-          <Link className="hover:text-slate-900" href="/page/contact">
-            Contact
-          </Link>
-          <Link className="hover:text-slate-900" href="/page/faq">
-            FAQ
-          </Link>
-        </nav>
-
-        <div className="flex items-center gap-2">
-          <Link
-            href="/page/contact"
-            className="hidden items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow-sm hover:bg-slate-50 sm:inline-flex"
-          >
-            <svg aria-hidden viewBox="0 0 24 24" fill="none" className="h-4 w-4">
-              <path
-                d="M8 7V6a4 4 0 118 0v1"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-              <path
-                d="M6 7h12l-1 14H7L6 7z"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinejoin="round"
-              />
-            </svg>
-            Book Now
-          </Link>
-          <Link
-            href="/page/admin/login"
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700"
-          >
-            <svg aria-hidden viewBox="0 0 24 24" fill="none" className="h-4 w-4">
-              <path
-                d="M15 3H7a2 2 0 00-2 2v14a2 2 0 002 2h8"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-              <path
-                d="M10 12h10m0 0l-3-3m3 3l-3 3"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            Sign In
-          </Link>
-        </div>
+        {mobileOpen ? (
+          <div className="mt-4 border-t border-border-soft pt-4 md:hidden">
+            <nav className="grid gap-2">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="rounded-2xl px-4 py-3 text-[15px] font-medium text-brand-ink hover:bg-brand-sand"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <a
+                href="tel:4039264063"
+                className="mt-2 inline-flex items-center justify-center gap-2 rounded-2xl bg-brand-primary px-4 py-3 text-[15px] font-semibold text-white"
+                onClick={() => setMobileOpen(false)}
+              >
+                Call 403-926-4063
+                <PhoneIcon className="h-4 w-4" />
+              </a>
+            </nav>
+          </div>
+        ) : null}
       </div>
     </header>
   );
 }
+
+function PhoneIcon({ className }: { className?: string }) {
+  return (
+    <svg aria-hidden viewBox="0 0 20 20" fill="none" className={className}>
+      <path
+        d="M6.5 3.5l2.2 2.6-1.2 2.1a13.6 13.6 0 004.1 4.1l2.1-1.2 2.6 2.2-1.2 2.7c-.3.7-1 .9-1.7.8C8.3 16.9 3.1 11.7 2.3 5.4c-.1-.7.2-1.4.8-1.7L6.5 3.5z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function MenuIcon({ className }: { className?: string }) {
+  return (
+    <svg aria-hidden viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function CloseIcon({ className }: { className?: string }) {
+  return (
+    <svg aria-hidden viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+

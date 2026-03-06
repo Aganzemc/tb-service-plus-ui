@@ -22,7 +22,7 @@ export default function ContactForm() {
         email: email || undefined,
         message,
       });
-      setStatus("Message envoyé");
+      setStatus("Message envoye");
       setName("");
       setPhone("");
       setEmail("");
@@ -36,27 +36,51 @@ export default function ContactForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="max-w-lg space-y-3">
+    <form onSubmit={onSubmit} className="max-w-xl space-y-4 rounded-[28px] border border-black/8 bg-white p-6 shadow-[0_18px_40px_rgba(5,3,47,0.06)]">
       <div>
-        <label className="block text-sm">Nom</label>
-        <input className="w-full rounded border border-black/20 px-3 py-2" value={name} onChange={(e) => setName(e.target.value)} required />
+        <label className="mb-2 block text-[15px] font-medium text-brand-ink">Nom</label>
+        <input
+          className="w-full rounded-2xl border border-black/15 px-4 py-3 text-[15px] text-brand-ink outline-none"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
       </div>
       <div>
-        <label className="block text-sm">Téléphone</label>
-        <input className="w-full rounded border border-black/20 px-3 py-2" value={phone} onChange={(e) => setPhone(e.target.value)} />
+        <label className="mb-2 block text-[15px] font-medium text-brand-ink">Telephone</label>
+        <input
+          className="w-full rounded-2xl border border-black/15 px-4 py-3 text-[15px] text-brand-ink outline-none"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+        />
       </div>
       <div>
-        <label className="block text-sm">Email</label>
-        <input className="w-full rounded border border-black/20 px-3 py-2" value={email} onChange={(e) => setEmail(e.target.value)} type="email" />
+        <label className="mb-2 block text-[15px] font-medium text-brand-ink">Email</label>
+        <input
+          className="w-full rounded-2xl border border-black/15 px-4 py-3 text-[15px] text-brand-ink outline-none"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          type="email"
+        />
       </div>
       <div>
-        <label className="block text-sm">Message</label>
-        <textarea className="w-full rounded border border-black/20 px-3 py-2" value={message} onChange={(e) => setMessage(e.target.value)} rows={5} required />
+        <label className="mb-2 block text-[15px] font-medium text-brand-ink">Message</label>
+        <textarea
+          className="w-full rounded-2xl border border-black/15 px-4 py-3 text-[15px] text-brand-ink outline-none"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          rows={5}
+          required
+        />
       </div>
-      <button disabled={loading} className="rounded bg-black px-4 py-2 text-white disabled:opacity-50" type="submit">
+      <button
+        disabled={loading}
+        className="rounded-2xl bg-brand-ink px-5 py-3 text-[15px] font-semibold text-white disabled:opacity-50"
+        type="submit"
+      >
         {loading ? "Envoi..." : "Envoyer"}
       </button>
-      {status ? <p className="text-sm">{status}</p> : null}
+      {status ? <p className="text-[14px] text-brand-ink/75">{status}</p> : null}
     </form>
   );
 }

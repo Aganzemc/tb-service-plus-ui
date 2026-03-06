@@ -1,26 +1,68 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --font-geist-sans: "Segoe UI";
+  --font-geist-mono: "Consolas";
+  --background: #f4f4ef;
+  --foreground: #0a1026;
+  --surface: #fcfcfb;
+  --brand-ink: #05032f;
+  --brand-primary: #5f67f4;
+  --brand-primary-deep: #403ec3;
+  --brand-coral: #ff825c;
+  --brand-mint: #97ecb4;
+  --brand-blush: #e8b7d3;
+  --brand-plum: #6c093f;
+  --brand-sand: #f1ece4;
+  --muted: #737692;
+  --border-soft: rgba(10, 16, 38, 0.08);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-brand-ink: var(--brand-ink);
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-primary-deep: var(--brand-primary-deep);
+  --color-brand-coral: var(--brand-coral);
+  --color-brand-mint: var(--brand-mint);
+  --color-brand-blush: var(--brand-blush);
+  --color-brand-plum: var(--brand-plum);
+  --color-brand-sand: var(--brand-sand);
+  --color-muted: var(--muted);
+  --color-border-soft: var(--border-soft);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), sans-serif;
 }
+
+a,
+button,
+input,
+textarea,
+select {
+  transition:
+    color 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease,
+    opacity 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
