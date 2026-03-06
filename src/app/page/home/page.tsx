@@ -52,30 +52,6 @@ const serviceCards = [
   },
 ];
 
-const promisePoints = [
-  "Un hero qui explique le service des le premier ecran.",
-  "Des CTA visibles pour appeler ou demander un devis.",
-  "Une grille de services plus facile a parcourir.",
-  "Une structure de page plus nette et plus professionnelle.",
-];
-
-const processSteps = [
-  {
-    step: "01",
-    title: "Dites-nous le besoin",
-    description: "Appelez, envoyez un email, ou ouvrez le formulaire de contact pour decrire le travail.",
-  },
-  {
-    step: "02",
-    title: "Nous confirmons le service",
-    description: "Nous clarifions le type de service, le lieu, le timing et les details utiles avant l'intervention.",
-  },
-  {
-    step: "03",
-    title: "Nous intervenons",
-    description: "TB Service Plus se deplace pour la mission avec une approche pratique et directe.",
-  },
-];
 
 export default function HomePage() {
   return (
@@ -145,35 +121,6 @@ export default function HomePage() {
             {serviceCards.map((service) => (
               <ServiceCard key={service.title} service={service} />
             ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-[#f7f7f2]">
-        <div className="mx-auto max-w-[1280px] px-6 py-16 md:px-8 md:py-24">
-          <div className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
-            <article className="rounded-[32px] bg-brand-ink p-7 text-white shadow-[0_24px_60px_rgba(5,3,47,0.18)] md:p-10">
-              <SectionLabel tone="dark">Why choose us</SectionLabel>
-              <h2 className="mt-5 max-w-2xl text-[clamp(2.2rem,4.4vw,3.7rem)] font-semibold leading-[1] tracking-[-0.06em]">
-                Une structure plus nette, plus directe, et plus credible pour TB Service Plus.
-              </h2>
-              <p className="mt-6 max-w-2xl text-[16px] leading-8 text-white/76 md:text-[18px]">
-                La page suit maintenant une logique simple: un hero fort, des services faciles a parcourir, puis un chemin
-                de contact clair pour faire avancer la demande.
-              </p>
-
-              <div className="mt-8 space-y-4">
-                {promisePoints.map((item) => (
-                  <PromisePoint key={item}>{item}</PromisePoint>
-                ))}
-              </div>
-            </article>
-
-            <div className="grid gap-4 md:grid-cols-3 xl:grid-cols-1">
-              {processSteps.map((step) => (
-                <ProcessCard key={step.step} step={step.step} title={step.title} description={step.description} />
-              ))}
-            </div>
           </div>
         </div>
       </section>
@@ -270,26 +217,6 @@ function ServiceCard({
   );
 }
 
-function PromisePoint({ children }: { children: ReactNode }) {
-  return (
-    <div className="flex items-start gap-3 rounded-[20px] bg-white/8 px-4 py-4">
-      <span className="mt-1 flex h-7 w-7 items-center justify-center rounded-full bg-white text-brand-primary">
-        <CheckIcon className="h-4 w-4" />
-      </span>
-      <p className="text-[15px] leading-7 text-white/82">{children}</p>
-    </div>
-  );
-}
-
-function ProcessCard({ step, title, description }: { step: string; title: string; description: string }) {
-  return (
-    <article className="rounded-[28px] border border-border-soft bg-white p-6 shadow-[0_18px_40px_rgba(5,3,47,0.05)]">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-brand-primary">Step {step}</p>
-      <h3 className="mt-4 text-[1.45rem] font-semibold leading-[1.04] tracking-[-0.04em] text-brand-ink">{title}</h3>
-      <p className="mt-4 text-[15px] leading-7 text-muted">{description}</p>
-    </article>
-  );
-}
 
 function ContactLine({
   icon,
@@ -373,13 +300,6 @@ function ArrowRightIcon({ className }: { className?: string }) {
   );
 }
 
-function CheckIcon({ className }: { className?: string }) {
-  return (
-    <svg aria-hidden viewBox="0 0 20 20" fill="none" className={className}>
-      <path d="M5 10.5l3.1 3.1L15 6.8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
 
 function ServiceIcon({ type, className }: { type: string; className?: string }) {
   if (type === "moving") {
