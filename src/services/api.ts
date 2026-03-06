@@ -17,7 +17,13 @@ export async function apiFetch<T>(
   const url = path.startsWith("http") ? path : `${API_BASE_URL}${path.startsWith("/") ? "" : "/"}${path}`;
 
   const headers = new Headers(options.headers);
-  if (!headers.has("Content-Type") && options.body) headers.set("Content-Type", "application/json");
+  const hasBody = options.body != null;
+  const isFormData = typeof FormData !== "undefined" && options.body instanceof FormData;
+
+  if (!headers.has("Content-Type") && hasBody && !isFormData) {
+    headers.set("Content-Type", "application/json");
+  }
+
   if (options.token) headers.set("Authorization", `Bearer ${options.token}`);
 
   const res = await fetch(url, {
@@ -30,8 +36,10 @@ export async function apiFetch<T>(
       | { message?: unknown; details?: unknown }
       | null;
 
-    const message =
-      (typeof body?.message === "string" ? body.message : undefined) || `Request failed (${res.status})`;
+    const fallbackMessage =
+      res.status === 413 ? "Image trop lourde. Choisissez une image plus legere." : `Request failed (${res.status})`;
+
+    const message = (typeof body?.message === "string" ? body.message : undefined) || fallbackMessage;
     const err: ApiError = { message, details: body?.details };
     throw err;
   }
