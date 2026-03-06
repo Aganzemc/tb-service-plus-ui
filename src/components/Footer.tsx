@@ -18,7 +18,7 @@ const quickLinks = [
 export default function Footer() {
   return (
     <footer className="bg-brand-ink text-white">
-      <div className="mx-auto max-w-[1180px] px-6 pb-12 pt-16">
+      <div className="mx-auto max-w-[1280px] px-6 pb-12 pt-16">
         <div className="grid gap-10 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
           <div className="max-w-sm space-y-4">
             <Link href="/page/home" className="inline-flex items-center gap-3">
