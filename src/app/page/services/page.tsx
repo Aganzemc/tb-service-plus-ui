@@ -1,22 +1,14 @@
-"use client";
-
-import ServiceCard from "@/components/ServiceCard";
-import { useServices } from "@/hooks/useServices";
+import ServicesShowcase from "@/components/ServicesShowcase";
 
 export default function ServicesPage() {
-  const { services, loading, error } = useServices();
-
-  if (loading) return <p>Chargement...</p>;
-  if (error) return <p>{error}</p>;
-
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-semibold">Services</h1>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        {services.map((s) => (
-          <ServiceCard key={s.id} service={s} />
-        ))}
-      </div>
-    </div>
+    <ServicesShowcase
+      badge="Catalogue services"
+      heading="Des services utiles pour la maison et les petits besoins du quotidien"
+      description="Parcours les prestations actives de TB Service Plus, ouvre la fiche detail de chaque service, puis passe rapidement a la prise de contact pour reserver ou demander un devis."
+      ctaHref="/page/contact"
+      ctaLabel="Demander un devis"
+      showDescription
+    />
   );
 }

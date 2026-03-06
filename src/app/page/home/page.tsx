@@ -1,57 +1,8 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import ServicesShowcase from "@/components/ServicesShowcase";
 
 const heroBadges = ["MOVING", "CLEANING", "DELIVERY", "JUNK REMOVAL", "SNOW REMOVAL"];
-
-
-const serviceCards = [
-  {
-    number: "01",
-    title: "Moving Services",
-    description: "Aide pour demenagement de maison, appartement, meubles, cartons, chargement et dechargement.",
-    detail: "Homes, apartments, boxes, furniture",
-    accent: "#2563eb",
-    tint: "#edf4ff",
-    icon: "moving",
-  },
-  {
-    number: "02",
-    title: "Cleaning Services",
-    description: "Nettoyage regulier, nettoyage complet, remise en etat et soutien avant ou apres un demenagement.",
-    detail: "Kitchens, bathrooms, floors, reset cleans",
-    accent: "#ff8d44",
-    tint: "#fff1e8",
-    icon: "cleaning",
-  },
-  {
-    number: "03",
-    title: "Delivery Services",
-    description: "Livraison locale de cartons, petits meubles, fournitures et commandes de proximite.",
-    detail: "Fast local pickup and drop-off",
-    accent: "#4f46e5",
-    tint: "#eeefff",
-    icon: "delivery",
-  },
-  {
-    number: "04",
-    title: "Junk Removal",
-    description: "Debarras pratique pour meubles, sacs, objets encombrants et petits residus de chantier.",
-    detail: "Clean-outs, haul-away, curb pickup",
-    accent: "#d946ef",
-    tint: "#fdf0ff",
-    icon: "junk",
-  },
-  {
-    number: "05",
-    title: "Snow Removal",
-    description: "Degagement des entrees, trottoirs et acces pour garder la propriete plus sure en hiver.",
-    detail: "Driveways, walkways, entrances",
-    accent: "#0ea5e9",
-    tint: "#ebf8ff",
-    icon: "snow",
-  },
-];
-
 
 export default function HomePage() {
   return (
@@ -108,22 +59,15 @@ export default function HomePage() {
         </div>
       </section>
 
-
-      <section id="services" className="bg-white">
-        <div className="mx-auto max-w-[1280px] px-6 py-16 md:px-8 md:py-24">
-          <div>
-            <h2 className="text-[clamp(2.25rem,4.8vw,4rem)] font-semibold leading-[0.98] tracking-[-0.06em] text-brand-ink">
-              Nos services
-            </h2>
-          </div>
-
-          <div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-5">
-            {serviceCards.map((service) => (
-              <ServiceCard key={service.title} service={service} />
-            ))}
-          </div>
-        </div>
-      </section>
+      <ServicesShowcase
+        sectionId="services"
+        badge="Nos services"
+        heading="Ce que nous pouvons faire pour vous"
+        description="Demenagement, nettoyage, livraison, debarras et deneigement: la home affiche maintenant les vrais services actifs venant de l'API, avec un rendu plus editorial inspire de ta maquette."
+        ctaHref="/page/services"
+        ctaLabel="Voir tous les services"
+        maxItems={5}
+      />
 
       <section id="contact" className="bg-white">
         <div className="mx-auto max-w-[1280px] px-6 py-16 md:px-8 md:py-24">
@@ -181,43 +125,6 @@ function SectionLabel({ children, tone = "light" }: { children: ReactNode; tone?
   return <span className={className}>{children}</span>;
 }
 
-function ServiceCard({
-  service,
-}: {
-  service: {
-    number: string;
-    title: string;
-    description: string;
-    detail: string;
-    accent: string;
-    tint: string;
-    icon: string;
-  };
-}) {
-  return (
-    <article className="overflow-hidden rounded-[30px] border border-border-soft bg-white shadow-[0_18px_40px_rgba(5,3,47,0.05)]">
-      <div className="h-2" style={{ backgroundColor: service.accent }} />
-      <div className="p-6">
-        <div className="flex items-start justify-between gap-4">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-muted">{service.number}</span>
-          <span
-            className="flex h-12 w-12 items-center justify-center rounded-2xl"
-            style={{ backgroundColor: service.tint, color: service.accent }}
-          >
-            <ServiceIcon type={service.icon} className="h-6 w-6" />
-          </span>
-        </div>
-        <h3 className="mt-6 text-[1.55rem] font-semibold leading-[1.02] tracking-[-0.05em] text-brand-ink">{service.title}</h3>
-        <p className="mt-4 text-[15px] leading-7 text-muted">{service.description}</p>
-        <div className="mt-6 rounded-[22px] px-4 py-3 text-[14px] font-semibold leading-6 text-brand-ink" style={{ backgroundColor: service.tint }}>
-          {service.detail}
-        </div>
-      </div>
-    </article>
-  );
-}
-
-
 function ContactLine({
   icon,
   label,
@@ -253,15 +160,6 @@ function SupportIcon({ type, className }: { type: string; className?: string }) 
   if (type === "mail") return <MailIcon className={className} />;
   if (type === "arrow") return <ArrowRightIcon className={className} />;
 
-  if (type === "home") {
-    return (
-      <svg aria-hidden viewBox="0 0 24 24" fill="none" className={className}>
-        <path d="M4 11.5L12 5l8 6.5V20H4v-8.5z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
-        <path d="M9 20v-4.5h6V20" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
-      </svg>
-    );
-  }
-
   return (
     <svg aria-hidden viewBox="0 0 24 24" fill="none" className={className}>
       <path d="M6 8h5v5H6V8zM13 8h5v5h-5V8zM6 15h5v5H6v-5zM13 15h5v5h-5v-5z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
@@ -296,57 +194,6 @@ function ArrowRightIcon({ className }: { className?: string }) {
     <svg aria-hidden viewBox="0 0 20 20" fill="none" className={className}>
       <path d="M4.5 10h11" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
       <path d="M10.5 5l5 5-5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-
-function ServiceIcon({ type, className }: { type: string; className?: string }) {
-  if (type === "moving") {
-    return (
-      <svg aria-hidden viewBox="0 0 24 24" fill="none" className={className}>
-        <path d="M4 8h11v8H4V8z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
-        <path d="M15 10h3l2 2v4h-5" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
-        <circle cx="7.5" cy="17.5" r="1.5" stroke="currentColor" strokeWidth="1.8" />
-        <circle cx="17.5" cy="17.5" r="1.5" stroke="currentColor" strokeWidth="1.8" />
-      </svg>
-    );
-  }
-
-  if (type === "cleaning") {
-    return (
-      <svg aria-hidden viewBox="0 0 24 24" fill="none" className={className}>
-        <path d="M9 5h6l2 4H7l2-4z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
-        <path d="M8 9h8l-1 10H9L8 9z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
-        <path d="M12 12v4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      </svg>
-    );
-  }
-
-  if (type === "delivery") {
-    return (
-      <svg aria-hidden viewBox="0 0 24 24" fill="none" className={className}>
-        <path d="M5 7l7-3 7 3-7 3-7-3z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
-        <path d="M5 7v10l7 3 7-3V7" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
-        <path d="M12 10v10" stroke="currentColor" strokeWidth="1.8" />
-      </svg>
-    );
-  }
-
-  if (type === "junk") {
-    return (
-      <svg aria-hidden viewBox="0 0 24 24" fill="none" className={className}>
-        <path d="M8 7h8l-1 12H9L8 7z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
-        <path d="M6 7h12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-        <path d="M10 4h4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      </svg>
-    );
-  }
-
-  return (
-    <svg aria-hidden viewBox="0 0 24 24" fill="none" className={className}>
-      <path d="M7 17l4-10 2 5 2-2 2 7H7z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
-      <path d="M5 19h14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   );
 }
