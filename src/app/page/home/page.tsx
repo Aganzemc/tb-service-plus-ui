@@ -53,14 +53,14 @@ export default function HomePage() {
                   href="/page/contact"
                   className="surface-lift inline-flex min-h-14 min-w-[250px] items-center justify-between gap-4 rounded-[14px] bg-white px-7 py-4 text-[15px] font-semibold text-brand-primary shadow-[0_18px_44px_rgba(255,255,255,0.18)]"
                 >
-                  Reservez maintenant
+                  Book now
                   <ArrowRightIcon className="h-4 w-4" />
                 </Link>
                 <a
                   href="#services"
                   className="surface-lift inline-flex min-h-14 min-w-[250px] items-center justify-between gap-4 rounded-[14px] border border-white/28 bg-white/6 px-7 py-4 text-[15px] font-semibold text-white backdrop-blur"
                 >
-                  Decouvrir nos services
+                  Explore our services
                   <ArrowRightIcon className="h-4 w-4" />
                 </a>
               </div>
@@ -71,11 +71,11 @@ export default function HomePage() {
 
       <ServicesShowcase
         sectionId="services"
-        badge="Nos services"
-        heading="Ce que nous pouvons faire pour vous"
-        description="Demenagement, nettoyage, livraison, debarras et deneigement: la home affiche maintenant les vrais services actifs venant de l'API, avec un rendu plus editorial inspire de ta maquette."
+        badge="Our services"
+        heading="What we can do for you"
+        description="Moving, cleaning, delivery, junk removal, and snow removal. The home page now presents the active services coming from the API in a more editorial layout."
         ctaHref="/page/services"
-        ctaLabel="Voir tous les services"
+        ctaLabel="View all services"
         maxItems={5}
       />
 
@@ -86,10 +86,10 @@ export default function HomePage() {
               <div>
                 <SectionLabel tone="dark">Ready to book</SectionLabel>
                 <h2 className="mt-5 max-w-3xl text-[clamp(2.35rem,5vw,4.4rem)] font-semibold leading-[1] tracking-[-0.06em]">
-                  Besoin de soutien pour demenager, nettoyer, livrer, debarrasser ou deneiger?
+                  Need help moving, cleaning, delivering, clearing out, or removing snow?
                 </h2>
                 <p className="mt-6 max-w-2xl text-[16px] leading-8 text-white/84 md:text-[18px]">
-                  Appelez maintenant ou utilisez le formulaire de contact pour demander un devis adapte a votre besoin.
+                  Call now or use the contact form to request a quote that fits your job.
                 </p>
 
                 <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap">
@@ -104,7 +104,7 @@ export default function HomePage() {
                     href="/page/contact"
                     className="surface-lift inline-flex min-h-14 items-center justify-center gap-2 rounded-xl border border-white/18 bg-white/10 px-6 py-4 text-[15px] font-semibold text-white"
                   >
-                    Demander un devis
+                    Get a quote
                     <ArrowRightIcon className="h-4 w-4" />
                   </Link>
                 </div>
@@ -113,7 +113,7 @@ export default function HomePage() {
               <Reveal delay={140} variant="left" className="rounded-[28px] border border-white/16 bg-white/10 p-6 backdrop-blur md:p-7">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/68">Direct contact</p>
                 <div className="mt-6 space-y-4">
-                  <ContactLine icon="phone" label="Telephone" value="403-926-4063" href="tel:4039264063" />
+                  <ContactLine icon="phone" label="Phone" value="403-926-4063" href="tel:4039264063" />
                   <ContactLine icon="mail" label="Email" value="TBserviceplus1@gmail.com" href="mailto:TBserviceplus1@gmail.com" />
                   <ContactLine icon="arrow" label="Next step" value="Open the contact page for quote details" />
                 </div>

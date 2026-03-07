@@ -8,8 +8,8 @@ type ServiceCardProps = {
 
 export default function ServiceCard({ service, showDescription = false }: ServiceCardProps) {
   const imageUrl = service.image_url?.trim();
-  const summary = service.short_description?.trim() || service.description?.trim() || "Support local adapte a votre besoin.";
-  const serviceLabel = service.sort_order != null ? `Service ${String(service.sort_order).padStart(2, "0")}` : "Service local";
+  const summary = service.short_description?.trim() || service.description?.trim() || "Local support tailored to your needs.";
+  const serviceLabel = service.sort_order != null ? `Service ${String(service.sort_order).padStart(2, "0")}` : "Local service";
 
   return (
     <Link

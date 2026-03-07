@@ -5,9 +5,9 @@ import { useEffect, useState } from "react";
 import AdminLoginModal from "@/components/AdminLoginModal";
 
 const navItems = [
-  { href: "/page/home", label: "Accueil" },
+  { href: "/page/home", label: "Home" },
   { href: "/page/services", label: "Services" },
-  { href: "/page/about", label: "A propos" },
+  { href: "/page/about", label: "About" },
   { href: "/page/contact", label: "Contact" },
 ];
 
@@ -54,20 +54,20 @@ export default function Navbar() {
               onClick={() => setLoginOpen(true)}
               className="surface-lift hidden items-center justify-center rounded-xl border border-brand-primary/16 bg-white px-5 py-3 text-[15px] font-semibold text-brand-ink hover:border-brand-primary hover:text-brand-primary md:inline-flex"
             >
-              Connexion
+              Sign in
             </button>
 
             <Link
               href="/page/contact"
               className="surface-lift hidden items-center justify-center rounded-xl bg-brand-primary px-5 py-3 text-[15px] font-semibold text-white shadow-[0_14px_26px_rgba(15,73,191,0.22)] hover:bg-brand-primary-deep md:inline-flex"
             >
-              Demander un devis
+              Get a quote
             </Link>
 
             <button
               type="button"
               className="surface-lift inline-flex h-11 w-11 items-center justify-center rounded-xl border border-black/10 bg-white text-brand-ink lg:hidden"
-              aria-label={mobileOpen ? "Fermer le menu" : "Ouvrir le menu"}
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
               aria-expanded={mobileOpen}
               onClick={() => setMobileOpen((current) => !current)}
             >
@@ -98,14 +98,14 @@ export default function Navbar() {
                     setLoginOpen(true);
                   }}
                 >
-                  Connexion
+                  Sign in
                 </button>
                 <Link
                   href="/page/contact"
                   className="surface-lift mt-2 inline-flex items-center justify-center rounded-xl bg-brand-primary px-4 py-3 text-[15px] font-semibold text-white"
                   onClick={() => setMobileOpen(false)}
                 >
-                  Demander un devis
+                  Get a quote
                 </Link>
               </nav>
             </div>

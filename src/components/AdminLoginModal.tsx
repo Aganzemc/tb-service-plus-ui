@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect } from "react";
 import AdminLoginCard from "@/components/AdminLoginCard";
@@ -38,7 +38,7 @@ export default function AdminLoginModal({ open, onClose }: AdminLoginModalProps)
       <div className="relative w-full max-w-[600px]" onClick={(event) => event.stopPropagation()} role="presentation">
         <button
           type="button"
-          aria-label="Fermer la connexion"
+          aria-label="Close sign-in"
           onClick={onClose}
           className="absolute right-4 top-4 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full bg-brand-sand/80 text-brand-ink hover:bg-brand-sand"
         >

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -18,7 +18,7 @@ export default function AdminDashboardPage() {
 
     refresh(token).catch((e: unknown) => {
       const maybe = e as { message?: unknown } | null;
-      setError(typeof maybe?.message === "string" ? maybe.message : "Erreur");
+      setError(typeof maybe?.message === "string" ? maybe.message : "Error");
     });
   }, [token, refresh, router]);
 
@@ -27,7 +27,7 @@ export default function AdminDashboardPage() {
       <div className="space-y-4">
         <h1 className="text-2xl font-semibold">Dashboard</h1>
         {error ? <p className="text-sm text-red-600">{error}</p> : null}
-        <p className="text-black/70">Bienvenue dans l&apos;administration.</p>
+        <p className="text-black/70">Welcome to the admin area.</p>
       </div>
     </AdminLayout>
   );

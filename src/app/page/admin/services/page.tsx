@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useMemo, useState, type ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
@@ -103,7 +103,7 @@ function parseSortOrder(value: string): number | undefined {
 function formatDate(value: string) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
-  return new Intl.DateTimeFormat("fr-FR", {
+  return new Intl.DateTimeFormat("en-CA", {
     day: "2-digit",
     month: "short",
     year: "numeric",
@@ -124,7 +124,7 @@ function canvasToBlob(canvas: HTMLCanvasElement, quality: number) {
           resolve(blob);
           return;
         }
-        reject(new Error("Impossible de generer l'image."));
+        reject(new Error("Unable to generate the image."));
       },
       "image/jpeg",
       quality,
@@ -144,7 +144,7 @@ function loadImageFromFile(file: File) {
 
     image.onerror = () => {
       URL.revokeObjectURL(objectUrl);
-      reject(new Error("Impossible de lire le media."));
+      reject(new Error("Unable to read the media file."));
     };
 
     image.src = objectUrl;
@@ -155,7 +155,7 @@ function readBlobAsDataUrl(blob: Blob) {
   return new Promise<string>((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(typeof reader.result === "string" ? reader.result : "");
-    reader.onerror = () => reject(new Error("Impossible de lire le media."));
+    reader.onerror = () => reject(new Error("Unable to read the media file."));
     reader.readAsDataURL(blob);
   });
 }
@@ -172,7 +172,7 @@ async function optimizeImageFile(file: File) {
   const context = canvas.getContext("2d");
 
   if (!context) {
-    throw new Error("Impossible de preparer le media.");
+    throw new Error("Unable to prepare the media file.");
   }
 
   const render = (nextWidth: number, nextHeight: number) => {
@@ -206,7 +206,7 @@ async function optimizeImageFile(file: File) {
   }
 
   if (blob.size > MAX_MEDIA_BYTES) {
-    throw new Error("Image trop lourde. Choisissez une image plus legere.");
+    throw new Error("Image is too large. Choose a lighter image.");
   }
 
   return readBlobAsDataUrl(blob);
@@ -247,7 +247,7 @@ export default function AdminServicesPage() {
       setError(null);
     } catch (err: unknown) {
       const maybe = err as { message?: unknown } | null;
-      setError(typeof maybe?.message === "string" ? maybe.message : "Erreur");
+      setError(typeof maybe?.message === "string" ? maybe.message : "Error");
     }
   }, [token]);
 
@@ -280,7 +280,7 @@ export default function AdminServicesPage() {
     const file = event.target.files?.[0];
     if (!file) return;
     if (!file.type.startsWith("image/")) {
-      setError("Selectionnez une image valide.");
+      setError("Select a valid image.");
       event.target.value = "";
       return;
     }
@@ -292,7 +292,7 @@ export default function AdminServicesPage() {
       setError(null);
     } catch (err: unknown) {
       const maybe = err as { message?: unknown } | null;
-      setError(typeof maybe?.message === "string" ? maybe.message : "Impossible de traiter cette image.");
+      setError(typeof maybe?.message === "string" ? maybe.message : "Unable to process this image.");
     } finally {
       event.target.value = "";
     }
@@ -302,7 +302,7 @@ export default function AdminServicesPage() {
     const file = event.target.files?.[0];
     if (!file) return;
     if (!file.type.startsWith("image/")) {
-      setError("Selectionnez une image valide.");
+      setError("Select a valid image.");
       event.target.value = "";
       return;
     }
@@ -314,7 +314,7 @@ export default function AdminServicesPage() {
       setError(null);
     } catch (err: unknown) {
       const maybe = err as { message?: unknown } | null;
-      setError(typeof maybe?.message === "string" ? maybe.message : "Impossible de traiter cette image.");
+      setError(typeof maybe?.message === "string" ? maybe.message : "Unable to process this image.");
     } finally {
       event.target.value = "";
     }
@@ -325,7 +325,7 @@ export default function AdminServicesPage() {
 
     const computedSlug = slugifyTitle(createState.title);
     if (!computedSlug) {
-      setError("Le titre est requis pour generer le slug.");
+      setError("A title is required to generate the slug.");
       return;
     }
 
@@ -347,7 +347,7 @@ export default function AdminServicesPage() {
       await reload();
     } catch (err: unknown) {
       const maybe = err as { message?: unknown } | null;
-      setError(typeof maybe?.message === "string" ? maybe.message : "Erreur");
+      setError(typeof maybe?.message === "string" ? maybe.message : "Error");
     } finally {
       setCreateLoading(false);
     }
@@ -370,7 +370,7 @@ export default function AdminServicesPage() {
 
     const computedSlug = slugifyTitle(editState.title);
     if (!computedSlug) {
-      setError("Le titre est requis pour generer le slug.");
+      setError("A title is required to generate the slug.");
       return;
     }
 
@@ -392,7 +392,7 @@ export default function AdminServicesPage() {
       cancelEdit();
     } catch (err: unknown) {
       const maybe = err as { message?: unknown } | null;
-      setError(typeof maybe?.message === "string" ? maybe.message : "Erreur");
+      setError(typeof maybe?.message === "string" ? maybe.message : "Error");
     } finally {
       setEditLoading(false);
     }
@@ -401,7 +401,7 @@ export default function AdminServicesPage() {
   const onDelete = useCallback(
     async (service: Service) => {
       if (!token) return;
-      const ok = window.confirm(`Supprimer le service ${service.title} ?`);
+      const ok = window.confirm(`Delete the service ${service.title} ?`);
       if (!ok) return;
 
       try {
@@ -410,7 +410,7 @@ export default function AdminServicesPage() {
         if (editingId === service.id) cancelEdit();
       } catch (err: unknown) {
         const maybe = err as { message?: unknown } | null;
-        setError(typeof maybe?.message === "string" ? maybe.message : "Erreur");
+        setError(typeof maybe?.message === "string" ? maybe.message : "Error");
       }
     },
     [cancelEdit, editingId, token],
@@ -822,11 +822,11 @@ function MediaField({
             htmlFor={inputId}
             className="inline-flex h-11 cursor-pointer items-center justify-center rounded-[14px] border border-black/10 bg-white px-4 text-[14px] font-semibold text-brand-ink"
           >
-            Joindre une image
+            Attach an image
           </label>
           {imageUrl.trim() ? (
             <button type="button" onClick={onClear} className="text-[13px] font-semibold text-red-600">
-              Retirer le media
+              Remove media
             </button>
           ) : null}
         </div>

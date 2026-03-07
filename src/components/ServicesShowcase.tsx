@@ -66,12 +66,12 @@ export default function ServicesShowcase({
             {loading ? <ServicesSkeleton count={maxItems ?? 5} /> : null}
             {!loading && error ? (
               <Reveal className="rounded-[28px] border border-black/10 bg-white/88 px-6 py-8 text-[15px] text-[#6b5646] shadow-[0_18px_40px_rgba(49,32,21,0.08)]">
-                Impossible de charger les services pour le moment.
+                Unable to load services right now.
               </Reveal>
             ) : null}
             {!loading && !error && visibleServices.length === 0 ? (
               <Reveal className="rounded-[28px] border border-black/10 bg-white/88 px-6 py-8 text-[15px] text-[#6b5646] shadow-[0_18px_40px_rgba(49,32,21,0.08)]">
-                Aucun service actif n&apos;est encore disponible dans l&apos;API.
+                No active services are currently available from the API.
               </Reveal>
             ) : null}
             {!loading && !error && visibleServices.length > 0 ? (

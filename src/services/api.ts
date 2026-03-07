@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "@/utils/constants";
+﻿import { API_BASE_URL } from "@/utils/constants";
 
 export type ApiError = {
   message: string;
@@ -37,7 +37,7 @@ export async function apiFetch<T>(
       | null;
 
     const fallbackMessage =
-      res.status === 413 ? "Image trop lourde. Choisissez une image plus legere." : `Request failed (${res.status})`;
+      res.status === 413 ? "Image is too large. Choose a lighter image." : `Request failed (${res.status})`;
 
     const message = (typeof body?.message === "string" ? body.message : undefined) || fallbackMessage;
     const err: ApiError = { message, details: body?.details };

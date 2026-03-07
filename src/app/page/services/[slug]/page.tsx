@@ -6,8 +6,8 @@ export default async function ServiceDetailsPage({ params }: { params: Promise<{
   const { slug } = await params;
   const service = await getPublicServiceBySlug(slug);
   const imageUrl = service.image_url?.trim();
-  const summary = service.short_description?.trim() || service.description?.trim() || "Support local adapte a votre besoin.";
-  const serviceLabel = service.sort_order != null ? `Service ${String(service.sort_order).padStart(2, "0")}` : "Service local";
+  const summary = service.short_description?.trim() || service.description?.trim() || "Local support tailored to your needs.";
+  const serviceLabel = service.sort_order != null ? `Service ${String(service.sort_order).padStart(2, "0")}` : "Local service";
 
   return (
     <div className="space-y-8">
@@ -39,27 +39,26 @@ export default async function ServiceDetailsPage({ params }: { params: Promise<{
                 href="/page/contact"
                 className="surface-lift inline-flex items-center justify-center rounded-2xl bg-white px-5 py-3 text-[15px] font-semibold text-brand-primary"
               >
-                Demander un devis
+                Get a quote
               </Link>
               <Link
                 href="/page/services"
                 className="surface-lift inline-flex items-center justify-center rounded-2xl border border-white/18 bg-white/10 px-5 py-3 text-[15px] font-semibold text-white"
               >
-                Retour aux services
+                Back to services
               </Link>
             </div>
           </div>
 
           <Reveal delay={120} variant="left" className="space-y-4">
             <div className="surface-lift rounded-[26px] border border-white/12 bg-white/10 p-5 backdrop-blur">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/58">Disponibilite</p>
-              <p className="mt-3 text-[1.45rem] font-semibold tracking-[-0.04em] text-white">Reponse rapide par contact direct</p>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/58">Availability</p>
+              <p className="mt-3 text-[1.45rem] font-semibold tracking-[-0.04em] text-white">Fast response through direct contact</p>
             </div>
             <div className="surface-lift rounded-[26px] border border-white/12 bg-white/10 p-5 backdrop-blur">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/58">Ideal pour</p>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/58">Best for</p>
               <p className="mt-3 text-[15px] leading-7 text-white/78">
-                Les demandes qui ont besoin d&apos;un echange clair, d&apos;un devis rapide et d&apos;une intervention
-                locale sans circuit complexe.
+                Jobs that need a clear exchange, a quick quote, and local support without a complicated process.
               </p>
             </div>
           </Reveal>
@@ -69,17 +68,17 @@ export default async function ServiceDetailsPage({ params }: { params: Promise<{
       <div className="grid gap-6 lg:grid-cols-[1.12fr_0.88fr]">
         <Reveal delay={90} className="rounded-[30px] border border-black/8 bg-white p-6 shadow-[0_18px_40px_rgba(5,3,47,0.06)] md:p-8">
           <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-brand-ink/42">Description</p>
-          <h2 className="mt-4 text-[1.9rem] font-semibold tracking-[-0.05em] text-brand-ink">Ce service en detail</h2>
+          <h2 className="mt-4 text-[1.9rem] font-semibold tracking-[-0.05em] text-brand-ink">This service in detail</h2>
           <p className="mt-4 text-[16px] leading-8 text-brand-ink/72">{service.description?.trim() || summary}</p>
         </Reveal>
 
         <Reveal delay={180} variant="left" className="space-y-4">
           <div className="surface-lift rounded-[30px] border border-black/8 bg-brand-sand/40 p-6 shadow-[0_18px_40px_rgba(5,3,47,0.04)]">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-brand-ink/42">Comment proceder</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-brand-ink/42">How it works</p>
             <ul className="mt-4 space-y-3 text-[15px] leading-7 text-brand-ink/74">
-              <li>Partagez les informations utiles via la page contact.</li>
-              <li>Precisez le lieu, le volume, ou le type de demande.</li>
-              <li>Nous revenons vers vous pour confirmer la prochaine etape.</li>
+              <li>Share the useful details through the contact page.</li>
+              <li>Specify the location, volume, or type of request.</li>
+              <li>We follow up to confirm the next step.</li>
             </ul>
           </div>
 

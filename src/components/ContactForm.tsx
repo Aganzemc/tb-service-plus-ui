@@ -22,14 +22,14 @@ export default function ContactForm() {
         email: email || undefined,
         message,
       });
-      setStatus("Message envoye");
+      setStatus("Message sent");
       setName("");
       setPhone("");
       setEmail("");
       setMessage("");
     } catch (err: unknown) {
       const maybe = err as { message?: unknown } | null;
-      setStatus(typeof maybe?.message === "string" ? maybe.message : "Erreur");
+      setStatus(typeof maybe?.message === "string" ? maybe.message : "Error");
     } finally {
       setLoading(false);
     }
@@ -41,7 +41,7 @@ export default function ContactForm() {
       className="w-full max-w-none space-y-4 rounded-[28px] border border-black/8 bg-white p-6 shadow-[0_18px_40px_rgba(5,3,47,0.06)]"
     >
       <div>
-        <label className="mb-2 block text-[15px] font-medium text-brand-ink">Nom</label>
+        <label className="mb-2 block text-[15px] font-medium text-brand-ink">Name</label>
         <input
           className="w-full rounded-2xl border border-black/15 bg-brand-sand/25 px-4 py-3 text-[15px] text-brand-ink outline-none focus:-translate-y-0.5 focus:border-brand-primary/40 focus:bg-white focus:shadow-[0_0_0_4px_rgba(95,103,244,0.08)]"
           value={name}
@@ -50,7 +50,7 @@ export default function ContactForm() {
         />
       </div>
       <div>
-        <label className="mb-2 block text-[15px] font-medium text-brand-ink">Telephone</label>
+        <label className="mb-2 block text-[15px] font-medium text-brand-ink">Phone</label>
         <input
           className="w-full rounded-2xl border border-black/15 bg-brand-sand/25 px-4 py-3 text-[15px] text-brand-ink outline-none focus:-translate-y-0.5 focus:border-brand-primary/40 focus:bg-white focus:shadow-[0_0_0_4px_rgba(95,103,244,0.08)]"
           value={phone}
@@ -81,7 +81,7 @@ export default function ContactForm() {
         className="surface-lift rounded-2xl bg-brand-ink px-5 py-3 text-[15px] font-semibold text-white disabled:opacity-50"
         type="submit"
       >
-        {loading ? "Envoi..." : "Envoyer"}
+        {loading ? "Sending..." : "Send"}
       </button>
       {status ? <p className="text-[14px] text-brand-ink/75">{status}</p> : null}
     </form>

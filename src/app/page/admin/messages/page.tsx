@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -29,7 +29,7 @@ export default function AdminMessagesPage() {
       .then((data) => setMessages(data))
       .catch((e: unknown) => {
         const maybe = e as { message?: unknown } | null;
-        setError(typeof maybe?.message === "string" ? maybe.message : "Erreur");
+        setError(typeof maybe?.message === "string" ? maybe.message : "Error");
       })
       .finally(() => setLoading(false));
   }, [token, router]);
@@ -47,7 +47,7 @@ export default function AdminMessagesPage() {
       } catch (e: unknown) {
         setMessages((prev) => prev.map((x) => (x.id === m.id ? { ...x, is_read: m.is_read } : x)));
         const maybe = e as { message?: unknown } | null;
-        setError(typeof maybe?.message === "string" ? maybe.message : "Erreur");
+        setError(typeof maybe?.message === "string" ? maybe.message : "Error");
       }
     },
     [token],
@@ -56,7 +56,7 @@ export default function AdminMessagesPage() {
   const onDelete = useCallback(
     async (m: Message) => {
       if (!token) return;
-      const ok = window.confirm(`Supprimer le message de: ${m.name} ?`);
+      const ok = window.confirm(`Delete the message from ${m.name}?`);
       if (!ok) return;
 
       const snapshot = messages;
@@ -66,7 +66,7 @@ export default function AdminMessagesPage() {
       } catch (e: unknown) {
         setMessages(snapshot);
         const maybe = e as { message?: unknown } | null;
-        setError(typeof maybe?.message === "string" ? maybe.message : "Erreur");
+        setError(typeof maybe?.message === "string" ? maybe.message : "Error");
       }
     },
     [messages, token],
@@ -76,7 +76,7 @@ export default function AdminMessagesPage() {
     <AdminLayout>
       <div className="space-y-4">
         <h1 className="text-2xl font-semibold">Messages</h1>
-        {loading ? <p>Chargement...</p> : null}
+        {loading ? <p>Loading...</p> : null}
         {error ? <p className="text-sm text-red-600">{error}</p> : null}
         <div className="space-y-2">
           {sortedMessages.map((m) => (
@@ -93,14 +93,14 @@ export default function AdminMessagesPage() {
                     className="rounded border border-black/20 px-3 py-2 text-sm"
                     onClick={() => toggleRead(m)}
                   >
-                    {m.is_read ? "Marquer non lu" : "Marquer lu"}
+                    {m.is_read ? "Mark unread" : "Mark read"}
                   </button>
                   <button
                     type="button"
                     className="rounded border border-red-600/40 px-3 py-2 text-sm text-red-700"
                     onClick={() => onDelete(m)}
                   >
-                    Supprimer
+                    Delete
                   </button>
                 </div>
               </div>

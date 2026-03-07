@@ -1,13 +1,13 @@
-import ServicesShowcase from "@/components/ServicesShowcase";
+﻿import ServicesShowcase from "@/components/ServicesShowcase";
 
 export default function ServicesPage() {
   return (
     <ServicesShowcase
-      badge="Catalogue services"
-      heading="Des services utiles pour la maison et les petits besoins du quotidien"
-      description="Parcours les prestations actives de TB Service Plus, ouvre la fiche detail de chaque service, puis passe rapidement a la prise de contact pour reserver ou demander un devis."
+      badge="Service catalog"
+      heading="Useful services for the home and the practical jobs people need every day"
+      description="Browse the active TB Service Plus offers, open the detail page for each service, and move quickly to contact when you are ready to book or request a quote."
       ctaHref="/page/contact"
-      ctaLabel="Demander un devis"
+      ctaLabel="Get a quote"
       showDescription
     />
   );

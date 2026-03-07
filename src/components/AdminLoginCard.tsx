@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -17,7 +17,7 @@ export default function AdminLoginCard({
   onCancel,
   showCancel = false,
   title = "Sign In",
-  subtitle = "Veuillez vous connecter pour continuer.",
+  subtitle = "Please sign in to continue.",
 }: AdminLoginCardProps) {
   const { login } = useAuth();
   const router = useRouter();
@@ -39,7 +39,7 @@ export default function AdminLoginCard({
       router.push("/page/admin/dashboard");
     } catch (err: unknown) {
       const maybe = err as { message?: unknown } | null;
-      setError(typeof maybe?.message === "string" ? maybe.message : "Erreur de connexion");
+      setError(typeof maybe?.message === "string" ? maybe.message : "Sign-in error");
     } finally {
       setLoading(false);
     }
@@ -74,7 +74,7 @@ export default function AdminLoginCard({
 
         <div>
           <label htmlFor="admin-password" className="block text-[14px] font-medium text-brand-ink/78">
-            Mot de passe
+            Password
           </label>
           <div className="relative mt-2">
             <input
@@ -89,7 +89,7 @@ export default function AdminLoginCard({
             <button
               type="button"
               className="absolute inset-y-0 right-4 my-auto inline-flex h-9 w-9 items-center justify-center rounded-full text-muted hover:bg-brand-sand hover:text-brand-primary"
-              aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+              aria-label={showPassword ? "Hide password" : "Show password"}
               onClick={() => setShowPassword((current) => !current)}
             >
               <EyeIcon className="h-5 w-5" open={showPassword} />
@@ -102,7 +102,7 @@ export default function AdminLoginCard({
           className="inline-flex h-14 w-full items-center justify-center rounded-[16px] bg-brand-primary px-5 text-[16px] font-semibold text-white shadow-[0_18px_36px_rgba(95,103,244,0.25)] hover:bg-brand-primary-deep disabled:cursor-not-allowed disabled:opacity-60"
           type="submit"
         >
-          {loading ? "Connexion..." : "Se connecter"}
+          {loading ? "Signing in..." : "Sign in"}
         </button>
       </form>
 
@@ -113,7 +113,7 @@ export default function AdminLoginCard({
           className="mt-5 inline-flex w-full items-center justify-center gap-2 text-[15px] font-semibold text-brand-primary"
         >
           <ArrowLeftIcon className="h-4 w-4" />
-          Retour
+          Back
         </button>
       ) : null}
     </div>

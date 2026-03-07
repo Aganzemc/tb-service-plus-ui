@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import type { Service } from "@/types/service";
@@ -19,7 +19,7 @@ export function useServices() {
       .catch((e: unknown) => {
         if (!mounted) return;
         const maybe = e as { message?: unknown } | null;
-        const msg = typeof maybe?.message === "string" ? maybe.message : "Erreur";
+        const msg = typeof maybe?.message === "string" ? maybe.message : "Error";
         setError(msg);
       })
       .finally(() => {
