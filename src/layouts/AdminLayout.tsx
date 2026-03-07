@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import type { ReactNode } from "react";
 import Link from "next/link";
@@ -9,7 +9,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen">
-      <header className="w-full border-b border-black/10">
+      <header className="page-enter w-full border-b border-black/10">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
           <Link href="/page/admin/dashboard" className="font-semibold">
             Admin
@@ -23,7 +23,9 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           </nav>
         </div>
       </header>
-      <div className="mx-auto max-w-6xl px-4 py-10">{children}</div>
+      <div className="mx-auto max-w-6xl px-4 py-10">
+        <div className="page-enter">{children}</div>
+      </div>
     </div>
   );
 }

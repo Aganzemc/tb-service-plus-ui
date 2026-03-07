@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { FormEvent, useState } from "react";
 import { createPublicMessage } from "@/services/messages.api";
@@ -36,11 +36,14 @@ export default function ContactForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="max-w-xl space-y-4 rounded-[28px] border border-black/8 bg-white p-6 shadow-[0_18px_40px_rgba(5,3,47,0.06)]">
+    <form
+      onSubmit={onSubmit}
+      className="w-full max-w-none space-y-4 rounded-[28px] border border-black/8 bg-white p-6 shadow-[0_18px_40px_rgba(5,3,47,0.06)]"
+    >
       <div>
         <label className="mb-2 block text-[15px] font-medium text-brand-ink">Nom</label>
         <input
-          className="w-full rounded-2xl border border-black/15 px-4 py-3 text-[15px] text-brand-ink outline-none"
+          className="w-full rounded-2xl border border-black/15 bg-brand-sand/25 px-4 py-3 text-[15px] text-brand-ink outline-none focus:-translate-y-0.5 focus:border-brand-primary/40 focus:bg-white focus:shadow-[0_0_0_4px_rgba(95,103,244,0.08)]"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
@@ -49,7 +52,7 @@ export default function ContactForm() {
       <div>
         <label className="mb-2 block text-[15px] font-medium text-brand-ink">Telephone</label>
         <input
-          className="w-full rounded-2xl border border-black/15 px-4 py-3 text-[15px] text-brand-ink outline-none"
+          className="w-full rounded-2xl border border-black/15 bg-brand-sand/25 px-4 py-3 text-[15px] text-brand-ink outline-none focus:-translate-y-0.5 focus:border-brand-primary/40 focus:bg-white focus:shadow-[0_0_0_4px_rgba(95,103,244,0.08)]"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
         />
@@ -57,7 +60,7 @@ export default function ContactForm() {
       <div>
         <label className="mb-2 block text-[15px] font-medium text-brand-ink">Email</label>
         <input
-          className="w-full rounded-2xl border border-black/15 px-4 py-3 text-[15px] text-brand-ink outline-none"
+          className="w-full rounded-2xl border border-black/15 bg-brand-sand/25 px-4 py-3 text-[15px] text-brand-ink outline-none focus:-translate-y-0.5 focus:border-brand-primary/40 focus:bg-white focus:shadow-[0_0_0_4px_rgba(95,103,244,0.08)]"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           type="email"
@@ -66,7 +69,7 @@ export default function ContactForm() {
       <div>
         <label className="mb-2 block text-[15px] font-medium text-brand-ink">Message</label>
         <textarea
-          className="w-full rounded-2xl border border-black/15 px-4 py-3 text-[15px] text-brand-ink outline-none"
+          className="w-full rounded-2xl border border-black/15 bg-brand-sand/25 px-4 py-3 text-[15px] text-brand-ink outline-none focus:-translate-y-0.5 focus:border-brand-primary/40 focus:bg-white focus:shadow-[0_0_0_4px_rgba(95,103,244,0.08)]"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           rows={5}
@@ -75,7 +78,7 @@ export default function ContactForm() {
       </div>
       <button
         disabled={loading}
-        className="rounded-2xl bg-brand-ink px-5 py-3 text-[15px] font-semibold text-white disabled:opacity-50"
+        className="surface-lift rounded-2xl bg-brand-ink px-5 py-3 text-[15px] font-semibold text-white disabled:opacity-50"
         type="submit"
       >
         {loading ? "Envoi..." : "Envoyer"}

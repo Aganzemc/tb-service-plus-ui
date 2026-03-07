@@ -31,8 +31,8 @@ type ServiceTemplate = {
 
 type InputMode = "text" | "numeric" | "decimal" | "tel" | "search" | "email" | "url" | "none";
 
-const MAX_MEDIA_BYTES = 850 * 1024;
-const MAX_MEDIA_DIMENSION = 1600;
+const MAX_MEDIA_BYTES = 320 * 1024;
+const MAX_MEDIA_DIMENSION = 1280;
 const MIN_MEDIA_DIMENSION = 720;
 const MIN_MEDIA_QUALITY = 0.52;
 

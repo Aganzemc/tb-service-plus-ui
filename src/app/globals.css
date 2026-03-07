@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
 :root {
   --font-geist-sans: "Segoe UI";
@@ -16,6 +16,10 @@
   --brand-sand: #f1ece4;
   --muted: #737692;
   --border-soft: rgba(10, 16, 38, 0.08);
+  --motion-spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-soft: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-duration-fast: 260ms;
+  --motion-duration-base: 760ms;
 }
 
 @theme inline {
@@ -66,3 +70,183 @@ select {
     transform 180ms ease;
 }
 
+.page-enter {
+  animation: page-enter 780ms var(--motion-spring) both;
+}
+
+.reveal {
+  opacity: 0;
+  filter: blur(14px);
+  transform: translate3d(0, 28px, 0) scale(0.985);
+  transition:
+    opacity var(--motion-duration-base) var(--motion-spring),
+    transform var(--motion-duration-base) var(--motion-spring),
+    filter calc(var(--motion-duration-base) + 80ms) var(--motion-soft);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform, filter;
+}
+
+.reveal[data-variant="left"] {
+  transform: translate3d(-34px, 0, 0) scale(0.985);
+}
+
+.reveal[data-variant="right"] {
+  transform: translate3d(34px, 0, 0) scale(0.985);
+}
+
+.reveal[data-variant="zoom"] {
+  transform: scale(0.94);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  filter: blur(0);
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.surface-lift,
+.surface-lift-strong {
+  will-change: transform, box-shadow;
+}
+
+.surface-lift {
+  transition:
+    transform 320ms var(--motion-soft),
+    box-shadow 320ms var(--motion-soft),
+    border-color 220ms ease,
+    background-color 220ms ease;
+}
+
+.surface-lift-strong {
+  transition:
+    transform 420ms var(--motion-soft),
+    box-shadow 420ms var(--motion-soft),
+    border-color 220ms ease,
+    background-color 220ms ease;
+}
+
+.nav-link {
+  position: relative;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -0.45rem;
+  height: 2px;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left center;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0.42;
+  transition: transform 240ms var(--motion-soft);
+}
+
+.hero-shimmer {
+  background-size: 160% 160%;
+  animation: hero-shimmer 13s ease-in-out infinite alternate;
+}
+
+.float-orb {
+  animation: float-orb 14s ease-in-out infinite;
+}
+
+.float-orb-delayed {
+  animation-delay: -7s;
+}
+
+.menu-enter {
+  animation: menu-enter 320ms var(--motion-soft) both;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .surface-lift:hover {
+    transform: translateY(-6px);
+  }
+
+  .surface-lift-strong:hover {
+    transform: translateY(-10px) scale(1.01);
+  }
+
+  .nav-link:hover::after,
+  .nav-link:focus-visible::after {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes menu-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -12px, 0) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes hero-shimmer {
+  0% {
+    transform: scale(1) rotate(0deg);
+    opacity: 0.56;
+  }
+
+  50% {
+    transform: scale(1.06) rotate(1.5deg);
+    opacity: 0.72;
+  }
+
+  100% {
+    transform: scale(1.02) rotate(-1deg);
+    opacity: 0.48;
+  }
+}
+
+@keyframes float-orb {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(0, -18px, 0) scale(1.05);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+}

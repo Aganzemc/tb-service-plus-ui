@@ -1,6 +1,7 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
+import Reveal from "@/components/Reveal";
 import ServiceCard from "@/components/ServiceCard";
 import { useServices } from "@/hooks/useServices";
 
@@ -37,7 +38,7 @@ export default function ServicesShowcase({
           <div className="absolute inset-x-0 bottom-0 h-24 bg-[linear-gradient(180deg,rgba(245,237,227,0)_0%,rgba(236,224,210,0.62)_100%)]" />
 
           <div className="relative grid gap-10 lg:grid-cols-[1fr_0.92fr] lg:items-start lg:gap-14">
-            <div>
+            <Reveal>
               <span className="inline-flex items-center gap-2 rounded-full border border-black/12 bg-white/82 px-4 py-2 text-[12px] font-semibold text-[#4c3a2d] shadow-[0_10px_24px_rgba(72,49,31,0.08)] backdrop-blur">
                 <WrenchIcon className="h-4 w-4" />
                 {badge}
@@ -45,38 +46,40 @@ export default function ServicesShowcase({
               <h2 className="mt-6 max-w-[10ch] text-[clamp(2.6rem,5.6vw,5.1rem)] font-serif italic leading-[0.94] tracking-[-0.05em] text-[#241710]">
                 {heading}
               </h2>
-            </div>
+            </Reveal>
 
-            <div className="max-w-[520px] lg:ml-auto lg:pt-16">
+            <Reveal delay={120} variant="left" className="max-w-[520px] lg:ml-auto lg:pt-16">
               <p className="text-[17px] leading-8 text-[#56453a] md:text-[19px] md:leading-9">{description}</p>
               <Link
                 href={ctaHref}
-                className="mt-8 inline-flex items-center gap-4 rounded-full border border-[#b39576] bg-[#d9c0a2] px-6 py-3 text-[15px] font-semibold text-[#2c1d15] shadow-[0_16px_36px_rgba(80,55,34,0.12)] transition hover:-translate-y-0.5"
+                className="surface-lift mt-8 inline-flex items-center gap-4 rounded-full border border-[#b39576] bg-[#d9c0a2] px-6 py-3 text-[15px] font-semibold text-[#2c1d15] shadow-[0_16px_36px_rgba(80,55,34,0.12)]"
               >
                 {ctaLabel}
                 <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#2c1d15] text-white">
                   <ArrowRightIcon className="h-5 w-5" />
                 </span>
               </Link>
-            </div>
+            </Reveal>
           </div>
 
           <div className="relative mt-12">
             {loading ? <ServicesSkeleton count={maxItems ?? 5} /> : null}
             {!loading && error ? (
-              <div className="rounded-[28px] border border-black/10 bg-white/88 px-6 py-8 text-[15px] text-[#6b5646] shadow-[0_18px_40px_rgba(49,32,21,0.08)]">
+              <Reveal className="rounded-[28px] border border-black/10 bg-white/88 px-6 py-8 text-[15px] text-[#6b5646] shadow-[0_18px_40px_rgba(49,32,21,0.08)]">
                 Impossible de charger les services pour le moment.
-              </div>
+              </Reveal>
             ) : null}
             {!loading && !error && visibleServices.length === 0 ? (
-              <div className="rounded-[28px] border border-black/10 bg-white/88 px-6 py-8 text-[15px] text-[#6b5646] shadow-[0_18px_40px_rgba(49,32,21,0.08)]">
+              <Reveal className="rounded-[28px] border border-black/10 bg-white/88 px-6 py-8 text-[15px] text-[#6b5646] shadow-[0_18px_40px_rgba(49,32,21,0.08)]">
                 Aucun service actif n&apos;est encore disponible dans l&apos;API.
-              </div>
+              </Reveal>
             ) : null}
             {!loading && !error && visibleServices.length > 0 ? (
               <div className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
-                {visibleServices.map((service) => (
-                  <ServiceCard key={service.id} service={service} showDescription={showDescription} />
+                {visibleServices.map((service, index) => (
+                  <Reveal key={service.id} delay={120 + index * 80}>
+                    <ServiceCard service={service} showDescription={showDescription} />
+                  </Reveal>
                 ))}
               </div>
             ) : null}

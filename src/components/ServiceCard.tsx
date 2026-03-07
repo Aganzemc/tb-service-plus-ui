@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import type { Service } from "@/types/service";
 
 type ServiceCardProps = {
@@ -14,13 +14,13 @@ export default function ServiceCard({ service, showDescription = false }: Servic
   return (
     <Link
       href={`/page/services/${service.slug}`}
-      className={`group relative flex overflow-hidden rounded-[28px] border border-black/8 bg-[#d7cab8] shadow-[0_24px_55px_rgba(48,31,20,0.14)] ${
+      className={`surface-lift-strong group relative flex overflow-hidden rounded-[28px] border border-black/8 bg-[#d7cab8] shadow-[0_24px_55px_rgba(48,31,20,0.14)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/40 focus-visible:ring-offset-4 focus-visible:ring-offset-[#f5ede3] ${
         showDescription ? "min-h-[400px]" : "min-h-[360px]"
       }`}
     >
       {imageUrl ? (
         <div
-          className="absolute inset-0 bg-cover bg-center transition duration-500 group-hover:scale-[1.04]"
+          className="absolute inset-0 bg-cover bg-center transition duration-700 group-hover:scale-[1.05]"
           style={{ backgroundImage: `url(${imageUrl})` }}
         />
       ) : (
@@ -31,7 +31,7 @@ export default function ServiceCard({ service, showDescription = false }: Servic
 
       <div className="relative flex h-full w-full flex-col justify-between p-4 sm:p-5">
         <div className="flex justify-end">
-          <span className="flex h-12 w-12 items-center justify-center rounded-full border border-white/28 bg-white/10 text-white backdrop-blur transition duration-300 group-hover:-translate-y-1 group-hover:bg-white/18">
+          <span className="flex h-12 w-12 items-center justify-center rounded-full border border-white/28 bg-white/10 text-white backdrop-blur transition duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:bg-white/18">
             <ArrowUpRightIcon className="h-5 w-5" />
           </span>
         </div>
