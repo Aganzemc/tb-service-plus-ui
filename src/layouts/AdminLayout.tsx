@@ -19,12 +19,6 @@ const mainNavigation = [
   { href: "/page/admin/messages", label: "Messages", icon: InboxIcon },
 ] as const;
 
-const utilityNavigation = [
-  { label: "Analytics", icon: ChartIcon },
-  { label: "Contacts", icon: UsersIcon },
-  { label: "Tags", icon: TagIcon },
-] as const;
-
 export default function AdminLayout({
   children,
   title,
@@ -48,13 +42,17 @@ export default function AdminLayout({
   return (
     <div className="min-h-screen bg-[#0a0a0b] p-2 text-brand-ink md:p-3">
       <div className="flex min-h-[calc(100vh-1rem)] w-full gap-2 rounded-[30px] bg-[#0a0a0b] md:min-h-[calc(100vh-1.5rem)] md:gap-3 md:rounded-[36px]">
-        <aside className="hidden w-[76px] shrink-0 rounded-[28px] bg-[#09090b] px-3 py-5 text-white xl:flex xl:flex-col xl:items-center xl:justify-between">
-          <div className="flex w-full flex-col items-center gap-6">
-            <Link href="/page/admin/dashboard" className="flex h-12 w-12 items-center justify-center rounded-[18px] bg-white/8 text-[#7c8dff]">
+        <aside className="hidden w-[220px] shrink-0 rounded-[28px] bg-[#09090b] px-4 py-5 text-white xl:flex xl:flex-col xl:justify-between">
+          <div className="flex w-full flex-col gap-6">
+            <Link href="/page/admin/dashboard" className="flex items-center gap-3 rounded-[18px] bg-white/8 px-3 py-3 text-[#7c8dff]">
               <LogoIcon className="h-6 w-6" />
+              <div>
+                <p className="text-[14px] font-semibold text-white">TB Service Plus</p>
+                <p className="text-[12px] text-white/45">Admin panel</p>
+              </div>
             </Link>
 
-            <nav className="flex w-full flex-col items-center gap-3">
+            <nav className="flex w-full flex-col gap-2">
               {mainNavigation.map((item) => {
                 const active = pathname.startsWith(item.href);
                 const Icon = item.icon;
@@ -63,43 +61,32 @@ export default function AdminLayout({
                   <Link
                     key={item.href}
                     href={item.href}
-                    aria-label={item.label}
-                    className={`flex h-11 w-11 items-center justify-center rounded-[14px] transition ${
-                      active ? "bg-white text-brand-ink shadow-[0_10px_24px_rgba(255,255,255,0.14)]" : "text-white/65 hover:bg-white/8 hover:text-white"
+                    className={`flex items-center gap-3 rounded-[16px] px-3 py-3 text-[14px] font-medium transition ${
+                      active
+                        ? "bg-white text-brand-ink shadow-[0_10px_24px_rgba(255,255,255,0.14)]"
+                        : "text-white/72 hover:bg-white/8 hover:text-white"
                     }`}
                   >
-                    <Icon className="h-5 w-5" />
+                    <span className={`flex h-10 w-10 items-center justify-center rounded-[12px] ${active ? "bg-[#eef1f6] text-brand-ink" : "bg-white/5 text-white/72"}`}>
+                      <Icon className="h-5 w-5" />
+                    </span>
+                    <span>{item.label}</span>
                   </Link>
                 );
               })}
             </nav>
-
-            <div className="h-px w-8 bg-white/10" />
-
-            <div className="flex w-full flex-col items-center gap-3">
-              {utilityNavigation.map((item) => {
-                const Icon = item.icon;
-
-                return (
-                  <div key={item.label} className="flex h-11 w-11 items-center justify-center rounded-[14px] text-white/45">
-                    <Icon className="h-5 w-5" />
-                  </div>
-                );
-              })}
-            </div>
           </div>
 
-          <div className="flex w-full flex-col items-center gap-3">
-            <button type="button" className="flex h-11 w-11 items-center justify-center rounded-[14px] text-white/45">
-              <HelpIcon className="h-5 w-5" />
-            </button>
+          <div className="flex w-full flex-col gap-2 border-t border-white/8 pt-4">
             <button
               type="button"
               onClick={handleLogout}
-              aria-label="Log Out"
-              className="flex h-11 w-11 items-center justify-center rounded-[14px] text-white/60 transition hover:bg-white/8 hover:text-white"
+              className="flex items-center gap-3 rounded-[16px] px-3 py-3 text-left text-[14px] font-medium text-white/72 transition hover:bg-white/8 hover:text-white"
             >
-              <LogoutIcon className="h-5 w-5" />
+              <span className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-white/5 text-white/72">
+                <LogoutIcon className="h-5 w-5" />
+              </span>
+              <span>Log Out</span>
             </button>
           </div>
         </aside>
@@ -197,44 +184,6 @@ function InboxIcon({ className }: { className?: string }) {
     <svg aria-hidden viewBox="0 0 24 24" fill="none" className={className}>
       <path d="M4 13l2.8-5.4A2 2 0 018.6 6h6.8a2 2 0 011.8 1.1L20 13v5H4v-5z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
       <path d="M9 13a3 3 0 006 0" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function ChartIcon({ className }: { className?: string }) {
-  return (
-    <svg aria-hidden viewBox="0 0 24 24" fill="none" className={className}>
-      <path d="M5 19V10m7 9V5m7 14v-7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      <path d="M3.5 19.5h17" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function UsersIcon({ className }: { className?: string }) {
-  return (
-    <svg aria-hidden viewBox="0 0 24 24" fill="none" className={className}>
-      <path d="M16.5 19a4.5 4.5 0 00-9 0" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      <circle cx="12" cy="9" r="3" stroke="currentColor" strokeWidth="1.8" />
-      <path d="M20 18a3.5 3.5 0 00-3-3.5M17 6.8A2.8 2.8 0 1118.4 12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function TagIcon({ className }: { className?: string }) {
-  return (
-    <svg aria-hidden viewBox="0 0 24 24" fill="none" className={className}>
-      <path d="M13 4H7a2 2 0 00-2 2v6l7 7 8-8-7-7z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
-      <circle cx="8.5" cy="8.5" r="1" fill="currentColor" />
-    </svg>
-  );
-}
-
-function HelpIcon({ className }: { className?: string }) {
-  return (
-    <svg aria-hidden viewBox="0 0 24 24" fill="none" className={className}>
-      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" />
-      <path d="M9.8 9.3a2.7 2.7 0 114.5 2.1c-.7.7-1.5 1.1-1.8 2.1" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      <circle cx="12" cy="17" r="1" fill="currentColor" />
     </svg>
   );
 }
