@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
@@ -29,6 +29,7 @@ export default function AdminLayout({
   const pathname = usePathname();
   const router = useRouter();
   const { admin, logout } = useAuth();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const activeItem = mainNavigation.find((item) => pathname.startsWith(item.href)) ?? mainNavigation[0];
   const resolvedTitle = title ?? activeItem.label;
@@ -37,6 +38,10 @@ export default function AdminLayout({
   function handleLogout() {
     logout();
     router.push("/page/admin/login");
+  }
+
+  function handleMobileNavigate() {
+    setMobileMenuOpen(false);
   }
 
   return (
@@ -95,9 +100,21 @@ export default function AdminLayout({
           <div className="min-h-full rounded-[24px] bg-white px-4 py-4 shadow-[0_12px_30px_rgba(15,23,52,0.06)] md:rounded-[28px] md:px-5 md:py-5 xl:px-6 xl:py-6">
             <div className="flex flex-col gap-4 border-b border-black/6 pb-4 xl:flex-row xl:items-start xl:justify-between">
               <div className="min-w-0 flex-1">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-black/35">{eyebrow}</p>
-                <h1 className="mt-2 text-[1.85rem] font-semibold tracking-[-0.04em] text-brand-ink md:text-[2rem]">{resolvedTitle}</h1>
-                <p className="mt-1 max-w-3xl text-[13px] leading-6 text-muted md:text-[14px]">{resolvedDescription}</p>
+                <div className="-ml-1 flex items-start gap-3 md:-ml-0">
+                  <button
+                    type="button"
+                    onClick={() => setMobileMenuOpen((current) => !current)}
+                    className="mt-0.5 flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-black/6 bg-brand-ink text-white shadow-[0_14px_34px_rgba(5,3,47,0.18)] transition hover:scale-[1.02] xl:hidden"
+                  >
+                    <MenuIcon className="h-4 w-4" />
+                  </button>
+
+                  <div className="min-w-0">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-black/35 md:text-[11px]">{eyebrow}</p>
+                    <h1 className="mt-1 text-[1.55rem] font-semibold tracking-[-0.04em] text-brand-ink md:mt-2 md:text-[2rem]">{resolvedTitle}</h1>
+                    <p className="mt-1 max-w-3xl text-[12px] leading-5 text-muted md:text-[14px] md:leading-6">{resolvedDescription}</p>
+                  </div>
+                </div>
               </div>
 
               <div className="flex min-w-0 flex-col gap-3 xl:items-end">
@@ -111,10 +128,10 @@ export default function AdminLayout({
                     />
                   </div>
 
-                  <button type="button" className="flex h-11 w-11 items-center justify-center rounded-full border border-black/6 bg-[#fafafa] text-black/60">
+                  <button type="button" className="hidden h-11 w-11 items-center justify-center rounded-full border border-black/6 bg-[#fafafa] text-black/60 xl:flex">
                     <ChatIcon className="h-4 w-4" />
                   </button>
-                  <button type="button" className="flex h-11 w-11 items-center justify-center rounded-full border border-black/6 bg-[#fafafa] text-black/60">
+                  <button type="button" className="hidden h-11 w-11 items-center justify-center rounded-full border border-black/6 bg-[#fafafa] text-black/60 xl:flex">
                     <BellIcon className="h-4 w-4" />
                   </button>
                   <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-[#eef1f6] text-[13px] font-semibold text-brand-ink">
@@ -126,27 +143,97 @@ export default function AdminLayout({
               </div>
             </div>
 
-            <div className="mt-4 xl:hidden">
-              <div className="flex flex-wrap gap-2 border-b border-black/6 pb-4">
+            <div className="mt-5 page-enter">{children}</div>
+          </div>
+        </div>
+
+        <div
+          className={`fixed inset-0 z-50 xl:hidden ${mobileMenuOpen ? "pointer-events-auto" : "pointer-events-none"}`}
+          aria-hidden={!mobileMenuOpen}
+        >
+          <button
+            type="button"
+            aria-label="Close menu"
+            onClick={() => setMobileMenuOpen(false)}
+            className={`absolute inset-0 bg-[#050507]/55 backdrop-blur-[3px] transition duration-300 ${
+              mobileMenuOpen ? "opacity-100" : "opacity-0"
+            }`}
+          />
+
+          <div
+            className={`absolute inset-y-0 left-0 w-[min(86vw,360px)] overflow-hidden rounded-r-[28px] bg-[#0a0a0b] p-3 shadow-[0_24px_80px_rgba(0,0,0,0.45)] transition duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              mobileMenuOpen ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"
+            }`}
+          >
+            <div className="flex h-full flex-col rounded-[24px] bg-[#111114] px-4 py-5 text-white">
+              <div className="flex items-center justify-between gap-3">
+                <Link
+                  href="/page/admin/dashboard"
+                  onClick={handleMobileNavigate}
+                  className="flex items-center gap-3 rounded-[18px] bg-white/8 px-3 py-3 text-[#7c8dff]"
+                >
+                  <LogoIcon className="h-6 w-6" />
+                  <div>
+                    <p className="text-[14px] font-semibold text-white">TB Service Plus</p>
+                    <p className="text-[12px] text-white/45">Admin panel</p>
+                  </div>
+                </Link>
+
+                <button
+                  type="button"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-white/8 text-white"
+                >
+                  <CloseIcon className="h-4 w-4" />
+                </button>
+              </div>
+
+              <div className="mt-6 flex items-center gap-3 rounded-[18px] border border-white/8 bg-white/6 px-3 py-3">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-[13px] font-semibold text-brand-ink">
+                  {(admin?.email ?? "A").slice(0, 1).toUpperCase()}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-[14px] font-semibold text-white">{admin?.email ?? "Administrator"}</p>
+                  <p className="truncate text-[12px] text-white/45">{admin?.role ?? "Admin access"}</p>
+                </div>
+              </div>
+
+              <nav className="mt-6 flex flex-col gap-2">
                 {mainNavigation.map((item) => {
                   const active = pathname.startsWith(item.href);
+                  const Icon = item.icon;
 
                   return (
                     <Link
                       key={item.href}
                       href={item.href}
-                      className={`rounded-full px-4 py-2 text-[13px] font-medium transition ${
-                        active ? "bg-brand-ink text-white" : "bg-[#f4f4f5] text-brand-ink"
+                      onClick={handleMobileNavigate}
+                      className={`inline-flex items-center gap-3 rounded-[16px] px-4 py-3 text-[14px] font-medium transition duration-300 ${
+                        active ? "bg-white text-brand-ink shadow-[0_12px_30px_rgba(255,255,255,0.14)]" : "bg-white/5 text-white/78 hover:bg-white/10"
                       }`}
                     >
-                      {item.label}
+                      <span className={`flex h-10 w-10 items-center justify-center rounded-[12px] ${active ? "bg-[#eef1f6] text-brand-ink" : "bg-white/8 text-white/78"}`}>
+                        <Icon className="h-5 w-5" />
+                      </span>
+                      <span>{item.label}</span>
                     </Link>
                   );
                 })}
+              </nav>
+
+              <div className="mt-auto border-t border-white/8 pt-4">
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="inline-flex w-full items-center gap-3 rounded-[16px] bg-white/5 px-4 py-3 text-left text-[14px] font-medium text-white/78 transition duration-300 hover:bg-white/10"
+                >
+                  <span className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-white/8 text-white/78">
+                    <LogoutIcon className="h-5 w-5" />
+                  </span>
+                  <span>Log Out</span>
+                </button>
               </div>
             </div>
-
-            <div className="mt-5 page-enter">{children}</div>
           </div>
         </div>
       </div>
@@ -193,6 +280,22 @@ function SearchIcon({ className }: { className?: string }) {
     <svg aria-hidden viewBox="0 0 24 24" fill="none" className={className}>
       <path d="M11 18a7 7 0 100-14 7 7 0 000 14z" stroke="currentColor" strokeWidth="1.8" />
       <path d="M20 20l-3.5-3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function MenuIcon({ className }: { className?: string }) {
+  return (
+    <svg aria-hidden viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M5 8h14M5 12h14M5 16h10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function CloseIcon({ className }: { className?: string }) {
+  return (
+    <svg aria-hidden viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M7 7l10 10M17 7L7 17" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   );
 }

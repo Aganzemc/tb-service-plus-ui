@@ -457,7 +457,7 @@ export default function AdminServicesPage() {
         </>
       }
     >
-      <div className="space-y-8">
+      <div className="space-y-6">
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <AdminStatCard
             label="Total services"
@@ -485,59 +485,62 @@ export default function AdminServicesPage() {
           />
         </section>
 
-        <section className="rounded-[24px] border border-black/6 bg-[#fbfbfc] p-5 shadow-[0_10px_24px_rgba(15,23,52,0.05)] md:p-6">
+        <section className="admin-card admin-fade-up overflow-hidden rounded-[26px]">
+          <div className="border-b border-black/6 px-5 py-5 md:px-6">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
             <div className="max-w-3xl">
-              <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-muted">Admin services</p>
-              <h1 className="mt-3 text-[clamp(1.7rem,3vw,2.4rem)] font-semibold leading-[1.02] tracking-[-0.04em] text-brand-ink">
-                Publish a new service for the website.
+              <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-black/35">Service Composer</p>
+              <h1 className="mt-3 text-[clamp(1.55rem,2.8vw,2.2rem)] font-semibold leading-[1.02] tracking-[-0.04em] text-brand-ink">
+                Create and publish a polished service entry.
               </h1>
-              <p className="mt-4 max-w-2xl text-[16px] leading-8 text-muted md:text-[18px]">
-                This panel keeps the same admin actions, but in a cleaner composer layout inspired by the reference card.
+              <p className="mt-3 max-w-2xl text-[14px] leading-7 text-muted md:text-[15px]">
+                Prepare the content, upload a cover visual, and publish each service with a cleaner workflow.
               </p>
             </div>
 
-            <div className="inline-flex items-center rounded-full border border-black/8 bg-[#f7f8fc] px-4 py-2 text-[14px] font-medium text-brand-ink">
-              {sortedServices.length} services in the list
+            <div className="inline-flex items-center rounded-full border border-black/8 bg-[#f8f9fb] px-4 py-2 text-[13px] font-semibold text-brand-ink">
+              {sortedServices.length} services in library
             </div>
+          </div>
           </div>
 
           {error ? (
-            <div className="mt-6 rounded-[20px] border border-red-100 bg-red-50 px-4 py-3 text-[14px] text-red-600">{error}</div>
+            <div className="mx-5 mt-5 rounded-[18px] border border-red-100 bg-red-50 px-4 py-3 text-[13px] text-red-600 md:mx-6">{error}</div>
           ) : null}
 
-          <div className="mt-8 overflow-hidden rounded-[24px] border border-black/6 bg-white">
-            <div className="flex flex-col gap-4 border-b border-black/8 px-6 py-6 md:flex-row md:items-start md:justify-between md:px-8">
+          <div className="px-5 py-5 md:px-6 md:py-6">
+          <div className="overflow-hidden rounded-[24px] border border-black/6 bg-[#fcfcfd]">
+            <div className="flex flex-col gap-4 border-b border-black/6 px-5 py-5 md:flex-row md:items-start md:justify-between md:px-6">
               <div>
-                <h2 className="text-[1.95rem] font-semibold tracking-[-0.05em] text-brand-ink">Share your service</h2>
-                <p className="mt-2 text-[15px] leading-7 text-muted md:text-[16px]">
-                  Fill the service content, attach a visual, and send it to the public website.
+                <h2 className="text-[1.2rem] font-semibold tracking-[-0.04em] text-brand-ink md:text-[1.35rem]">Service details</h2>
+                <p className="mt-2 text-[13px] leading-6 text-muted md:text-[14px]">
+                  Build a complete service card with media, content, visibility, and sorting.
                 </p>
               </div>
 
               <button
                 type="button"
                 onClick={resetCreateForm}
-                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-black/8 bg-white text-muted hover:text-brand-ink"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-black/8 bg-white text-muted shadow-[0_8px_18px_rgba(15,23,52,0.04)] hover:text-brand-ink"
                 aria-label="Reset the form"
               >
                 <CloseIcon className="h-5 w-5" />
               </button>
             </div>
 
-            <div className="px-6 py-6 md:px-8 md:py-8">
-              <div className="rounded-[28px] border border-dashed border-black/14 bg-white p-5 md:p-6">
+            <div className="px-5 py-5 md:px-6 md:py-6">
+              <div className="rounded-[24px] border border-dashed border-black/12 bg-white p-5 shadow-[0_8px_20px_rgba(15,23,52,0.04)] md:p-6">
                 <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
                   <label
                     htmlFor="create-media-input"
-                    className="flex min-h-[260px] cursor-pointer flex-col items-center justify-center rounded-[24px] border border-dashed border-black/10 bg-[#fafbff] px-6 py-8 text-center"
+                    className="flex min-h-[260px] cursor-pointer flex-col items-center justify-center rounded-[22px] border border-dashed border-black/10 bg-[#fafbff] px-6 py-8 text-center"
                   >
-                    <span className="flex h-16 w-16 items-center justify-center rounded-2xl border border-black/8 bg-white text-brand-ink shadow-[0_10px_26px_rgba(5,3,47,0.05)]">
+                    <span className="flex h-16 w-16 items-center justify-center rounded-[18px] border border-black/8 bg-white text-brand-ink shadow-[0_10px_24px_rgba(15,23,52,0.05)]">
                       <UploadIcon className="h-7 w-7" />
                     </span>
-                    <h3 className="mt-6 text-[1.6rem] font-semibold tracking-[-0.04em] text-brand-ink">Join an image in media</h3>
-                    <p className="mt-3 max-w-md text-[15px] leading-7 text-muted">
-                      Select an image file from your device. The app optimizes it before sending to the API.
+                    <h3 className="mt-5 text-[1.25rem] font-semibold tracking-[-0.03em] text-brand-ink">Upload a service image</h3>
+                    <p className="mt-2 max-w-md text-[14px] leading-6 text-muted">
+                      Choose a cover image from your device. The file is optimized automatically before upload.
                     </p>
                   </label>
 
@@ -564,9 +567,9 @@ export default function AdminServicesPage() {
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div>
                     <p className="text-[15px] font-semibold text-brand-ink">Quick templates</p>
-                    <p className="mt-1 text-[14px] text-muted">Pick a common service and adjust the content.</p>
+                    <p className="mt-1 text-[13px] text-muted">Start from a preset and customize the content faster.</p>
                   </div>
-                  <p className="text-[14px] text-muted">{countCompletedFields(createState)}/6 fields ready</p>
+                  <p className="text-[13px] font-medium text-muted">{countCompletedFields(createState)}/6 fields ready</p>
                 </div>
 
                 <div className="mt-4 flex flex-wrap gap-2">
@@ -642,11 +645,11 @@ export default function AdminServicesPage() {
               </div>
             </div>
 
-            <div className="flex flex-col gap-3 border-t border-black/8 px-6 py-5 md:flex-row md:items-center md:justify-between md:px-8">
+            <div className="flex flex-col gap-3 border-t border-black/6 px-5 py-5 md:flex-row md:items-center md:justify-between md:px-6">
               <button
                 type="button"
                 onClick={resetCreateForm}
-                className="inline-flex h-14 items-center justify-center rounded-[16px] border border-black/10 bg-white px-5 text-[15px] font-semibold text-brand-ink"
+                className="inline-flex h-12 items-center justify-center rounded-[14px] border border-black/10 bg-white px-5 text-[14px] font-semibold text-brand-ink"
               >
                 Clear form
               </button>
@@ -655,13 +658,13 @@ export default function AdminServicesPage() {
                 <button
                   type="button"
                   onClick={() => setCreateState((prev) => ({ ...prev, is_active: !prev.is_active }))}
-                  className="inline-flex h-14 items-center justify-center rounded-[16px] border border-black/10 bg-white px-5 text-[15px] font-semibold text-brand-ink"
+                  className="inline-flex h-12 items-center justify-center rounded-[14px] border border-black/10 bg-white px-5 text-[14px] font-semibold text-brand-ink"
                 >
                   {createState.is_active ? "Mark as inactive" : "Mark as active"}
                 </button>
                 <button
                   type="button"
-                  className="inline-flex h-14 items-center justify-center rounded-[16px] bg-brand-primary px-6 text-[15px] font-semibold text-white shadow-[0_18px_40px_rgba(95,103,244,0.26)] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="inline-flex h-12 items-center justify-center rounded-[14px] bg-brand-ink px-6 text-[14px] font-semibold text-white shadow-[0_14px_30px_rgba(5,3,47,0.14)] disabled:cursor-not-allowed disabled:opacity-60"
                   onClick={onCreate}
                   disabled={createLoading || !createState.title.trim() || !createState.slug.trim()}
                 >
@@ -670,22 +673,25 @@ export default function AdminServicesPage() {
               </div>
             </div>
           </div>
+          </div>
         </section>
 
-        <section className="rounded-[24px] border border-black/6 bg-[#fbfbfc] p-5 shadow-[0_10px_24px_rgba(15,23,52,0.05)] md:p-6">
+        <section className="admin-card admin-fade-up overflow-hidden rounded-[26px]">
+          <div className="border-b border-black/6 px-5 py-5 md:px-6">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
-              <h2 className="text-[clamp(1.5rem,2.6vw,2rem)] font-semibold tracking-[-0.04em] text-brand-ink">Existing services</h2>
-              <p className="mt-3 max-w-2xl text-[15px] leading-7 text-muted md:text-[16px]">
-                Review, edit, or remove the services that are already connected to the public pages.
+              <h2 className="text-[clamp(1.3rem,2.4vw,1.9rem)] font-semibold tracking-[-0.04em] text-brand-ink">Service library</h2>
+              <p className="mt-2 max-w-2xl text-[14px] leading-6 text-muted md:text-[15px]">
+                Review, refine, and manage every published service from one cleaner grid.
               </p>
             </div>
-            <div className="inline-flex items-center rounded-full bg-brand-sand px-4 py-2 text-[14px] font-medium text-brand-ink">
+            <div className="inline-flex items-center rounded-full bg-[#f8f9fb] px-4 py-2 text-[13px] font-semibold text-brand-ink">
               Total {sortedServices.length}
             </div>
           </div>
+          </div>
 
-          <div className="mt-6 flex flex-col gap-3 border-b border-black/6 pb-5 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-col gap-3 border-b border-black/6 px-5 py-5 lg:flex-row lg:items-center lg:justify-between md:px-6">
             <div className="relative min-w-[240px] flex-1 lg:max-w-sm">
               <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-black/35" />
               <input
@@ -693,7 +699,7 @@ export default function AdminServicesPage() {
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder="Search services"
-                className="h-10 w-full rounded-[12px] border border-black/8 bg-white pl-9 pr-3 text-[13px] text-brand-ink outline-none focus:border-brand-primary"
+                className="h-11 w-full rounded-[14px] border border-black/8 bg-[#fafafa] pl-9 pr-3 text-[13px] text-brand-ink outline-none focus:border-brand-primary"
               />
             </div>
 
@@ -710,8 +716,8 @@ export default function AdminServicesPage() {
                     key={item.value}
                     type="button"
                     onClick={() => setStatusFilter(item.value as "all" | "active" | "hidden")}
-                    className={`inline-flex h-10 items-center justify-center rounded-[12px] px-4 text-[13px] font-medium ${
-                      active ? "bg-brand-ink text-white" : "border border-black/8 bg-white text-brand-ink"
+                    className={`inline-flex h-11 items-center justify-center rounded-[14px] px-4 text-[13px] font-semibold ${
+                      active ? "bg-brand-ink text-white shadow-[0_10px_24px_rgba(5,3,47,0.14)]" : "border border-black/8 bg-white text-brand-ink"
                     }`}
                   >
                     {item.label}
@@ -722,22 +728,22 @@ export default function AdminServicesPage() {
           </div>
 
           {loading ? (
-            <div className="mt-8 rounded-[24px] border border-black/8 bg-[#fafbff] px-5 py-12 text-center text-[15px] text-muted">
+            <div className="mx-5 my-5 rounded-[24px] border border-black/8 bg-[#fafbff] px-5 py-12 text-center text-[15px] text-muted md:mx-6">
               Loading services...
             </div>
           ) : null}
 
           {!loading && filteredServices.length === 0 ? (
-            <div className="mt-8 rounded-[24px] border border-dashed border-black/12 bg-[#fafbff] px-5 py-12 text-center">
+            <div className="mx-5 my-5 rounded-[24px] border border-dashed border-black/12 bg-[#fafbff] px-5 py-12 text-center md:mx-6">
               <p className="text-[1.2rem] font-semibold text-brand-ink">No services found</p>
               <p className="mt-2 text-[15px] text-muted">Adjust the filters or publish a new service from the composer above.</p>
             </div>
           ) : null}
 
           {!loading && filteredServices.length > 0 ? (
-            <div className="mt-8 grid gap-4 xl:grid-cols-2">
+            <div className="grid gap-4 px-5 py-5 xl:grid-cols-2 md:px-6 md:py-6">
               {filteredServices.map((service) => (
-                <article key={service.id} className="overflow-hidden rounded-[22px] border border-black/6 bg-white p-4 shadow-[0_10px_24px_rgba(15,23,52,0.05)] md:p-5">
+                <article key={service.id} className="admin-card overflow-hidden rounded-[24px] p-4 transition hover:-translate-y-0.5 md:p-5">
                   {editingId === service.id ? (
                     <div className="space-y-5">
                       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">

@@ -14,7 +14,7 @@ const toneStyles: Record<NonNullable<AdminStatCardProps["tone"]>, string> = {
 
 export default function AdminStatCard({ label, value, hint, tone = "primary" }: AdminStatCardProps) {
   return (
-    <article className="rounded-[20px] border border-black/6 bg-white p-4 shadow-[0_8px_20px_rgba(15,23,52,0.04)] md:p-5">
+    <article className="admin-card admin-fade-up rounded-[22px] p-4 md:p-5">
       <span className={`flex h-10 w-10 items-center justify-center rounded-[12px] text-[12px] font-semibold ${toneStyles[tone]}`}>
         {value === "--" ? "--" : label.slice(0, 1).toUpperCase()}
       </span>
