@@ -13,39 +13,32 @@ type AdminLayoutProps = {
   actions?: ReactNode;
 };
 
-const navigationItems = [
-  {
-    href: "/page/admin/dashboard",
-    label: "Dashboard",
-    description: "Vue d'ensemble",
-    icon: DashboardIcon,
-  },
-  {
-    href: "/page/admin/services",
-    label: "Services",
-    description: "Catalogue public",
-    icon: LayersIcon,
-  },
-  {
-    href: "/page/admin/messages",
-    label: "Messages",
-    description: "Demandes clients",
-    icon: InboxIcon,
-  },
+const mainNavigation = [
+  { href: "/page/admin/dashboard", label: "Dashboard", icon: DashboardIcon },
+  { href: "/page/admin/services", label: "Services", icon: LayersIcon },
+  { href: "/page/admin/messages", label: "Messages", icon: InboxIcon },
+] as const;
+
+const utilityNavigation = [
+  { label: "Analytics", icon: ChartIcon },
+  { label: "Contacts", icon: UsersIcon },
+  { label: "Tags", icon: TagIcon },
 ] as const;
 
 export default function AdminLayout({
   children,
   title,
   description,
-  eyebrow = "TB Service Plus Admin",
+  eyebrow = "Admin dashboard",
   actions,
 }: AdminLayoutProps) {
   const pathname = usePathname();
   const router = useRouter();
   const { admin, logout } = useAuth();
 
-  const activeItem = navigationItems.find((item) => pathname.startsWith(item.href)) ?? navigationItems[0];
+  const activeItem = mainNavigation.find((item) => pathname.startsWith(item.href)) ?? mainNavigation[0];
+  const resolvedTitle = title ?? activeItem.label;
+  const resolvedDescription = description ?? "Manage the website content and customer activity.";
 
   function handleLogout() {
     logout();
@@ -53,130 +46,133 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#f3f6ff] text-brand-ink">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(95,103,244,0.16),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(255,130,92,0.14),transparent_24%)]" />
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[linear-gradient(180deg,rgba(255,255,255,0.78),rgba(255,255,255,0))]" />
+    <div className="min-h-screen bg-[#0a0a0b] p-2 text-brand-ink md:p-3">
+      <div className="flex min-h-[calc(100vh-1rem)] w-full gap-2 rounded-[30px] bg-[#0a0a0b] md:min-h-[calc(100vh-1.5rem)] md:gap-3 md:rounded-[36px]">
+        <aside className="hidden w-[76px] shrink-0 rounded-[28px] bg-[#09090b] px-3 py-5 text-white xl:flex xl:flex-col xl:items-center xl:justify-between">
+          <div className="flex w-full flex-col items-center gap-6">
+            <Link href="/page/admin/dashboard" className="flex h-12 w-12 items-center justify-center rounded-[18px] bg-white/8 text-[#7c8dff]">
+              <LogoIcon className="h-6 w-6" />
+            </Link>
 
-      <div className="relative mx-auto flex min-h-screen w-full max-w-7xl gap-6 px-4 py-5 md:px-6 lg:px-8">
-        <aside className="hidden w-[290px] shrink-0 lg:block">
-          <div className="sticky top-5 space-y-5 rounded-[30px] border border-white/65 bg-white/80 p-5 shadow-[0_26px_80px_rgba(41,47,96,0.12)] backdrop-blur-xl">
-            <div className="rounded-[24px] bg-[linear-gradient(135deg,#0f1734_0%,#5f67f4_100%)] p-5 text-white shadow-[0_24px_60px_rgba(47,56,140,0.35)]">
-              <div className="inline-flex rounded-full border border-white/14 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-white/86">
-                Espace interne
-              </div>
-              <h2 className="mt-4 text-[1.55rem] font-semibold tracking-[-0.05em]">TB Service Plus</h2>
-              <p className="mt-2 text-[14px] leading-6 text-white/78">
-                Un tableau de bord plus propre pour gérer les services et suivre les demandes.
-              </p>
-            </div>
-
-            <nav className="space-y-2">
-              {navigationItems.map((item) => {
-                const Icon = item.icon;
+            <nav className="flex w-full flex-col items-center gap-3">
+              {mainNavigation.map((item) => {
                 const active = pathname.startsWith(item.href);
+                const Icon = item.icon;
 
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`group flex items-center gap-3 rounded-[22px] px-4 py-3 transition ${
-                      active
-                        ? "bg-brand-ink text-white shadow-[0_18px_40px_rgba(15,23,52,0.22)]"
-                        : "border border-black/6 bg-[#f8f9ff] text-brand-ink hover:border-brand-primary/20 hover:bg-white"
+                    aria-label={item.label}
+                    className={`flex h-11 w-11 items-center justify-center rounded-[14px] transition ${
+                      active ? "bg-white text-brand-ink shadow-[0_10px_24px_rgba(255,255,255,0.14)]" : "text-white/65 hover:bg-white/8 hover:text-white"
                     }`}
                   >
-                    <span
-                      className={`flex h-11 w-11 items-center justify-center rounded-[16px] ${
-                        active ? "bg-white/12 text-white" : "bg-white text-brand-primary shadow-[0_10px_24px_rgba(95,103,244,0.14)]"
-                      }`}
-                    >
-                      <Icon className="h-5 w-5" />
-                    </span>
-                    <span className="min-w-0">
-                      <span className="block text-[15px] font-semibold">{item.label}</span>
-                      <span className={`block text-[12px] ${active ? "text-white/68" : "text-muted"}`}>{item.description}</span>
-                    </span>
+                    <Icon className="h-5 w-5" />
                   </Link>
                 );
               })}
             </nav>
 
-            <div className="rounded-[24px] border border-black/6 bg-[#f8f9ff] p-4">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-muted">Session</p>
-              <p className="mt-3 text-[15px] font-semibold text-brand-ink">{admin?.email ?? "Administrator"}</p>
-              <p className="mt-1 text-[13px] text-muted">{admin?.role ?? "Admin access"}</p>
+            <div className="h-px w-8 bg-white/10" />
 
-              <button
-                type="button"
-                onClick={handleLogout}
-                className="mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-[16px] border border-black/8 bg-white text-[14px] font-semibold text-brand-ink hover:border-red-200 hover:text-red-600"
-              >
-                <LogoutIcon className="h-4 w-4" />
-                Déconnexion
-              </button>
-            </div>
-          </div>
-        </aside>
-
-        <div className="min-w-0 flex-1 space-y-6">
-          <div className="rounded-[28px] border border-white/65 bg-white/76 p-4 shadow-[0_18px_50px_rgba(41,47,96,0.09)] backdrop-blur-xl md:p-5 lg:hidden">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-muted">Navigation</p>
-                <p className="mt-2 text-[1.2rem] font-semibold tracking-[-0.04em] text-brand-ink">{activeItem.label}</p>
-              </div>
-
-              <button
-                type="button"
-                onClick={handleLogout}
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-[16px] border border-black/8 bg-white px-4 text-[14px] font-semibold text-brand-ink"
-              >
-                <LogoutIcon className="h-4 w-4" />
-                Déconnexion
-              </button>
-            </div>
-
-            <div className="mt-4 flex flex-wrap gap-2">
-              {navigationItems.map((item) => {
-                const active = pathname.startsWith(item.href);
+            <div className="flex w-full flex-col items-center gap-3">
+              {utilityNavigation.map((item) => {
+                const Icon = item.icon;
 
                 return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`inline-flex items-center rounded-full px-4 py-2 text-[13px] font-semibold transition ${
-                      active ? "bg-brand-ink text-white" : "border border-black/8 bg-[#f8f9ff] text-brand-ink"
-                    }`}
-                  >
-                    {item.label}
-                  </Link>
+                  <div key={item.label} className="flex h-11 w-11 items-center justify-center rounded-[14px] text-white/45">
+                    <Icon className="h-5 w-5" />
+                  </div>
                 );
               })}
             </div>
           </div>
 
-          {(title || description || actions) && (
-            <section className="rounded-[32px] border border-white/70 bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(246,248,255,0.88))] p-6 shadow-[0_24px_70px_rgba(41,47,96,0.12)] backdrop-blur-xl md:p-8">
-              <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
-                <div className="max-w-3xl">
-                  <p className="text-[12px] font-semibold uppercase tracking-[0.26em] text-muted">{eyebrow}</p>
-                  {title ? (
-                    <h1 className="mt-4 text-[clamp(2rem,4vw,3.4rem)] font-semibold leading-[0.95] tracking-[-0.06em] text-brand-ink">
-                      {title}
-                    </h1>
-                  ) : null}
-                  {description ? <p className="mt-4 max-w-2xl text-[15px] leading-8 text-muted md:text-[17px]">{description}</p> : null}
+          <div className="flex w-full flex-col items-center gap-3">
+            <button type="button" className="flex h-11 w-11 items-center justify-center rounded-[14px] text-white/45">
+              <HelpIcon className="h-5 w-5" />
+            </button>
+            <button
+              type="button"
+              onClick={handleLogout}
+              aria-label="Log Out"
+              className="flex h-11 w-11 items-center justify-center rounded-[14px] text-white/60 transition hover:bg-white/8 hover:text-white"
+            >
+              <LogoutIcon className="h-5 w-5" />
+            </button>
+          </div>
+        </aside>
+
+        <div className="min-w-0 flex-1 rounded-[28px] bg-[#f6f6f7] p-3 md:rounded-[32px] md:p-4 xl:p-5">
+          <div className="min-h-full rounded-[24px] bg-white px-4 py-4 shadow-[0_12px_30px_rgba(15,23,52,0.06)] md:rounded-[28px] md:px-5 md:py-5 xl:px-6 xl:py-6">
+            <div className="flex flex-col gap-4 border-b border-black/6 pb-4 xl:flex-row xl:items-start xl:justify-between">
+              <div className="min-w-0 flex-1">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-black/35">{eyebrow}</p>
+                <h1 className="mt-2 text-[1.85rem] font-semibold tracking-[-0.04em] text-brand-ink md:text-[2rem]">{resolvedTitle}</h1>
+                <p className="mt-1 max-w-3xl text-[13px] leading-6 text-muted md:text-[14px]">{resolvedDescription}</p>
+              </div>
+
+              <div className="flex min-w-0 flex-col gap-3 xl:items-end">
+                <div className="flex w-full flex-wrap items-center gap-2 xl:justify-end">
+                  <div className="relative min-w-[240px] flex-1 xl:min-w-[340px] xl:flex-none">
+                    <SearchIcon className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-black/35" />
+                    <input
+                      type="search"
+                      placeholder="Search here..."
+                      className="h-11 w-full rounded-full border border-black/6 bg-[#f7f7f8] pl-11 pr-4 text-[13px] text-brand-ink outline-none focus:border-brand-primary"
+                    />
+                  </div>
+
+                  <button type="button" className="flex h-11 w-11 items-center justify-center rounded-full border border-black/6 bg-[#fafafa] text-black/60">
+                    <ChatIcon className="h-4 w-4" />
+                  </button>
+                  <button type="button" className="flex h-11 w-11 items-center justify-center rounded-full border border-black/6 bg-[#fafafa] text-black/60">
+                    <BellIcon className="h-4 w-4" />
+                  </button>
+                  <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-[#eef1f6] text-[13px] font-semibold text-brand-ink">
+                    {(admin?.email ?? "A").slice(0, 1).toUpperCase()}
+                  </span>
                 </div>
 
-                {actions ? <div className="flex flex-wrap gap-3">{actions}</div> : null}
+                {actions ? <div className="flex w-full flex-wrap gap-2 xl:justify-end">{actions}</div> : null}
               </div>
-            </section>
-          )}
+            </div>
 
-          <div className="page-enter">{children}</div>
+            <div className="mt-4 xl:hidden">
+              <div className="flex flex-wrap gap-2 border-b border-black/6 pb-4">
+                {mainNavigation.map((item) => {
+                  const active = pathname.startsWith(item.href);
+
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={`rounded-full px-4 py-2 text-[13px] font-medium transition ${
+                        active ? "bg-brand-ink text-white" : "bg-[#f4f4f5] text-brand-ink"
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="mt-5 page-enter">{children}</div>
+          </div>
         </div>
       </div>
     </div>
+  );
+}
+
+function LogoIcon({ className }: { className?: string }) {
+  return (
+    <svg aria-hidden viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M8 4.5l7 4v7l-7 4-4-2.3v-7l4-2.7z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+      <path d="M8 4.5v7l7 4" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+    </svg>
   );
 }
 
@@ -201,6 +197,71 @@ function InboxIcon({ className }: { className?: string }) {
     <svg aria-hidden viewBox="0 0 24 24" fill="none" className={className}>
       <path d="M4 13l2.8-5.4A2 2 0 018.6 6h6.8a2 2 0 011.8 1.1L20 13v5H4v-5z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
       <path d="M9 13a3 3 0 006 0" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function ChartIcon({ className }: { className?: string }) {
+  return (
+    <svg aria-hidden viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M5 19V10m7 9V5m7 14v-7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <path d="M3.5 19.5h17" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function UsersIcon({ className }: { className?: string }) {
+  return (
+    <svg aria-hidden viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M16.5 19a4.5 4.5 0 00-9 0" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <circle cx="12" cy="9" r="3" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M20 18a3.5 3.5 0 00-3-3.5M17 6.8A2.8 2.8 0 1118.4 12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function TagIcon({ className }: { className?: string }) {
+  return (
+    <svg aria-hidden viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M13 4H7a2 2 0 00-2 2v6l7 7 8-8-7-7z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+      <circle cx="8.5" cy="8.5" r="1" fill="currentColor" />
+    </svg>
+  );
+}
+
+function HelpIcon({ className }: { className?: string }) {
+  return (
+    <svg aria-hidden viewBox="0 0 24 24" fill="none" className={className}>
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M9.8 9.3a2.7 2.7 0 114.5 2.1c-.7.7-1.5 1.1-1.8 2.1" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <circle cx="12" cy="17" r="1" fill="currentColor" />
+    </svg>
+  );
+}
+
+function SearchIcon({ className }: { className?: string }) {
+  return (
+    <svg aria-hidden viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M11 18a7 7 0 100-14 7 7 0 000 14z" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M20 20l-3.5-3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function ChatIcon({ className }: { className?: string }) {
+  return (
+    <svg aria-hidden viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M7 17l-3 2v-4.5A7 7 0 0111 7h2a7 7 0 017 7v3H7z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+      <path d="M9 12h6M9 15h4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function BellIcon({ className }: { className?: string }) {
+  return (
+    <svg aria-hidden viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M7 10a5 5 0 1110 0v3.4l1.3 2.1a1 1 0 01-.9 1.5H6.6a1 1 0 01-.9-1.5L7 13.4V10z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+      <path d="M10 18a2 2 0 004 0" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   );
 }

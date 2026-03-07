@@ -47,16 +47,13 @@ export default function AdminMessagesPage() {
         if (!active) return;
         setMessages(data);
         setError(null);
+        setLoading(false);
       })
       .catch((messagesError: unknown) => {
         if (!active) return;
         const maybe = messagesError as { message?: unknown } | null;
-        setError(typeof maybe?.message === "string" ? maybe.message : "Erreur de chargement");
-      })
-      .finally(() => {
-        if (active) {
-          setLoading(false);
-        }
+        setError(typeof maybe?.message === "string" ? maybe.message : "Loading error");
+        setLoading(false);
       });
 
     return () => {
@@ -70,6 +67,7 @@ export default function AdminMessagesPage() {
   );
 
   const unreadCount = useMemo(() => messages.filter((message) => !message.is_read).length, [messages]);
+  const readCount = useMemo(() => messages.filter((message) => message.is_read).length, [messages]);
 
   const filteredMessages = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
@@ -110,7 +108,7 @@ export default function AdminMessagesPage() {
           ),
         );
         const maybe = toggleError as { message?: unknown } | null;
-        setError(typeof maybe?.message === "string" ? maybe.message : "Erreur de mise à jour");
+        setError(typeof maybe?.message === "string" ? maybe.message : "Update error");
       }
     },
     [token],
@@ -130,7 +128,7 @@ export default function AdminMessagesPage() {
       } catch (deleteError: unknown) {
         setMessages(previousMessages);
         const maybe = deleteError as { message?: unknown } | null;
-        setError(typeof maybe?.message === "string" ? maybe.message : "Erreur de suppression");
+        setError(typeof maybe?.message === "string" ? maybe.message : "Delete error");
       }
     },
     [messages, token],
@@ -138,61 +136,51 @@ export default function AdminMessagesPage() {
 
   return (
     <AdminLayout
-      title="Messages clients"
-      description="Centralisez les demandes, filtrez les conversations et traitez rapidement les nouveaux messages grâce à une vue plus lisible."
+      title="Messages Inbox"
+      description="A denser inbox layout inspired by the reference mockup, with compact filters and a clean table structure."
       actions={
         <Link
           href="/page/admin/dashboard"
-          className="inline-flex h-12 items-center justify-center rounded-[16px] border border-black/8 bg-white px-5 text-[14px] font-semibold text-brand-ink"
+          className="inline-flex h-10 items-center justify-center rounded-[12px] border border-black/8 bg-[#fafafa] px-4 text-[13px] font-medium text-brand-ink"
         >
-          Retour au dashboard
+          Dashboard
         </Link>
       }
     >
-      <div className="space-y-6">
+      <div className="space-y-5">
         {error ? (
-          <div className="rounded-[24px] border border-red-100 bg-red-50 px-5 py-4 text-[14px] text-red-700">{error}</div>
+          <div className="rounded-[18px] border border-red-100 bg-red-50 px-4 py-3 text-[13px] text-red-700">{error}</div>
         ) : null}
 
         <section className="grid gap-4 md:grid-cols-3">
-          <AdminStatCard
-            label="Total"
-            value={loading ? "--" : String(messages.length)}
-            hint="Nombre de messages disponibles dans la boîte admin."
-            tone="dark"
-          />
-          <AdminStatCard
-            label="Non lus"
-            value={loading ? "--" : String(unreadCount)}
-            hint="Messages à traiter en priorité."
-            tone="coral"
-          />
-          <AdminStatCard
-            label="Résultats"
-            value={loading ? "--" : String(filteredMessages.length)}
-            hint="Messages visibles après filtre et recherche."
-            tone="primary"
-          />
+          <AdminStatCard label="Total" value={loading ? "--" : String(messages.length)} hint="All received messages." tone="dark" />
+          <AdminStatCard label="Unread" value={loading ? "--" : String(unreadCount)} hint="Messages waiting to be reviewed." tone="coral" />
+          <AdminStatCard label="Read" value={loading ? "--" : String(readCount)} hint="Messages already reviewed." tone="mint" />
         </section>
 
-        <section className="rounded-[30px] border border-white/70 bg-white/88 p-5 shadow-[0_24px_70px_rgba(41,47,96,0.1)] backdrop-blur-xl md:p-6">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <div className="relative w-full max-w-xl">
-              <SearchIcon className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted" />
-              <input
-                type="search"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder="Rechercher par nom, email, téléphone ou contenu"
-                className="h-14 w-full rounded-[18px] border border-black/8 bg-[#f8f9ff] pl-12 pr-4 text-[15px] text-brand-ink outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10"
-              />
+        <section className="rounded-[22px] border border-black/6 bg-[#fbfbfc] p-4 shadow-[0_10px_24px_rgba(15,23,52,0.05)] md:p-5">
+          <div className="flex flex-col gap-3 border-b border-black/6 pb-4 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <h2 className="text-[1.05rem] font-semibold text-brand-ink md:text-[1.15rem]">Recent Contact Messages</h2>
+              <p className="mt-1 text-[13px] text-muted">Rechercher, filtrer et traiter les messages depuis une seule vue.</p>
             </div>
 
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="relative min-w-[240px] flex-1 lg:flex-none">
+                <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-black/35" />
+                <input
+                  type="search"
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                  placeholder="Search"
+                  className="h-10 w-full rounded-[12px] border border-black/8 bg-white pl-9 pr-3 text-[13px] text-brand-ink outline-none focus:border-brand-primary"
+                />
+              </div>
+
               {[
-                { value: "all", label: "Tous" },
-                { value: "unread", label: "Non lus" },
-                { value: "read", label: "Lus" },
+                { value: "all", label: "All" },
+                { value: "unread", label: "Unread" },
+                { value: "read", label: "Read" },
               ].map((item) => {
                 const active = filter === item.value;
 
@@ -201,8 +189,8 @@ export default function AdminMessagesPage() {
                     key={item.value}
                     type="button"
                     onClick={() => setFilter(item.value as FilterMode)}
-                    className={`inline-flex h-11 items-center justify-center rounded-full px-4 text-[14px] font-semibold transition ${
-                      active ? "bg-brand-ink text-white" : "border border-black/8 bg-[#f8f9ff] text-brand-ink"
+                    className={`inline-flex h-10 items-center justify-center rounded-[12px] px-4 text-[13px] font-medium ${
+                      active ? "bg-brand-ink text-white" : "border border-black/8 bg-white text-brand-ink"
                     }`}
                   >
                     {item.label}
@@ -211,81 +199,73 @@ export default function AdminMessagesPage() {
               })}
             </div>
           </div>
-        </section>
 
-        <section className="space-y-4">
-          {loading ? <p className="px-1 text-[15px] text-muted">Chargement des messages…</p> : null}
-
-          {!loading && filteredMessages.length === 0 ? (
-            <div className="rounded-[30px] border border-dashed border-black/10 bg-white/75 px-6 py-12 text-center shadow-[0_18px_50px_rgba(41,47,96,0.06)]">
-              <p className="text-[1.4rem] font-semibold tracking-[-0.04em] text-brand-ink">Aucun message trouvé</p>
-              <p className="mt-3 text-[15px] leading-7 text-muted">
-                Ajustez la recherche ou les filtres pour afficher d&apos;autres conversations.
-              </p>
-            </div>
-          ) : null}
-
-          {filteredMessages.map((message) => (
-            <article
-              key={message.id}
-              className="rounded-[30px] border border-white/70 bg-white/88 p-5 shadow-[0_22px_60px_rgba(41,47,96,0.09)] backdrop-blur-xl md:p-6"
-            >
-              <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
-                <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span
-                      className={`inline-flex rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] ${
-                        message.is_read ? "bg-black/5 text-muted" : "bg-brand-coral/18 text-[#c95633]"
-                      }`}
-                    >
-                      {message.is_read ? "Lu" : "Nouveau"}
-                    </span>
-                    <span className="inline-flex rounded-full bg-brand-primary/12 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-primary">
-                      {formatDate(message.created_at)}
-                    </span>
-                  </div>
-
-                  <div className="mt-4 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                    <div className="min-w-0">
-                      <h2 className="text-[1.45rem] font-semibold tracking-[-0.04em] text-brand-ink">{message.name}</h2>
-                      <div className="mt-3 flex flex-wrap gap-3 text-[14px] text-muted">
-                        <span className="inline-flex items-center gap-2 rounded-full border border-black/8 bg-[#f8f9ff] px-3 py-1.5">
-                          <MailIcon className="h-4 w-4" />
-                          {message.email || "Email non renseigné"}
+          <div className="mt-4 overflow-x-auto">
+            <table className="min-w-full border-separate border-spacing-0 text-left">
+              <thead>
+                <tr className="text-[12px] text-black/45">
+                  <th className="rounded-l-[14px] bg-[#f1f2f4] px-4 py-3 font-medium">Name</th>
+                  <th className="bg-[#f1f2f4] px-4 py-3 font-medium">Contact</th>
+                  <th className="bg-[#f1f2f4] px-4 py-3 font-medium">Message</th>
+                  <th className="bg-[#f1f2f4] px-4 py-3 font-medium">Date</th>
+                  <th className="bg-[#f1f2f4] px-4 py-3 font-medium">Status</th>
+                  <th className="rounded-r-[14px] bg-[#f1f2f4] px-4 py-3 font-medium">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr>
+                    <td colSpan={6} className="px-4 py-8 text-center text-[13px] text-muted">
+                      Loading messages...
+                    </td>
+                  </tr>
+                ) : filteredMessages.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className="px-4 py-8 text-center text-[13px] text-muted">
+                      No messages found.
+                    </td>
+                  </tr>
+                ) : (
+                  filteredMessages.map((message) => (
+                    <tr key={message.id} className="text-[13px] text-brand-ink align-top">
+                      <td className="border-b border-black/6 px-4 py-4 font-semibold">{message.name}</td>
+                      <td className="border-b border-black/6 px-4 py-4 text-muted">
+                        <div>{message.email || "No email provided"}</div>
+                        <div className="mt-1 text-[12px]">{message.phone || "No phone provided"}</div>
+                      </td>
+                      <td className="border-b border-black/6 px-4 py-4 text-muted">
+                        <p className="line-clamp-2 max-w-[380px]">{message.message}</p>
+                      </td>
+                      <td className="border-b border-black/6 px-4 py-4 text-muted">{formatDate(message.created_at)}</td>
+                      <td className="border-b border-black/6 px-4 py-4">
+                        <span
+                          className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-medium ${
+                            message.is_read ? "bg-[#eef1f4] text-muted" : "bg-[#fff1ec] text-[#d66b47]"
+                          }`}
+                        >
+                          {message.is_read ? "Read" : "Unread"}
                         </span>
-                        <span className="inline-flex items-center gap-2 rounded-full border border-black/8 bg-[#f8f9ff] px-3 py-1.5">
-                          <PhoneIcon className="h-4 w-4" />
-                          {message.phone || "Téléphone non renseigné"}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-wrap gap-3">
-                      <button
-                        type="button"
-                        className="inline-flex h-11 items-center justify-center rounded-[16px] border border-black/8 bg-[#f8f9ff] px-4 text-[14px] font-semibold text-brand-ink"
-                        onClick={() => toggleRead(message)}
-                      >
-                        {message.is_read ? "Marquer non lu" : "Marquer lu"}
-                      </button>
-                      <button
-                        type="button"
-                        className="inline-flex h-11 items-center justify-center rounded-[16px] border border-red-200 bg-red-50 px-4 text-[14px] font-semibold text-red-700"
-                        onClick={() => onDelete(message)}
-                      >
-                        Supprimer
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="mt-5 rounded-[22px] border border-black/6 bg-[#f8f9ff] p-4">
-                    <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-muted">Message</p>
-                    <p className="mt-3 whitespace-pre-wrap text-[15px] leading-8 text-brand-ink/82">{message.message}</p>
-                  </div>
-                </div>
-              </div>
-            </article>
-          ))}
+                      </td>
+                      <td className="border-b border-black/6 px-4 py-4">
+                        <div className="flex flex-col items-start gap-2">
+                          <button
+                            type="button"
+                            onClick={() => toggleRead(message)}
+                            className="text-[12px] font-medium text-brand-primary"
+                          >
+                            {message.is_read ? "Mark unread" : "Mark read"}
+                          </button>
+                          <button type="button" onClick={() => onDelete(message)} className="text-[12px] font-medium text-[#d66565]">
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </section>
       </div>
     </AdminLayout>
@@ -297,28 +277,6 @@ function SearchIcon({ className }: { className?: string }) {
     <svg aria-hidden viewBox="0 0 24 24" fill="none" className={className}>
       <path d="M11 18a7 7 0 100-14 7 7 0 000 14z" stroke="currentColor" strokeWidth="1.8" />
       <path d="M20 20l-3.5-3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function MailIcon({ className }: { className?: string }) {
-  return (
-    <svg aria-hidden viewBox="0 0 20 20" fill="none" className={className}>
-      <path d="M3.5 5.5h13v9h-13v-9z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
-      <path d="M4 6l6 4.5L16 6" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function PhoneIcon({ className }: { className?: string }) {
-  return (
-    <svg aria-hidden viewBox="0 0 20 20" fill="none" className={className}>
-      <path
-        d="M6.5 3.5l2.2 2.6-1.2 2.1a13.6 13.6 0 004.1 4.1l2.1-1.2 2.6 2.2-1.2 2.7c-.3.7-1 .9-1.7.8C8.3 16.9 3.1 11.7 2.3 5.4c-.1-.7.2-1.4.8-1.7L6.5 3.5z"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
     </svg>
   );
 }

@@ -1,7 +1,9 @@
 ﻿"use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState, type ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
+import AdminStatCard from "@/components/admin/AdminStatCard";
 import AdminLayout from "@/layouts/AdminLayout";
 import { useAuth } from "@/hooks/useAuth";
 import {
@@ -228,6 +230,8 @@ export default function AdminServicesPage() {
   const [editState, setEditState] = useState<ServiceFormState>(() => toFormState());
   const [editLoading, setEditLoading] = useState(false);
   const [editMediaName, setEditMediaName] = useState("");
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "hidden">("all");
 
   const sortedServices = useMemo(() => {
     return [...services].sort((a, b) => {
@@ -237,6 +241,22 @@ export default function AdminServicesPage() {
       return a.created_at.localeCompare(b.created_at);
     });
   }, [services]);
+
+  const filteredServices = useMemo(() => {
+    const normalizedSearch = search.trim().toLowerCase();
+
+    return sortedServices.filter((service) => {
+      if (statusFilter === "active" && !service.is_active) return false;
+      if (statusFilter === "hidden" && service.is_active) return false;
+
+      if (!normalizedSearch) return true;
+
+      return [service.title, service.slug, service.short_description ?? "", service.description ?? ""]
+        .join(" ")
+        .toLowerCase()
+        .includes(normalizedSearch);
+    });
+  }, [search, sortedServices, statusFilter]);
 
   const reload = useCallback(async () => {
     if (!token) return;
@@ -416,13 +436,60 @@ export default function AdminServicesPage() {
     [cancelEdit, editingId, token],
   );
   return (
-    <AdminLayout>
+    <AdminLayout
+      title="Services Library"
+      description="Manage the service catalog in a denser admin layout inspired by the reference dashboard."
+      actions={
+        <>
+          <Link
+            href="/page/admin/dashboard"
+            className="inline-flex h-10 items-center justify-center rounded-[12px] border border-black/8 bg-[#fafafa] px-4 text-[13px] font-medium text-brand-ink"
+          >
+            Dashboard
+          </Link>
+          <button
+            type="button"
+            onClick={resetCreateForm}
+            className="inline-flex h-10 items-center justify-center rounded-[12px] bg-brand-ink px-4 text-[13px] font-medium text-white"
+          >
+            New Service
+          </button>
+        </>
+      }
+    >
       <div className="space-y-8">
-        <section className="rounded-[34px] border border-black/8 bg-white p-5 shadow-[0_24px_70px_rgba(5,3,47,0.08)] md:p-8">
+        <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <AdminStatCard
+            label="Total services"
+            value={loading ? "--" : String(sortedServices.length)}
+            hint="All services configured in the admin."
+            tone="dark"
+          />
+          <AdminStatCard
+            label="Active"
+            value={loading ? "--" : String(sortedServices.filter((service) => service.is_active).length)}
+            hint="Services currently visible on the website."
+            tone="mint"
+          />
+          <AdminStatCard
+            label="Hidden"
+            value={loading ? "--" : String(sortedServices.filter((service) => !service.is_active).length)}
+            hint="Services currently hidden from the website."
+            tone="coral"
+          />
+          <AdminStatCard
+            label="Filtered"
+            value={loading ? "--" : String(filteredServices.length)}
+            hint="Rows currently visible in the library."
+            tone="primary"
+          />
+        </section>
+
+        <section className="rounded-[24px] border border-black/6 bg-[#fbfbfc] p-5 shadow-[0_10px_24px_rgba(15,23,52,0.05)] md:p-6">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
             <div className="max-w-3xl">
               <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-muted">Admin services</p>
-              <h1 className="mt-4 text-[clamp(2.2rem,4.8vw,4.2rem)] font-semibold leading-[0.96] tracking-[-0.06em] text-brand-ink">
+              <h1 className="mt-3 text-[clamp(1.7rem,3vw,2.4rem)] font-semibold leading-[1.02] tracking-[-0.04em] text-brand-ink">
                 Publish a new service for the website.
               </h1>
               <p className="mt-4 max-w-2xl text-[16px] leading-8 text-muted md:text-[18px]">
@@ -439,7 +506,7 @@ export default function AdminServicesPage() {
             <div className="mt-6 rounded-[20px] border border-red-100 bg-red-50 px-4 py-3 text-[14px] text-red-600">{error}</div>
           ) : null}
 
-          <div className="mt-8 overflow-hidden rounded-[30px] border border-black/8 bg-[#fcfcff]">
+          <div className="mt-8 overflow-hidden rounded-[24px] border border-black/6 bg-white">
             <div className="flex flex-col gap-4 border-b border-black/8 px-6 py-6 md:flex-row md:items-start md:justify-between md:px-8">
               <div>
                 <h2 className="text-[1.95rem] font-semibold tracking-[-0.05em] text-brand-ink">Share your service</h2>
@@ -605,10 +672,10 @@ export default function AdminServicesPage() {
           </div>
         </section>
 
-        <section className="rounded-[34px] border border-black/8 bg-white p-5 shadow-[0_24px_70px_rgba(5,3,47,0.08)] md:p-8">
+        <section className="rounded-[24px] border border-black/6 bg-[#fbfbfc] p-5 shadow-[0_10px_24px_rgba(15,23,52,0.05)] md:p-6">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
-              <h2 className="text-[clamp(1.9rem,4vw,3rem)] font-semibold tracking-[-0.05em] text-brand-ink">Existing services</h2>
+              <h2 className="text-[clamp(1.5rem,2.6vw,2rem)] font-semibold tracking-[-0.04em] text-brand-ink">Existing services</h2>
               <p className="mt-3 max-w-2xl text-[15px] leading-7 text-muted md:text-[16px]">
                 Review, edit, or remove the services that are already connected to the public pages.
               </p>
@@ -618,23 +685,59 @@ export default function AdminServicesPage() {
             </div>
           </div>
 
+          <div className="mt-6 flex flex-col gap-3 border-b border-black/6 pb-5 lg:flex-row lg:items-center lg:justify-between">
+            <div className="relative min-w-[240px] flex-1 lg:max-w-sm">
+              <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-black/35" />
+              <input
+                type="search"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Search services"
+                className="h-10 w-full rounded-[12px] border border-black/8 bg-white pl-9 pr-3 text-[13px] text-brand-ink outline-none focus:border-brand-primary"
+              />
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {[
+                { value: "all", label: "All" },
+                { value: "active", label: "Active" },
+                { value: "hidden", label: "Hidden" },
+              ].map((item) => {
+                const active = statusFilter === item.value;
+
+                return (
+                  <button
+                    key={item.value}
+                    type="button"
+                    onClick={() => setStatusFilter(item.value as "all" | "active" | "hidden")}
+                    className={`inline-flex h-10 items-center justify-center rounded-[12px] px-4 text-[13px] font-medium ${
+                      active ? "bg-brand-ink text-white" : "border border-black/8 bg-white text-brand-ink"
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           {loading ? (
             <div className="mt-8 rounded-[24px] border border-black/8 bg-[#fafbff] px-5 py-12 text-center text-[15px] text-muted">
               Loading services...
             </div>
           ) : null}
 
-          {!loading && sortedServices.length === 0 ? (
+          {!loading && filteredServices.length === 0 ? (
             <div className="mt-8 rounded-[24px] border border-dashed border-black/12 bg-[#fafbff] px-5 py-12 text-center">
-              <p className="text-[1.2rem] font-semibold text-brand-ink">No services yet</p>
-              <p className="mt-2 text-[15px] text-muted">Use the composer above to publish the first service.</p>
+              <p className="text-[1.2rem] font-semibold text-brand-ink">No services found</p>
+              <p className="mt-2 text-[15px] text-muted">Adjust the filters or publish a new service from the composer above.</p>
             </div>
           ) : null}
 
-          {!loading && sortedServices.length > 0 ? (
+          {!loading && filteredServices.length > 0 ? (
             <div className="mt-8 grid gap-4 xl:grid-cols-2">
-              {sortedServices.map((service) => (
-                <article key={service.id} className="overflow-hidden rounded-[28px] border border-black/8 bg-[#fcfcff] p-5 shadow-[0_16px_36px_rgba(5,3,47,0.05)]">
+              {filteredServices.map((service) => (
+                <article key={service.id} className="overflow-hidden rounded-[22px] border border-black/6 bg-white p-4 shadow-[0_10px_24px_rgba(15,23,52,0.05)] md:p-5">
                   {editingId === service.id ? (
                     <div className="space-y-5">
                       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -749,20 +852,20 @@ export default function AdminServicesPage() {
                             <StatusBadge active={service.is_active} />
                             <MetaBadge>{service.sort_order != null ? `Order ${service.sort_order}` : "No order"}</MetaBadge>
                           </div>
-                          <h3 className="mt-4 text-[1.5rem] font-semibold tracking-[-0.04em] text-brand-ink">{service.title}</h3>
-                          <p className="mt-1 text-[14px] font-medium text-muted">/{service.slug}</p>
-                          <p className="mt-4 text-[15px] leading-7 text-muted">
+                          <h3 className="mt-3 text-[1.2rem] font-semibold tracking-[-0.03em] text-brand-ink">{service.title}</h3>
+                          <p className="mt-1 text-[13px] font-medium text-muted">/{service.slug}</p>
+                          <p className="mt-3 text-[14px] leading-6 text-muted">
                             {service.short_description || service.description || "No description added yet."}
                           </p>
                         </div>
                       </div>
 
-                      <div className="mt-5 flex flex-col gap-3 border-t border-black/8 pt-5 sm:flex-row sm:items-center sm:justify-between">
-                        <p className="text-[14px] text-muted">Created {formatDate(service.created_at)}</p>
+                      <div className="mt-4 flex flex-col gap-3 border-t border-black/8 pt-4 sm:flex-row sm:items-center sm:justify-between">
+                        <p className="text-[13px] text-muted">Created {formatDate(service.created_at)}</p>
                         <div className="flex flex-col gap-3 sm:flex-row">
                           <button
                             type="button"
-                            className="inline-flex h-11 items-center justify-center gap-2 rounded-[14px] border border-black/10 bg-white px-4 text-[14px] font-semibold text-brand-ink"
+                            className="inline-flex h-10 items-center justify-center gap-2 rounded-[12px] border border-black/10 bg-[#fafafa] px-4 text-[13px] font-semibold text-brand-ink"
                             onClick={() => startEdit(service)}
                           >
                             <EditIcon className="h-4 w-4" />
@@ -770,7 +873,7 @@ export default function AdminServicesPage() {
                           </button>
                           <button
                             type="button"
-                            className="inline-flex h-11 items-center justify-center gap-2 rounded-[14px] border border-red-200 bg-red-50 px-4 text-[14px] font-semibold text-red-700"
+                            className="inline-flex h-10 items-center justify-center gap-2 rounded-[12px] border border-red-200 bg-red-50 px-4 text-[13px] font-semibold text-red-700"
                             onClick={() => onDelete(service)}
                           >
                             <TrashIcon className="h-4 w-4" />
@@ -1022,6 +1125,15 @@ function ServiceThumb({ service }: { service: Service }) {
         </div>
       )}
     </div>
+  );
+}
+
+function SearchIcon({ className }: { className?: string }) {
+  return (
+    <svg aria-hidden viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M11 18a7 7 0 100-14 7 7 0 000 14z" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M20 20l-3.5-3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
   );
 }
 
