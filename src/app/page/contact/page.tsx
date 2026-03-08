@@ -16,7 +16,7 @@ export default function ContactPage() {
     : null;
 
   return (
-    <div className="contact-reference-type relative left-1/2 right-1/2 -mt-4 -mb-12 w-screen -translate-x-1/2 overflow-hidden bg-[#f3f2ee] md:-mt-6 md:-mb-16">
+    <div className="page-stage contact-reference-type relative left-1/2 right-1/2 -mt-4 -mb-12 w-screen -translate-x-1/2 overflow-hidden bg-[#f3f2ee] md:-mt-6 md:-mb-16">
       <ContactHero />
 
       <section className="relative z-10 mx-auto -mt-16 max-w-[1280px] px-6 pb-20 md:-mt-24 md:px-8 md:pb-24">

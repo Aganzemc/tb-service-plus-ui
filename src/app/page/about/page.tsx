@@ -20,7 +20,7 @@ const ABOUT_PILLS = ["Local support", "Clear communication", "Fast follow-up"] a
 
 export default function AboutPage() {
   return (
-    <div className="relative left-1/2 right-1/2 -mt-4 -mb-12 w-screen -translate-x-1/2 overflow-hidden bg-[#f4f4ef] md:-mt-6 md:-mb-16">
+    <div className="page-stage relative left-1/2 right-1/2 -mt-4 -mb-12 w-screen -translate-x-1/2 overflow-hidden bg-[#f4f4ef] md:-mt-6 md:-mb-16">
       <AboutHero />
 
       <section className="mx-auto max-w-[1180px] px-6 py-16 md:px-8 md:py-20">

@@ -81,7 +81,97 @@ select {
 }
 
 .page-enter {
+  position: relative;
   animation: page-enter 780ms var(--motion-spring) both;
+  will-change: opacity, transform, filter;
+}
+
+.page-stage {
+  position: relative;
+  isolation: isolate;
+  --page-stage-delay: 120ms;
+}
+
+.page-stage::before {
+  content: "";
+  position: absolute;
+  inset: clamp(1rem, 4vw, 2.5rem) clamp(0.5rem, 2vw, 1.75rem);
+  z-index: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(115deg, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0) 34%),
+    radial-gradient(circle at top left, rgba(95, 103, 244, 0.16), transparent 48%),
+    radial-gradient(circle at bottom right, rgba(255, 130, 92, 0.14), transparent 42%);
+  opacity: 0;
+  transform: translate3d(0, 24px, 0) scale(0.98);
+  filter: blur(24px);
+  animation: page-stage-wash 1200ms var(--motion-soft) 80ms both;
+}
+
+.page-stage > * {
+  position: relative;
+  z-index: 1;
+  opacity: 0;
+  filter: blur(14px);
+  transform: translate3d(0, 34px, 0) scale(0.992);
+  animation: page-section-enter 920ms var(--motion-spring) both;
+  animation-delay: calc(var(--page-stage-delay, 120ms) + var(--page-block-delay, 0ms));
+  will-change: opacity, transform, filter;
+}
+
+.page-stage > *:nth-child(2) {
+  --page-block-delay: 90ms;
+}
+
+.page-stage > *:nth-child(3) {
+  --page-block-delay: 180ms;
+}
+
+.page-stage > *:nth-child(4) {
+  --page-block-delay: 270ms;
+}
+
+.page-stage > *:nth-child(5) {
+  --page-block-delay: 360ms;
+}
+
+.page-stage-admin {
+  --page-stage-delay: 220ms;
+}
+
+.page-stage-login {
+  --page-stage-delay: 140ms;
+}
+
+.page-admin-route {
+  min-height: 100%;
+}
+
+.page-admin-rail,
+.page-admin-panel,
+.page-admin-header {
+  will-change: opacity, transform, filter;
+}
+
+.page-admin-rail {
+  opacity: 0;
+  filter: blur(12px);
+  transform: translate3d(-24px, 0, 0) scale(0.985);
+  animation: page-admin-rail 860ms var(--motion-spring) both;
+}
+
+.page-admin-panel {
+  opacity: 0;
+  filter: blur(14px);
+  transform: translate3d(0, 26px, 0) scale(0.994);
+  animation: page-admin-panel 940ms var(--motion-spring) 60ms both;
+}
+
+.page-admin-header {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  animation: page-admin-header 780ms var(--motion-spring) 180ms both;
 }
 
 .reveal {
@@ -223,6 +313,78 @@ select {
 @keyframes page-enter {
   from {
     opacity: 0;
+    filter: blur(16px);
+    transform: translate3d(0, 22px, 0) scale(0.992);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes page-stage-wash {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0) scale(0.96);
+  }
+
+  35% {
+    opacity: 0.88;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(0, -18px, 0) scale(1.04);
+  }
+}
+
+@keyframes page-section-enter {
+  from {
+    opacity: 0;
+    filter: blur(16px);
+    transform: translate3d(0, 34px, 0) scale(0.992);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes page-admin-rail {
+  from {
+    opacity: 0;
+    filter: blur(12px);
+    transform: translate3d(-24px, 0, 0) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes page-admin-panel {
+  from {
+    opacity: 0;
+    filter: blur(16px);
+    transform: translate3d(0, 26px, 0) scale(0.994);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes page-admin-header {
+  from {
+    opacity: 0;
     transform: translate3d(0, 18px, 0);
   }
 
@@ -304,5 +466,19 @@ select {
     opacity: 1;
     filter: none;
     transform: none;
+  }
+
+  .page-enter,
+  .page-stage > *,
+  .page-admin-rail,
+  .page-admin-panel,
+  .page-admin-header {
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+
+  .page-stage::before {
+    display: none;
   }
 }

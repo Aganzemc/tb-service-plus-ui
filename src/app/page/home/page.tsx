@@ -13,7 +13,7 @@ type SupportIconType = "phone" | "mail" | "arrow";
 
 export default function HomePage() {
   return (
-    <div className="relative left-1/2 right-1/2 -mt-4 -mb-12 w-screen -translate-x-1/2 overflow-hidden bg-white md:-mt-6 md:-mb-16">
+    <div className="page-stage relative left-1/2 right-1/2 -mt-4 -mb-12 w-screen -translate-x-1/2 overflow-hidden bg-white md:-mt-6 md:-mb-16">
       <HeroSection />
 
       <ServicesShowcase

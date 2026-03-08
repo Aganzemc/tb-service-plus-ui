@@ -6,7 +6,7 @@ const SERVICE_PILLS = ["Moving", "Cleaning", "Delivery", "Junk Removal", "Snow R
 
 export default function ServicesPage() {
   return (
-    <div className="relative left-1/2 right-1/2 -mt-4 -mb-12 w-screen -translate-x-1/2 overflow-hidden bg-[#e6ddd1] md:-mt-6 md:-mb-16">
+    <div className="page-stage relative left-1/2 right-1/2 -mt-4 -mb-12 w-screen -translate-x-1/2 overflow-hidden bg-[#e6ddd1] md:-mt-6 md:-mb-16">
       <ServicesHero />
 
       <ServicesShowcase

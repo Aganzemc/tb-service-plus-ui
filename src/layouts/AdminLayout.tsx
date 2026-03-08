@@ -47,7 +47,7 @@ export default function AdminLayout({
   return (
     <div className="min-h-screen bg-[#0a0a0b] p-2 text-brand-ink md:p-3">
       <div className="flex min-h-[calc(100vh-1rem)] w-full gap-2 rounded-[30px] bg-[#0a0a0b] md:min-h-[calc(100vh-1.5rem)] md:gap-3 md:rounded-[36px]">
-        <aside className="hidden w-[220px] shrink-0 rounded-[28px] bg-[#09090b] px-4 py-5 text-white xl:flex xl:flex-col xl:justify-between">
+        <aside className="page-admin-rail hidden w-[220px] shrink-0 rounded-[28px] bg-[#09090b] px-4 py-5 text-white xl:flex xl:flex-col xl:justify-between">
           <div className="flex w-full flex-col gap-6">
             <Link href="/page/admin/dashboard" className="flex items-center gap-3 rounded-[18px] bg-white/8 px-3 py-3 text-[#7c8dff]">
               <LogoIcon className="h-6 w-6" />
@@ -96,9 +96,9 @@ export default function AdminLayout({
           </div>
         </aside>
 
-        <div className="min-w-0 flex-1 rounded-[28px] bg-[#f6f6f7] p-3 md:rounded-[32px] md:p-4 xl:p-5">
+        <div className="page-admin-panel min-w-0 flex-1 rounded-[28px] bg-[#f6f6f7] p-3 md:rounded-[32px] md:p-4 xl:p-5">
           <div className="min-h-full rounded-[24px] bg-white px-4 py-4 shadow-[0_12px_30px_rgba(15,23,52,0.06)] md:rounded-[28px] md:px-5 md:py-5 xl:px-6 xl:py-6">
-            <div className="flex flex-col gap-4 border-b border-black/6 pb-4 xl:flex-row xl:items-start xl:justify-between">
+            <div className="page-admin-header flex flex-col gap-4 border-b border-black/6 pb-4 xl:flex-row xl:items-start xl:justify-between">
               <div className="min-w-0 flex-1">
                 <div className="-ml-1 flex items-start gap-3 md:-ml-0">
                   <button
