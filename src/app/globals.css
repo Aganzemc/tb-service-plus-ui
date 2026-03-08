@@ -3,6 +3,7 @@
 :root {
   --font-geist-sans: "Segoe UI";
   --font-geist-mono: "Consolas";
+  --font-contact-reference: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   --background: #f4f4ef;
   --foreground: #0a1026;
   --surface: #fcfcfb;
@@ -55,6 +56,14 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), sans-serif;
+}
+
+.contact-reference-type,
+.contact-reference-type input,
+.contact-reference-type textarea,
+.contact-reference-type select,
+.contact-reference-type button {
+  font-family: var(--font-contact-reference);
 }
 
 a,
