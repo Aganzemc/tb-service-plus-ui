@@ -5,7 +5,7 @@ const CONTACT_PHONE_DISPLAY = "403-926-4063";
 const CONTACT_PHONE_TEL = "4039264063";
 const CONTACT_EMAIL = "TBserviceplus1@gmail.com";
 
-const SERVICE_PILLS = ["Demenagement", "Nettoyage", "Livraison", "Debarras", "Deneigement"] as const;
+const SERVICE_PILLS = ["Moving", "Cleaning", "Delivery", "Junk Removal", "Snow Removal"] as const;
 
 export default function ContactPage() {
   const businessAddress = process.env.NEXT_PUBLIC_BUSINESS_ADDRESS?.trim() || "";
@@ -22,37 +22,37 @@ export default function ContactPage() {
       <section className="relative z-10 mx-auto -mt-16 max-w-[1280px] px-6 pb-20 md:-mt-24 md:px-8 md:pb-24">
         <div className="grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start">
           <Reveal className="pt-4 lg:pt-28">
-            <p className="text-[15px] font-medium tracking-[-0.01em] text-brand-ink/56">Contact direct</p>
-            <h2 className="mt-5 max-w-[11ch] text-[clamp(3rem,5.6vw,4.9rem)] font-medium leading-[0.95] tracking-[-0.055em] text-brand-ink">
-              Prenez contact avec nous
+            <p className="text-[13px] font-medium tracking-[-0.01em] text-brand-ink/56">Direct contact</p>
+            <h2 className="mt-4 max-w-[12ch] text-[clamp(2.45rem,4.7vw,4rem)] font-medium leading-[0.98] tracking-[-0.05em] text-brand-ink">
+              Get in touch with us
             </h2>
-            <p className="mt-5 max-w-[35rem] text-[18px] leading-[1.62] text-brand-ink/72 md:text-[21px]">
-              Remplissez le formulaire pour nous parler de votre besoin. Nous vous repondrons rapidement avec la
-              prochaine etape, le contexte du devis, et les informations utiles pour avancer.
+            <p className="mt-4 max-w-[35rem] text-[16px] leading-[1.58] text-brand-ink/72 md:text-[18px]">
+              Fill out the form to tell us what you need. We will get back to you quickly with the next step, quote
+              context, and the key details to move forward.
             </p>
 
             <div className="mt-9 space-y-4">
               <ContactInfoItem
                 icon="phone"
-                label="Telephone"
-                lines={[CONTACT_PHONE_DISPLAY, "Pour une demande urgente ou une coordination rapide."]}
+                label="Phone"
+                lines={[CONTACT_PHONE_DISPLAY, "For urgent requests or fast coordination."]}
                 href={`tel:${CONTACT_PHONE_TEL}`}
               />
               <ContactInfoItem
                 icon="mail"
                 label="Email"
-                lines={[CONTACT_EMAIL, "Ideal pour envoyer les details de la demande par ecrit."]}
+                lines={[CONTACT_EMAIL, "Best if you want to send your request details in writing."]}
                 href={`mailto:${CONTACT_EMAIL}`}
               />
               <ContactInfoItem
                 icon="services"
-                label="Services couverts"
-                lines={["Demenagement, nettoyage, livraison,", "debarras et deneigement."]}
+                label="Services covered"
+                lines={["Moving, cleaning, delivery,", "junk removal, and snow removal."]}
               />
               <ContactInfoItem
                 icon="clock"
-                label="Reponse"
-                lines={["Retour rapide par telephone ou email", "avec une prochaine etape claire."]}
+                label="Response"
+                lines={["Fast follow-up by phone or email", "with a clear next step."]}
               />
             </div>
 
@@ -60,7 +60,7 @@ export default function ContactPage() {
               {SERVICE_PILLS.map((pill) => (
                 <span
                   key={pill}
-                  className="inline-flex items-center rounded-full border border-black/8 bg-white px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-ink/66 shadow-[0_8px_24px_rgba(15,23,42,0.05)]"
+                  className="inline-flex items-center rounded-full border border-black/8 bg-white px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-brand-ink/66 shadow-[0_8px_24px_rgba(15,23,42,0.05)]"
                 >
                   {pill}
                 </span>
@@ -76,12 +76,12 @@ export default function ContactPage() {
 
       <section className="mx-auto max-w-[1280px] px-6 pb-20 md:px-8 md:pb-24">
         <Reveal className="text-center">
-          <p className="text-[15px] font-medium tracking-[-0.01em] text-brand-ink/56">Localisation</p>
-          <h2 className="mt-4 text-[clamp(2.8rem,5vw,4.4rem)] font-medium leading-[0.95] tracking-[-0.055em] text-brand-ink">
-            Notre localisation
+          <p className="text-[13px] font-medium tracking-[-0.01em] text-brand-ink/56">Location</p>
+          <h2 className="mt-4 text-[clamp(2.2rem,4.1vw,3.5rem)] font-medium leading-[0.98] tracking-[-0.05em] text-brand-ink">
+            Our location
           </h2>
-          <p className="mt-4 text-[18px] leading-[1.62] text-brand-ink/72 md:text-[20px]">
-            Consultez la carte pour visualiser la zone ou le point de service avant la confirmation de votre demande.
+          <p className="mt-4 text-[16px] leading-[1.58] text-brand-ink/72 md:text-[18px]">
+            Check the map to view the service area or location point before your request is confirmed.
           </p>
         </Reveal>
 
@@ -98,9 +98,9 @@ export default function ContactPage() {
           ) : (
             <div className="flex min-h-[320px] items-center justify-center bg-[linear-gradient(135deg,#fbfbf8_0%,#f0efe9_100%)] px-6 py-12 text-center md:min-h-[420px]">
               <div className="max-w-xl">
-                <p className="text-[1.2rem] font-semibold text-brand-ink">La carte sera visible ici</p>
-                <p className="mt-3 text-[15px] leading-7 text-brand-ink/66">
-                  Configurez la localisation de l&apos;entreprise pour afficher la carte complete sur cette section.
+                <p className="text-[1.05rem] font-semibold text-brand-ink">The map will appear here</p>
+                <p className="mt-3 text-[14px] leading-6 text-brand-ink/66">
+                  Configure the business location to display the full map in this section.
                 </p>
                 {businessAddress ? (
                   <p className="mt-4 text-[14px] font-medium text-brand-ink/72">{businessAddress}</p>
@@ -134,10 +134,10 @@ function ContactHero() {
         <div className="max-w-4xl">
           <p className="text-[15px] font-medium tracking-[-0.01em] text-white/74">TB Service Plus</p>
           <h1 className="mt-5 text-[clamp(3.1rem,6.5vw,5.6rem)] font-medium leading-[0.94] tracking-[-0.06em] text-white">
-            Contactez-nous
+            Contact us
           </h1>
           <p className="mx-auto mt-5 max-w-3xl text-[18px] leading-[1.6] text-white/86 md:text-[21px]">
-            Nous sommes la pour repondre a vos questions et vous aider a trouver une solution adaptee a votre besoin.
+            We are here to answer your questions and help you find the right solution for your needs.
           </p>
         </div>
       </div>
@@ -163,9 +163,9 @@ function ContactInfoItem({
       </span>
 
       <div>
-        <p className="text-[14px] font-medium tracking-[-0.01em] text-brand-ink/56">{label}</p>
+        <p className="text-[13px] font-medium tracking-[-0.01em] text-brand-ink/56">{label}</p>
         {lines.map((line) => (
-          <p key={line} className="mt-1 text-[17px] leading-[1.55] text-brand-ink/76">
+          <p key={line} className="mt-1 text-[15px] leading-[1.5] text-brand-ink/76">
             {line}
           </p>
         ))}

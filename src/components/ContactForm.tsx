@@ -4,16 +4,16 @@ import { FormEvent, useState } from "react";
 import { createPublicMessage } from "@/services/messages.api";
 
 const SERVICE_OPTIONS = [
-  "Demenagement",
-  "Nettoyage",
-  "Livraison",
-  "Debarras",
-  "Deneigement",
-  "Autre demande",
+  "Moving",
+  "Cleaning",
+  "Delivery",
+  "Junk Removal",
+  "Snow Removal",
+  "Other request",
 ] as const;
 
 const inputClassName =
-  "w-full rounded-[16px] border border-black/10 bg-[#fcfcfa] px-5 py-3.5 text-[18px] leading-[1.35] text-brand-ink outline-none placeholder:text-brand-ink/38 focus:-translate-y-0.5 focus:border-brand-primary/40 focus:bg-white focus:shadow-[0_0_0_4px_rgba(95,103,244,0.08)]";
+  "w-full rounded-[16px] border border-black/10 bg-[#fcfcfa] px-4.5 py-3 text-[16px] leading-[1.35] text-brand-ink outline-none placeholder:text-brand-ink/38 focus:-translate-y-0.5 focus:border-brand-primary/40 focus:bg-white focus:shadow-[0_0_0_4px_rgba(95,103,244,0.08)]";
 
 export default function ContactForm() {
   const [firstName, setFirstName] = useState("");
@@ -30,7 +30,7 @@ export default function ContactForm() {
     setStatus(null);
 
     if (!phone.trim() && !email.trim()) {
-      setStatus("Ajoutez au moins un email ou un telephone pour que nous puissions vous recontacter.");
+      setStatus("Add at least an email or phone number so we can get back to you.");
       return;
     }
 
@@ -47,7 +47,7 @@ export default function ContactForm() {
         message: composedMessage,
       });
 
-      setStatus("Votre message a bien ete envoye.");
+      setStatus("Your message has been sent.");
       setFirstName("");
       setLastName("");
       setPhone("");
@@ -56,13 +56,13 @@ export default function ContactForm() {
       setMessage("");
     } catch (err: unknown) {
       const maybe = err as { message?: unknown } | null;
-      setStatus(typeof maybe?.message === "string" ? maybe.message : "Une erreur est survenue.");
+      setStatus(typeof maybe?.message === "string" ? maybe.message : "An error occurred.");
     } finally {
       setLoading(false);
     }
   }
 
-  const isSuccess = status === "Votre message a bien ete envoye.";
+  const isSuccess = status === "Your message has been sent.";
 
   return (
     <form
@@ -70,25 +70,25 @@ export default function ContactForm() {
       className="rounded-[30px] border border-black/8 bg-white p-6 shadow-[0_28px_80px_rgba(15,23,42,0.1)] md:p-8"
     >
       <div>
-        <p className="text-[15px] font-medium tracking-[-0.01em] text-brand-ink/56">Formulaire de contact</p>
-        <h2 className="mt-4 text-[clamp(2.4rem,3.5vw,3.4rem)] font-medium leading-[0.97] tracking-[-0.05em] text-brand-ink">
-          Envoyez-nous votre demande
+        <p className="text-[13px] font-medium tracking-[-0.01em] text-brand-ink/56">Contact form</p>
+        <h2 className="mt-3 text-[clamp(2rem,3vw,2.85rem)] font-medium leading-[1] tracking-[-0.045em] text-brand-ink">
+          Send us your request
         </h2>
-        <p className="mt-4 max-w-2xl text-[18px] leading-[1.58] text-brand-ink/68">
-          Donnez-nous un maximum de contexte sur votre besoin. Nous vous repondrons dans les plus brefs delais.
+        <p className="mt-3 max-w-2xl text-[15px] leading-[1.56] text-brand-ink/68 md:text-[16px]">
+          Give us as much context as possible about what you need. We will reply as quickly as we can.
         </p>
       </div>
 
       <div className="mt-7 grid gap-4 md:grid-cols-2">
         <div>
-          <label htmlFor="contact-first-name" className="mb-2 block text-[15px] font-medium text-brand-ink">
-            Prenom
+          <label htmlFor="contact-first-name" className="mb-2 block text-[13px] font-medium text-brand-ink">
+            First name
           </label>
           <input
             id="contact-first-name"
             name="firstName"
             autoComplete="given-name"
-            placeholder="Entrez votre prenom"
+            placeholder="Enter your first name"
             className={inputClassName}
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
@@ -97,14 +97,14 @@ export default function ContactForm() {
         </div>
 
         <div>
-          <label htmlFor="contact-last-name" className="mb-2 block text-[15px] font-medium text-brand-ink">
-            Nom
+          <label htmlFor="contact-last-name" className="mb-2 block text-[13px] font-medium text-brand-ink">
+            Last name
           </label>
           <input
             id="contact-last-name"
             name="lastName"
             autoComplete="family-name"
-            placeholder="Entrez votre nom"
+            placeholder="Enter your last name"
             className={inputClassName}
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
@@ -113,7 +113,7 @@ export default function ContactForm() {
         </div>
 
         <div className="md:col-span-2">
-          <label htmlFor="contact-email" className="mb-2 block text-[15px] font-medium text-brand-ink">
+          <label htmlFor="contact-email" className="mb-2 block text-[13px] font-medium text-brand-ink">
             Email
           </label>
           <input
@@ -121,7 +121,7 @@ export default function ContactForm() {
             name="email"
             autoComplete="email"
             type="email"
-            placeholder="Entrez votre email"
+            placeholder="Enter your email"
             className={inputClassName}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -129,15 +129,15 @@ export default function ContactForm() {
         </div>
 
         <div className="md:col-span-2">
-          <label htmlFor="contact-phone" className="mb-2 block text-[15px] font-medium text-brand-ink">
-            Telephone
+          <label htmlFor="contact-phone" className="mb-2 block text-[13px] font-medium text-brand-ink">
+            Phone
           </label>
           <input
             id="contact-phone"
             name="phone"
             autoComplete="tel"
             type="tel"
-            placeholder="Entrez votre numero de telephone"
+            placeholder="Enter your phone number"
             className={inputClassName}
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
@@ -145,7 +145,7 @@ export default function ContactForm() {
         </div>
 
         <div className="md:col-span-2">
-          <label htmlFor="contact-service" className="mb-2 block text-[15px] font-medium text-brand-ink">
+          <label htmlFor="contact-service" className="mb-2 block text-[13px] font-medium text-brand-ink">
             Service
           </label>
           <select
@@ -156,7 +156,7 @@ export default function ContactForm() {
             onChange={(e) => setService(e.target.value)}
             required
           >
-            <option value="">Selectionnez un service</option>
+            <option value="">Select a service</option>
             {SERVICE_OPTIONS.map((option) => (
               <option key={option} value={option}>
                 {option}
@@ -166,13 +166,13 @@ export default function ContactForm() {
         </div>
 
         <div className="md:col-span-2">
-          <label htmlFor="contact-message" className="mb-2 block text-[15px] font-medium text-brand-ink">
+          <label htmlFor="contact-message" className="mb-2 block text-[13px] font-medium text-brand-ink">
             Message
           </label>
           <textarea
             id="contact-message"
             name="message"
-            placeholder="Precisez le besoin, l'adresse, la date souhaitee et tout detail utile"
+            placeholder="Describe the job, address, preferred date, and any useful details"
             className={`${inputClassName} min-h-[160px] resize-y`}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
@@ -183,17 +183,16 @@ export default function ContactForm() {
       </div>
 
       <div className="mt-6 border-t border-black/8 pt-5">
-        <p className="text-[14px] leading-6 text-brand-ink/54">
-          L&apos;email ou le telephone est necessaire pour que nous puissions vous recontacter apres reception de votre
-          demande.
+        <p className="text-[13px] leading-6 text-brand-ink/54">
+          An email or phone number is required so we can contact you after receiving your request.
         </p>
 
         <button
           disabled={loading}
-          className="surface-lift mt-5 inline-flex min-h-[56px] w-full items-center justify-center rounded-[18px] bg-[linear-gradient(135deg,#366be8_0%,#2d5dd5_100%)] px-6 py-3 text-[18px] font-semibold text-white shadow-[0_16px_36px_rgba(54,107,232,0.24)] disabled:cursor-not-allowed disabled:opacity-50"
+          className="surface-lift mt-5 inline-flex min-h-[54px] w-full items-center justify-center rounded-[18px] bg-[linear-gradient(135deg,#366be8_0%,#2d5dd5_100%)] px-6 py-3 text-[16px] font-semibold text-white shadow-[0_16px_36px_rgba(54,107,232,0.24)] disabled:cursor-not-allowed disabled:opacity-50"
           type="submit"
         >
-          {loading ? "Envoi en cours..." : "Envoyer"}
+          {loading ? "Sending..." : "Send"}
         </button>
       </div>
 
