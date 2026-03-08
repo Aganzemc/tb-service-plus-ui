@@ -47,7 +47,7 @@ export default function AdminLayout({
   return (
     <div className="min-h-screen bg-[#0a0a0b] p-2 text-brand-ink md:p-3">
       <div className="flex min-h-[calc(100vh-1rem)] w-full gap-2 rounded-[30px] bg-[#0a0a0b] md:min-h-[calc(100vh-1.5rem)] md:gap-3 md:rounded-[36px]">
-        <aside className="page-admin-rail hidden w-[220px] shrink-0 rounded-[28px] bg-[#09090b] px-4 py-5 text-white xl:flex xl:flex-col xl:justify-between">
+        <aside className="hidden w-[220px] shrink-0 rounded-[28px] bg-[#09090b] px-4 py-5 text-white xl:sticky xl:top-3 xl:flex xl:self-start xl:flex-col">
           <div className="flex w-full flex-col gap-6">
             <Link href="/page/admin/dashboard" className="flex items-center gap-3 rounded-[18px] bg-white/8 px-3 py-3 text-[#7c8dff]">
               <LogoIcon className="h-6 w-6" />
@@ -80,19 +80,19 @@ export default function AdminLayout({
                 );
               })}
             </nav>
-          </div>
 
-          <div className="flex w-full flex-col gap-2 border-t border-white/8 pt-4">
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="flex items-center gap-3 rounded-[16px] px-3 py-3 text-left text-[14px] font-medium text-white/72 transition hover:bg-white/8 hover:text-white"
-            >
-              <span className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-white/5 text-white/72">
-                <LogoutIcon className="h-5 w-5" />
-              </span>
-              <span>Log Out</span>
-            </button>
+            <div className="flex w-full flex-col gap-2 border-t border-white/8 pt-4">
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="flex items-center gap-3 rounded-[16px] px-3 py-3 text-left text-[14px] font-medium text-white/72 transition hover:bg-white/8 hover:text-white"
+              >
+                <span className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-white/5 text-white/72">
+                  <LogoutIcon className="h-5 w-5" />
+                </span>
+                <span>Log Out</span>
+              </button>
+            </div>
           </div>
         </aside>
 
