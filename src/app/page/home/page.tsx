@@ -76,7 +76,7 @@ export default function HomePage() {
         description="Moving, cleaning, delivery, junk removal, and snow removal. The home page now presents the active services coming from the API in a more editorial layout."
         ctaHref="/page/services"
         ctaLabel="View all services"
-        maxItems={5}
+        maxItems={4}
       />
 
       <section id="contact" className="bg-white">
