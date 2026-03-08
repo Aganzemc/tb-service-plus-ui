@@ -457,7 +457,7 @@ export default function AdminServicesPage() {
         </>
       }
     >
-      <div className="page-stage page-stage-admin space-y-6">
+      <div className="space-y-6">
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <AdminStatCard
             label="Total services"
