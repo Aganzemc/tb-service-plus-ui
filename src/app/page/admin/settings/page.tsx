@@ -325,7 +325,7 @@ export default function AdminSettingsPage() {
         </>
       }
     >
-      <div className="page-stage page-stage-admin space-y-6">
+      <div className="page-stage page-stage-sharp page-stage-admin space-y-6">
         {error ? (
           <div className="rounded-[18px] border border-red-100 bg-red-50 px-4 py-3 text-[13px] text-red-700">{error}</div>
         ) : null}
