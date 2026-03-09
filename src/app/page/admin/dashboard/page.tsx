@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import AdminPagination from "@/components/admin/AdminPagination";
 import AdminStatCard from "@/components/admin/AdminStatCard";
 import { useAuth } from "@/hooks/useAuth";
 import AdminLayout from "@/layouts/AdminLayout";
@@ -10,6 +11,9 @@ import { listAdminMessages } from "@/services/messages.api";
 import { listAdminServices } from "@/services/services.api";
 import type { Message } from "@/types/message";
 import type { Service } from "@/types/service";
+
+const DASHBOARD_SERVICES_PER_PAGE = 4;
+const DASHBOARD_MESSAGES_PER_PAGE = 4;
 
 function formatDate(value: string) {
   const date = new Date(value);
@@ -35,6 +39,8 @@ export default function AdminDashboardPage() {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [servicesPage, setServicesPage] = useState(1);
+  const [messagesPage, setMessagesPage] = useState(1);
 
   useEffect(() => {
     if (!token) {
@@ -116,7 +122,6 @@ export default function AdminDashboardPage() {
         if (firstOrder !== secondOrder) return firstOrder - secondOrder;
         return first.title.localeCompare(second.title);
       })
-      .slice(0, 6)
       .map((service, index) => {
         const relatedMessages = messages.filter((message) => {
           const haystack = `${message.message} ${message.name} ${
@@ -146,10 +151,32 @@ export default function AdminDashboardPage() {
       [...messages]
         .sort((first, second) =>
           second.created_at.localeCompare(first.created_at)
-        )
-        .slice(0, 4),
+        ),
     [messages]
   );
+
+  const serviceTotalPages = useMemo(
+    () => Math.max(1, Math.ceil(serviceRows.length / DASHBOARD_SERVICES_PER_PAGE)),
+    [serviceRows.length]
+  );
+
+  const messageTotalPages = useMemo(
+    () => Math.max(1, Math.ceil(recentMessages.length / DASHBOARD_MESSAGES_PER_PAGE)),
+    [recentMessages.length]
+  );
+
+  const visibleServicesPage = Math.min(servicesPage, serviceTotalPages);
+  const visibleMessagesPage = Math.min(messagesPage, messageTotalPages);
+
+  const paginatedServiceRows = useMemo(() => {
+    const start = (visibleServicesPage - 1) * DASHBOARD_SERVICES_PER_PAGE;
+    return serviceRows.slice(start, start + DASHBOARD_SERVICES_PER_PAGE);
+  }, [serviceRows, visibleServicesPage]);
+
+  const paginatedRecentMessages = useMemo(() => {
+    const start = (visibleMessagesPage - 1) * DASHBOARD_MESSAGES_PER_PAGE;
+    return recentMessages.slice(start, start + DASHBOARD_MESSAGES_PER_PAGE);
+  }, [recentMessages, visibleMessagesPage]);
 
   return (
     <AdminLayout
@@ -285,7 +312,7 @@ export default function AdminDashboardPage() {
                         Loading service metrics...
                       </td>
                     </tr>
-                  ) : serviceRows.length === 0 ? (
+                  ) : paginatedServiceRows.length === 0 ? (
                     <tr>
                       <td
                         colSpan={5}
@@ -295,7 +322,7 @@ export default function AdminDashboardPage() {
                       </td>
                     </tr>
                   ) : (
-                    serviceRows.map((service) => (
+                    paginatedServiceRows.map((service) => (
                       <tr
                         key={service.id}
                         className="admin-table-row text-[13px] text-brand-ink"
@@ -342,10 +369,19 @@ export default function AdminDashboardPage() {
                         </td>
                       </tr>
                     ))
-                  )}
+                )}
                 </tbody>
               </table>
             </div>
+
+            <AdminPagination
+              page={visibleServicesPage}
+              totalPages={serviceTotalPages}
+              totalItems={serviceRows.length}
+              pageSize={DASHBOARD_SERVICES_PER_PAGE}
+              itemLabel="services"
+              onPageChange={setServicesPage}
+            />
           </article>
 
           <article className="admin-card admin-fade-up rounded-[26px] p-5 md:p-6">
@@ -372,12 +408,12 @@ export default function AdminDashboardPage() {
                 <div className="text-[13px] text-muted">
                   Loading activity...
                 </div>
-              ) : recentMessages.length === 0 ? (
+              ) : paginatedRecentMessages.length === 0 ? (
                 <div className="text-[13px] text-muted">
                   No recent activity yet.
                 </div>
               ) : (
-                recentMessages.map((message) => (
+                paginatedRecentMessages.map((message) => (
                   <div
                     key={message.id}
                     className="admin-card-soft rounded-[18px] px-4 py-4"
@@ -409,6 +445,17 @@ export default function AdminDashboardPage() {
                   </div>
                 ))
               )}
+            </div>
+
+            <div className="mt-5">
+              <AdminPagination
+                page={visibleMessagesPage}
+                totalPages={messageTotalPages}
+                totalItems={recentMessages.length}
+                pageSize={DASHBOARD_MESSAGES_PER_PAGE}
+                itemLabel="messages"
+                onPageChange={setMessagesPage}
+              />
             </div>
           </article>
         </section>

@@ -24,7 +24,7 @@ const MAX_LOGO_BYTES = 220 * 1024;
 const MAX_LOGO_DIMENSION = 720;
 const MIN_LOGO_DIMENSION = 320;
 const MIN_LOGO_QUALITY = 0.52;
-const SETTINGS_HISTORY_PAGE_SIZE = 6;
+const SETTINGS_HISTORY_PAGE_SIZE = 5;
 const EMPTY_SETTINGS_HISTORY = {
   history: [] as SiteSettingsHistoryEntry[],
   page: 1,
