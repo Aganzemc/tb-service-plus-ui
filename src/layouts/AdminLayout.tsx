@@ -17,6 +17,7 @@ const mainNavigation = [
   { href: "/page/admin/dashboard", label: "Dashboard", icon: DashboardIcon },
   { href: "/page/admin/services", label: "Services", icon: LayersIcon },
   { href: "/page/admin/messages", label: "Messages", icon: InboxIcon },
+  { href: "/page/admin/settings", label: "Settings", icon: SettingsIcon },
 ] as const;
 
 export default function AdminLayout({
@@ -324,6 +325,24 @@ function LogoutIcon({ className }: { className?: string }) {
       <path d="M14 7l5 5-5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M19 12H9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
       <path d="M11 5H6a2 2 0 00-2 2v10a2 2 0 002 2h5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function SettingsIcon({ className }: { className?: string }) {
+  return (
+    <svg aria-hidden viewBox="0 0 24 24" fill="none" className={className}>
+      <path
+        d="M12 8.5a3.5 3.5 0 100 7 3.5 3.5 0 000-7z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+      <path
+        d="M19 12a7 7 0 00-.1-1.1l2-1.5-2-3.4-2.4 1a7.8 7.8 0 00-1.9-1.1l-.3-2.6h-4l-.3 2.6a7.8 7.8 0 00-1.9 1.1l-2.4-1-2 3.4 2 1.5A7 7 0 005 12c0 .4 0 .7.1 1.1l-2 1.5 2 3.4 2.4-1c.6.5 1.2.8 1.9 1.1l.3 2.6h4l.3-2.6c.7-.3 1.3-.6 1.9-1.1l2.4 1 2-3.4-2-1.5c.1-.4.1-.7.1-1.1z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }

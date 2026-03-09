@@ -1,19 +1,21 @@
 import ContactForm from "@/components/ContactForm";
 import Reveal from "@/components/Reveal";
-
-const CONTACT_PHONE_DISPLAY = "403-926-4063";
-const CONTACT_PHONE_TEL = "4039264063";
-const CONTACT_EMAIL = "TBserviceplus1@gmail.com";
+import { getPublicSiteSettings } from "@/services/settings.server";
+import { formatPhoneHref, formatWhatsAppHref, getSocialLinks, hasSettingValue } from "@/utils/site-settings";
 
 const SERVICE_PILLS = ["Moving", "Cleaning", "Delivery", "Junk Removal", "Snow Removal"] as const;
 
-export default function ContactPage() {
-  const businessAddress = process.env.NEXT_PUBLIC_BUSINESS_ADDRESS?.trim() || "";
+export default async function ContactPage() {
+  const settings = await getPublicSiteSettings();
+  const businessAddress = settings.business_address;
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_API_KEY;
   const mapQuery = businessAddress || "TB Service Plus";
   const mapSrc = apiKey
     ? `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${encodeURIComponent(mapQuery)}`
     : null;
+  const phoneHref = formatPhoneHref(settings.contact_phone);
+  const whatsappHref = formatWhatsAppHref(settings.whatsapp_phone);
+  const socialLinks = getSocialLinks(settings);
 
   return (
     <div className="page-stage contact-reference-type relative left-1/2 right-1/2 -mt-4 -mb-12 w-screen -translate-x-1/2 overflow-hidden bg-[#f3f2ee] md:-mt-6 md:-mb-16">
@@ -32,18 +34,33 @@ export default function ContactPage() {
             </p>
 
             <div className="mt-9 space-y-4">
-              <ContactInfoItem
-                icon="phone"
-                label="Phone"
-                lines={[CONTACT_PHONE_DISPLAY, "For urgent requests or fast coordination."]}
-                href={`tel:${CONTACT_PHONE_TEL}`}
-              />
-              <ContactInfoItem
-                icon="mail"
-                label="Email"
-                lines={[CONTACT_EMAIL, "Best if you want to send your request details in writing."]}
-                href={`mailto:${CONTACT_EMAIL}`}
-              />
+              {phoneHref ? (
+                <ContactInfoItem
+                  icon="phone"
+                  label="Phone"
+                  lines={[settings.contact_phone, "For urgent requests or fast coordination."]}
+                  href={phoneHref}
+                />
+              ) : null}
+
+              {hasSettingValue(settings.contact_email) ? (
+                <ContactInfoItem
+                  icon="mail"
+                  label="Email"
+                  lines={[settings.contact_email, "Best if you want to send your request details in writing."]}
+                  href={`mailto:${settings.contact_email}`}
+                />
+              ) : null}
+
+              {whatsappHref ? (
+                <ContactInfoItem
+                  icon="whatsapp"
+                  label="WhatsApp"
+                  lines={[settings.whatsapp_phone, "Useful for quick coordination and short updates."]}
+                  href={whatsappHref}
+                />
+              ) : null}
+
               <ContactInfoItem
                 icon="services"
                 label="Services covered"
@@ -64,6 +81,18 @@ export default function ContactPage() {
                 >
                   {pill}
                 </span>
+              ))}
+
+              {socialLinks.map((item) => (
+                <a
+                  key={item.key}
+                  href={item.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center rounded-full border border-black/8 bg-white px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-brand-ink/66 shadow-[0_8px_24px_rgba(15,23,42,0.05)]"
+                >
+                  {item.label}
+                </a>
               ))}
             </div>
           </Reveal>
@@ -151,7 +180,7 @@ function ContactInfoItem({
   lines,
   href,
 }: {
-  icon: "phone" | "mail" | "services" | "clock";
+  icon: "phone" | "mail" | "whatsapp" | "services" | "clock";
   label: string;
   lines: [string, string] | string[];
   href?: string;
@@ -174,13 +203,23 @@ function ContactInfoItem({
   );
 
   if (href) {
-    return <a href={href}>{content}</a>;
+    return (
+      <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel={href.startsWith("http") ? "noreferrer" : undefined}>
+        {content}
+      </a>
+    );
   }
 
   return content;
 }
 
-function InfoIcon({ type, className }: { type: "phone" | "mail" | "services" | "clock"; className?: string }) {
+function InfoIcon({
+  type,
+  className,
+}: {
+  type: "phone" | "mail" | "whatsapp" | "services" | "clock";
+  className?: string;
+}) {
   if (type === "phone") {
     return (
       <svg aria-hidden viewBox="0 0 20 20" fill="none" className={className}>
@@ -199,6 +238,18 @@ function InfoIcon({ type, className }: { type: "phone" | "mail" | "services" | "
       <svg aria-hidden viewBox="0 0 20 20" fill="none" className={className}>
         <path d="M3.5 5.5h13v9h-13v-9z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
         <path d="M4 6l6 4.5L16 6" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+      </svg>
+    );
+  }
+
+  if (type === "whatsapp") {
+    return (
+      <svg aria-hidden viewBox="0 0 20 20" fill="none" className={className}>
+        <path d="M10 3.5a6 6 0 00-5.2 9l-.8 4 4-1A6 6 0 1010 3.5z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+        <path
+          d="M7.8 8.1c.1-.3.3-.4.5-.4h.5c.2 0 .4.1.5.4l.5 1.3c.1.2 0 .4-.1.6l-.4.5c.5.9 1.1 1.6 2 2l.5-.4c.2-.1.4-.2.6-.1l1.3.5c.3.1.4.3.4.5v.5c0 .2-.1.4-.4.5-.5.2-1 .2-1.5.1A6 6 0 017 9.5c-.1-.5-.1-1 .1-1.4.1 0 .3-.1.7 0z"
+          fill="currentColor"
+        />
       </svg>
     );
   }

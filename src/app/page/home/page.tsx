@@ -2,16 +2,17 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import Reveal from "@/components/Reveal";
 import ServicesShowcase from "@/components/ServicesShowcase";
+import { getPublicSiteSettings } from "@/services/settings.server";
+import type { SiteSettings } from "@/types/site-settings";
+import { formatPhoneHref, formatWhatsAppHref, hasSettingValue } from "@/utils/site-settings";
 
 const heroBadges = ["MOVING", "CLEANING", "DELIVERY", "JUNK REMOVAL", "SNOW REMOVAL"] as const;
 
-const CONTACT_PHONE_DISPLAY = "403-926-4063";
-const CONTACT_PHONE_TEL = "4039264063";
-const CONTACT_EMAIL = "TBserviceplus1@gmail.com";
+type SupportIconType = "phone" | "mail" | "whatsapp" | "arrow";
 
-type SupportIconType = "phone" | "mail" | "arrow";
+export default async function HomePage() {
+  const settings = await getPublicSiteSettings();
 
-export default function HomePage() {
   return (
     <div className="page-stage relative left-1/2 right-1/2 -mt-4 -mb-12 w-screen -translate-x-1/2 overflow-hidden bg-white md:-mt-6 md:-mb-16">
       <HeroSection />
@@ -26,7 +27,7 @@ export default function HomePage() {
         maxItems={4}
       />
 
-      <ContactSection />
+      <ContactSection settings={settings} />
     </div>
   );
 }
@@ -96,7 +97,10 @@ function HeroSection() {
   );
 }
 
-function ContactSection() {
+function ContactSection({ settings }: { settings: SiteSettings }) {
+  const phoneHref = formatPhoneHref(settings.contact_phone);
+  const whatsappHref = formatWhatsAppHref(settings.whatsapp_phone);
+
   return (
     <section id="contact" className="bg-white">
       <div className="mx-auto max-w-[1280px] px-6 py-16 md:px-8 md:py-24">
@@ -108,17 +112,32 @@ function ContactSection() {
                 Need help moving, cleaning, delivering, clearing out, or removing snow?
               </h2>
               <p className="mt-6 max-w-2xl text-[16px] leading-8 text-white/84 md:text-[18px]">
-                Call now or use the contact form to request a quote that fits your job.
+                Call now, write on WhatsApp, or use the contact form to request a quote that fits your job.
               </p>
 
               <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap">
-                <a
-                  href={`tel:${CONTACT_PHONE_TEL}`}
-                  className="surface-lift inline-flex min-h-14 items-center justify-center gap-2 rounded-xl bg-white px-6 py-4 text-[15px] font-semibold text-brand-primary"
-                >
-                  Call {CONTACT_PHONE_DISPLAY}
-                  <PhoneIcon className="h-4 w-4" />
-                </a>
+                {phoneHref ? (
+                  <a
+                    href={phoneHref}
+                    className="surface-lift inline-flex min-h-14 items-center justify-center gap-2 rounded-xl bg-white px-6 py-4 text-[15px] font-semibold text-brand-primary"
+                  >
+                    Call {settings.contact_phone}
+                    <PhoneIcon className="h-4 w-4" />
+                  </a>
+                ) : null}
+
+                {whatsappHref ? (
+                  <a
+                    href={whatsappHref}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="surface-lift inline-flex min-h-14 items-center justify-center gap-2 rounded-xl border border-white/18 bg-white/10 px-6 py-4 text-[15px] font-semibold text-white"
+                  >
+                    WhatsApp us
+                    <WhatsAppIcon className="h-4 w-4" />
+                  </a>
+                ) : null}
+
                 <Link
                   href="/page/contact"
                   className="surface-lift inline-flex min-h-14 items-center justify-center gap-2 rounded-xl border border-white/18 bg-white/10 px-6 py-4 text-[15px] font-semibold text-white"
@@ -132,18 +151,13 @@ function ContactSection() {
             <Reveal delay={140} variant="left" className="rounded-[28px] border border-white/16 bg-white/10 p-6 backdrop-blur md:p-7">
               <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/68">Direct contact</p>
               <div className="mt-6 space-y-4">
-                <ContactLine
-                  icon="phone"
-                  label="Phone"
-                  value={CONTACT_PHONE_DISPLAY}
-                  href={`tel:${CONTACT_PHONE_TEL}`}
-                />
-                <ContactLine
-                  icon="mail"
-                  label="Email"
-                  value={CONTACT_EMAIL}
-                  href={`mailto:${CONTACT_EMAIL}`}
-                />
+                {phoneHref ? <ContactLine icon="phone" label="Phone" value={settings.contact_phone} href={phoneHref} /> : null}
+                {hasSettingValue(settings.contact_email) ? (
+                  <ContactLine icon="mail" label="Email" value={settings.contact_email} href={`mailto:${settings.contact_email}`} />
+                ) : null}
+                {whatsappHref ? (
+                  <ContactLine icon="whatsapp" label="WhatsApp" value={settings.whatsapp_phone} href={whatsappHref} />
+                ) : null}
                 <ContactLine icon="arrow" label="Next step" value="Open the contact page for quote details" />
               </div>
             </Reveal>
@@ -187,7 +201,7 @@ function ContactLine({
   );
 
   if (href) {
-    return <a href={href}>{content}</a>;
+    return <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel={href.startsWith("http") ? "noreferrer" : undefined}>{content}</a>;
   }
 
   return content;
@@ -196,6 +210,7 @@ function ContactLine({
 function SupportIcon({ type, className }: { type: SupportIconType; className?: string }) {
   if (type === "phone") return <PhoneIcon className={className} />;
   if (type === "mail") return <MailIcon className={className} />;
+  if (type === "whatsapp") return <WhatsAppIcon className={className} />;
   if (type === "arrow") return <ArrowRightIcon className={className} />;
 
   return (
@@ -223,6 +238,18 @@ function MailIcon({ className }: { className?: string }) {
     <svg aria-hidden viewBox="0 0 20 20" fill="none" className={className}>
       <path d="M3.5 5.5h13v9h-13v-9z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
       <path d="M4 6l6 4.5L16 6" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function WhatsAppIcon({ className }: { className?: string }) {
+  return (
+    <svg aria-hidden viewBox="0 0 20 20" fill="none" className={className}>
+      <path d="M10 3.5a6 6 0 00-5.2 9l-.8 4 4-1A6 6 0 1010 3.5z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+      <path
+        d="M7.8 8.1c.1-.3.3-.4.5-.4h.5c.2 0 .4.1.5.4l.5 1.3c.1.2 0 .4-.1.6l-.4.5c.5.9 1.1 1.6 2 2l.5-.4c.2-.1.4-.2.6-.1l1.3.5c.3.1.4.3.4.5v.5c0 .2-.1.4-.4.5-.5.2-1 .2-1.5.1A6 6 0 017 9.5c-.1-.5-.1-1 .1-1.4.1 0 .3-.1.7 0z"
+        fill="currentColor"
+      />
     </svg>
   );
 }

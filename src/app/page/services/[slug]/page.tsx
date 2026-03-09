@@ -1,13 +1,20 @@
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
+import { getPublicSiteSettings } from "@/services/settings.server";
 import { getPublicServiceBySlug } from "@/services/services.api";
 
 export default async function ServiceDetailsPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  const settings = await getPublicSiteSettings();
   const service = await getPublicServiceBySlug(slug);
   const imageUrl = service.image_url?.trim();
   const summary = service.short_description?.trim() || service.description?.trim() || "Local support tailored to your needs.";
   const serviceLabel = service.sort_order != null ? `Service ${String(service.sort_order).padStart(2, "0")}` : "Local service";
+  const quickContactItems = [
+    settings.contact_phone ? `Call ${settings.contact_phone} for direct coordination.` : null,
+    settings.contact_email ? `Email ${settings.contact_email} with your request.` : null,
+    "Use the contact page to send the job details.",
+  ].filter(Boolean) as string[];
 
   return (
     <div className="space-y-8 md:space-y-10">
@@ -87,11 +94,7 @@ export default async function ServiceDetailsPage({ params }: { params: Promise<{
           <InfoPanel
             label="Quick contact"
             title="Ready when you are"
-            items={[
-              "Call 403-926-4063 for direct coordination.",
-              "Email TBserviceplus1@gmail.com with your request.",
-              "Use the contact page to send the job details.",
-            ]}
+            items={quickContactItems}
             tone="white"
           />
         </Reveal>
