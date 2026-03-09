@@ -238,7 +238,6 @@ export default function AdminSettingsPage() {
       return;
     }
 
-    setLoading(true);
     loadSettings().finally(() => setLoading(false));
   }, [loadSettings, router, token]);
 
@@ -248,7 +247,6 @@ export default function AdminSettingsPage() {
       return;
     }
 
-    setHistoryLoading(true);
     loadHistory().finally(() => setHistoryLoading(false));
   }, [historyReloadKey, historyPage, loadHistory, router, token]);
 
@@ -293,6 +291,7 @@ export default function AdminSettingsPage() {
       setSettings(result.settings);
       setLogoName(result.settings.logo_url ? logoName || "Logo ready" : "");
       setSuccess("Settings saved successfully.");
+      setHistoryLoading(true);
       setHistoryPage(1);
       setHistoryReloadKey((current) => current + 1);
     } catch (saveError: unknown) {
@@ -680,7 +679,10 @@ export default function AdminSettingsPage() {
             totalItems={historyState.total}
             pageSize={historyState.pageSize}
             itemLabel="changes"
-            onPageChange={setHistoryPage}
+            onPageChange={(nextPage) => {
+              setHistoryLoading(true);
+              setHistoryPage(nextPage);
+            }}
           />
         </section>
       </div>

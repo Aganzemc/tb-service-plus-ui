@@ -66,18 +66,12 @@ export default function AdminMessagesPage() {
   const deferredSearch = useDeferredValue(search);
 
   useEffect(() => {
-    setPage(1);
-  }, [deferredSearch, filter]);
-
-  useEffect(() => {
     if (!token) {
       router.push("/page/admin/login");
       return;
     }
 
     let active = true;
-
-    setLoading(true);
 
     listAdminMessagesPage(token, {
       page,
@@ -116,11 +110,13 @@ export default function AdminMessagesPage() {
       if (!token) return;
 
       try {
+        setLoading(true);
         await updateAdminMessage(token, message.id, { is_read: !message.is_read });
         setReloadKey((current) => current + 1);
       } catch (toggleError: unknown) {
         const maybe = toggleError as { message?: unknown } | null;
         setError(typeof maybe?.message === "string" ? maybe.message : "Update error");
+        setLoading(false);
       }
     },
     [token],
@@ -133,6 +129,7 @@ export default function AdminMessagesPage() {
       if (!confirmed) return;
 
       try {
+        setLoading(true);
         await deleteAdminMessage(token, message.id);
         if (messages.length === 1 && page > 1) {
           setPage((current) => Math.max(1, current - 1));
@@ -142,6 +139,7 @@ export default function AdminMessagesPage() {
       } catch (deleteError: unknown) {
         const maybe = deleteError as { message?: unknown } | null;
         setError(typeof maybe?.message === "string" ? maybe.message : "Delete error");
+        setLoading(false);
       }
     },
     [messages.length, page, token],
@@ -199,7 +197,11 @@ export default function AdminMessagesPage() {
                 <input
                   type="search"
                   value={search}
-                  onChange={(event) => setSearch(event.target.value)}
+                  onChange={(event) => {
+                    setLoading(true);
+                    setPage(1);
+                    setSearch(event.target.value);
+                  }}
                   placeholder="Search"
                   className="h-11 w-full rounded-[14px] border border-black/8 bg-[#fafafa] pl-10 pr-4 text-[13px] text-brand-ink outline-none focus:border-brand-primary"
                 />
@@ -217,7 +219,12 @@ export default function AdminMessagesPage() {
                     <button
                       key={item.value}
                       type="button"
-                      onClick={() => setFilter(item.value as FilterMode)}
+                      onClick={() => {
+                        if (item.value === filter) return;
+                        setLoading(true);
+                        setPage(1);
+                        setFilter(item.value as FilterMode);
+                      }}
                       className={`inline-flex h-11 items-center justify-center rounded-[14px] px-4 text-[13px] font-semibold transition ${
                         active
                           ? "bg-brand-ink text-white shadow-[0_10px_24px_rgba(5,3,47,0.14)]"
@@ -315,7 +322,10 @@ export default function AdminMessagesPage() {
             totalItems={messagesPage.total}
             pageSize={messagesPage.pageSize}
             itemLabel="messages"
-            onPageChange={setPage}
+            onPageChange={(nextPage) => {
+              setLoading(true);
+              setPage(nextPage);
+            }}
           />
         </section>
       </div>

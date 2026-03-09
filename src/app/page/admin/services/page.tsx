@@ -252,17 +252,12 @@ export default function AdminServicesPage() {
   const deferredSearch = useDeferredValue(search);
 
   useEffect(() => {
-    setPage(1);
-  }, [deferredSearch, statusFilter]);
-
-  useEffect(() => {
     if (!token) {
       router.push("/page/admin/login");
       return;
     }
 
     let active = true;
-    setLoading(true);
 
     listAdminServicesPage(token, {
       page,
@@ -379,6 +374,7 @@ export default function AdminServicesPage() {
       });
 
       resetCreateForm();
+      setLoading(true);
       setPage(1);
       setReloadKey((current) => current + 1);
     } catch (err: unknown) {
@@ -387,7 +383,7 @@ export default function AdminServicesPage() {
     } finally {
       setCreateLoading(false);
     }
-  }, [createState, reload, resetCreateForm, token]);
+  }, [createState, resetCreateForm, token]);
 
   const startEdit = useCallback((service: Service) => {
     setEditingId(service.id);
@@ -425,6 +421,7 @@ export default function AdminServicesPage() {
       });
 
       cancelEdit();
+      setLoading(true);
       setReloadKey((current) => current + 1);
     } catch (err: unknown) {
       const maybe = err as { message?: unknown } | null;
@@ -441,6 +438,7 @@ export default function AdminServicesPage() {
       if (!ok) return;
 
       try {
+        setLoading(true);
         await deleteAdminService(token, service.id);
         if (editingId === service.id) cancelEdit();
 
@@ -452,6 +450,7 @@ export default function AdminServicesPage() {
       } catch (err: unknown) {
         const maybe = err as { message?: unknown } | null;
         setError(typeof maybe?.message === "string" ? maybe.message : "Error");
+        setLoading(false);
       }
     },
     [cancelEdit, editingId, page, services.length, token],
@@ -718,7 +717,11 @@ export default function AdminServicesPage() {
               <input
                 type="search"
                 value={search}
-                onChange={(event) => setSearch(event.target.value)}
+                onChange={(event) => {
+                  setLoading(true);
+                  setPage(1);
+                  setSearch(event.target.value);
+                }}
                 placeholder="Search services"
                 className="h-11 w-full rounded-[14px] border border-black/8 bg-[#fafafa] pl-9 pr-3 text-[13px] text-brand-ink outline-none focus:border-brand-primary"
               />
@@ -736,7 +739,12 @@ export default function AdminServicesPage() {
                   <button
                     key={item.value}
                     type="button"
-                    onClick={() => setStatusFilter(item.value as "all" | "active" | "hidden")}
+                    onClick={() => {
+                      if (item.value === statusFilter) return;
+                      setLoading(true);
+                      setPage(1);
+                      setStatusFilter(item.value as "all" | "active" | "hidden");
+                    }}
                     className={`inline-flex h-11 items-center justify-center rounded-[14px] px-4 text-[13px] font-semibold ${
                       active ? "bg-brand-ink text-white shadow-[0_10px_24px_rgba(5,3,47,0.14)]" : "border border-black/8 bg-white text-brand-ink"
                     }`}
@@ -921,7 +929,10 @@ export default function AdminServicesPage() {
             totalItems={servicesPage.total}
             pageSize={servicesPage.pageSize}
             itemLabel="services"
-            onPageChange={setPage}
+            onPageChange={(nextPage) => {
+              setLoading(true);
+              setPage(nextPage);
+            }}
           />
         </section>
       </div>

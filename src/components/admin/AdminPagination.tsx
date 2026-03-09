@@ -60,11 +60,12 @@ export default function AdminPagination({
               <button
                 type="button"
                 onClick={() => onPageChange(value)}
+                disabled={active}
                 className={`inline-flex h-10 w-10 items-center justify-center rounded-[12px] text-[13px] font-semibold ${
                   active
                     ? "bg-brand-ink text-white shadow-[0_10px_24px_rgba(5,3,47,0.14)]"
                     : "border border-black/8 bg-white text-brand-ink"
-                }`}
+                } disabled:cursor-default`}
               >
                 {value}
               </button>
