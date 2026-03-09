@@ -3,18 +3,47 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState, type ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
+import AdminPagination from "@/components/admin/AdminPagination";
 import AdminStatCard from "@/components/admin/AdminStatCard";
 import BrandMark from "@/components/BrandMark";
 import { useAuth } from "@/hooks/useAuth";
 import AdminLayout from "@/layouts/AdminLayout";
-import { getAdminSettings, updateAdminSettings } from "@/services/settings.api";
-import { DEFAULT_SITE_SETTINGS, type SiteSettings } from "@/types/site-settings";
+import {
+  getAdminSettings,
+  listAdminSettingsHistory,
+  updateAdminSettings,
+} from "@/services/settings.api";
+import {
+  DEFAULT_SITE_SETTINGS,
+  type SiteSettings,
+  type SiteSettingsHistoryEntry,
+} from "@/types/site-settings";
 import { formatPhoneHref, formatWhatsAppHref, getSocialLinks, hasSettingValue } from "@/utils/site-settings";
 
 const MAX_LOGO_BYTES = 220 * 1024;
 const MAX_LOGO_DIMENSION = 720;
 const MIN_LOGO_DIMENSION = 320;
 const MIN_LOGO_QUALITY = 0.52;
+const SETTINGS_HISTORY_PAGE_SIZE = 6;
+const EMPTY_SETTINGS_HISTORY = {
+  history: [] as SiteSettingsHistoryEntry[],
+  page: 1,
+  pageSize: SETTINGS_HISTORY_PAGE_SIZE,
+  total: 0,
+  totalPages: 1,
+};
+
+const SETTING_LABELS: Record<keyof SiteSettings, string> = {
+  business_address: "Address",
+  contact_phone: "Phone",
+  whatsapp_phone: "WhatsApp",
+  contact_email: "Email",
+  facebook_url: "Facebook",
+  instagram_url: "Instagram",
+  tiktok_url: "TikTok",
+  linkedin_url: "LinkedIn",
+  logo_url: "Logo",
+};
 
 function countContactFields(settings: SiteSettings) {
   return [settings.business_address, settings.contact_phone, settings.whatsapp_phone, settings.contact_email].filter((value) =>
@@ -26,6 +55,26 @@ function countSocialFields(settings: SiteSettings) {
   return [settings.facebook_url, settings.instagram_url, settings.tiktok_url, settings.linkedin_url].filter((value) =>
     hasSettingValue(value),
   ).length;
+}
+
+function formatHistoryDate(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+}
+
+function formatHistoryValue(value: string | null | undefined) {
+  if (!value) return "Cleared";
+  if (value === "[uploaded image data]") return "Uploaded image";
+  if (value.length <= 90) return value;
+  return `${value.slice(0, 87)}...`;
 }
 
 function canvasToBlob(canvas: HTMLCanvasElement, quality: number) {
@@ -135,6 +184,11 @@ export default function AdminSettingsPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [logoName, setLogoName] = useState("");
+  const [historyState, setHistoryState] = useState(EMPTY_SETTINGS_HISTORY);
+  const [historyLoading, setHistoryLoading] = useState(true);
+  const [historyError, setHistoryError] = useState<string | null>(null);
+  const [historyPage, setHistoryPage] = useState(1);
+  const [historyReloadKey, setHistoryReloadKey] = useState(0);
 
   const phoneHref = formatPhoneHref(settings.contact_phone);
   const whatsappHref = formatWhatsAppHref(settings.whatsapp_phone);
@@ -156,6 +210,28 @@ export default function AdminSettingsPage() {
     }
   }, [token]);
 
+  const loadHistory = useCallback(async () => {
+    if (!token) return;
+
+    try {
+      const data = await listAdminSettingsHistory(token, {
+        page: historyPage,
+        pageSize: SETTINGS_HISTORY_PAGE_SIZE,
+      });
+
+      if (data.page !== historyPage) {
+        setHistoryPage(data.page);
+        return;
+      }
+
+      setHistoryState(data);
+      setHistoryError(null);
+    } catch (loadError: unknown) {
+      const maybe = loadError as { message?: unknown } | null;
+      setHistoryError(typeof maybe?.message === "string" ? maybe.message : "History loading error");
+    }
+  }, [historyPage, token]);
+
   useEffect(() => {
     if (!token) {
       router.push("/page/admin/login");
@@ -165,6 +241,16 @@ export default function AdminSettingsPage() {
     setLoading(true);
     loadSettings().finally(() => setLoading(false));
   }, [loadSettings, router, token]);
+
+  useEffect(() => {
+    if (!token) {
+      router.push("/page/admin/login");
+      return;
+    }
+
+    setHistoryLoading(true);
+    loadHistory().finally(() => setHistoryLoading(false));
+  }, [historyReloadKey, historyPage, loadHistory, router, token]);
 
   const setField = useCallback((key: keyof SiteSettings, value: string) => {
     setSettings((current) => ({ ...current, [key]: value }));
@@ -207,6 +293,8 @@ export default function AdminSettingsPage() {
       setSettings(result.settings);
       setLogoName(result.settings.logo_url ? logoName || "Logo ready" : "");
       setSuccess("Settings saved successfully.");
+      setHistoryPage(1);
+      setHistoryReloadKey((current) => current + 1);
     } catch (saveError: unknown) {
       const maybe = saveError as { message?: unknown } | null;
       setError(typeof maybe?.message === "string" ? maybe.message : "Unable to save settings.");
@@ -510,6 +598,90 @@ export default function AdminSettingsPage() {
               </ul>
             </div>
           </article>
+        </section>
+
+        <section className="admin-card admin-fade-up overflow-hidden rounded-[26px]">
+          <div className="flex flex-col gap-4 border-b border-black/6 px-5 py-5 md:flex-row md:items-end md:justify-between md:px-6">
+            <div>
+              <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-black/35">History</p>
+              <h2 className="mt-3 text-[1.2rem] font-semibold tracking-[-0.04em] text-brand-ink md:text-[1.35rem]">
+                Settings change log
+              </h2>
+              <p className="mt-2 max-w-2xl text-[14px] leading-7 text-muted">
+                Track who changed the public contact settings, when the update happened, and which fields were affected.
+              </p>
+            </div>
+
+            <div className="inline-flex items-center rounded-full bg-[#f8f9fb] px-4 py-2 text-[13px] font-semibold text-brand-ink">
+              {historyState.total} changes logged
+            </div>
+          </div>
+
+          {historyError ? (
+            <div className="mx-5 mt-5 rounded-[18px] border border-red-100 bg-red-50 px-4 py-3 text-[13px] text-red-700 md:mx-6">
+              {historyError}
+            </div>
+          ) : null}
+
+          {historyLoading ? (
+            <div className="px-5 py-10 text-center text-[14px] text-muted md:px-6">Loading history...</div>
+          ) : historyState.history.length === 0 ? (
+            <div className="px-5 py-10 text-center md:px-6">
+              <p className="text-[1.05rem] font-semibold text-brand-ink">No settings history yet</p>
+              <p className="mt-2 text-[14px] text-muted">The first successful save will appear here.</p>
+            </div>
+          ) : (
+            <div className="grid gap-4 px-5 py-5 md:px-6 md:py-6">
+              {historyState.history.map((entry) => (
+                <article key={entry.id} className="rounded-[24px] border border-black/8 bg-[#fcfcfd] p-4 shadow-[0_12px_30px_rgba(15,23,52,0.05)]">
+                  <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                    <div>
+                      <p className="text-[15px] font-semibold text-brand-ink">
+                        {entry.changed_by_email || entry.changed_by_admin_id || "Unknown admin"}
+                      </p>
+                      <p className="mt-1 text-[13px] text-muted">{formatHistoryDate(entry.changed_at)}</p>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2">
+                      {entry.changed_keys.map((key) => (
+                        <span
+                          key={`${entry.id}-${key}`}
+                          className="inline-flex items-center rounded-full bg-brand-sand px-3 py-1 text-[12px] font-semibold text-brand-ink"
+                        >
+                          {SETTING_LABELS[key]}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="mt-4 grid gap-3 md:grid-cols-2">
+                    {entry.changed_keys.map((key) => (
+                      <div key={key} className="rounded-[18px] border border-black/8 bg-white p-4">
+                        <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-black/35">{SETTING_LABELS[key]}</p>
+                        <div className="mt-3 space-y-2 text-[13px] text-muted">
+                          <p>
+                            <span className="font-semibold text-brand-ink">Before:</span> {formatHistoryValue(entry.previous_values[key])}
+                          </p>
+                          <p>
+                            <span className="font-semibold text-brand-ink">After:</span> {formatHistoryValue(entry.next_values[key])}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
+
+          <AdminPagination
+            page={historyState.page}
+            totalPages={historyState.totalPages}
+            totalItems={historyState.total}
+            pageSize={historyState.pageSize}
+            itemLabel="changes"
+            onPageChange={setHistoryPage}
+          />
         </section>
       </div>
     </AdminLayout>

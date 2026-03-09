@@ -10,6 +10,20 @@ export type SiteSettings = {
   logo_url: string;
 };
 
+export type SiteSettingKey = keyof SiteSettings;
+
+export type SiteSettingsHistoryValueMap = Partial<Record<SiteSettingKey, string | null>>;
+
+export type SiteSettingsHistoryEntry = {
+  id: string;
+  changed_at: string;
+  changed_by_admin_id: string | null;
+  changed_by_email: string | null;
+  changed_keys: SiteSettingKey[];
+  previous_values: SiteSettingsHistoryValueMap;
+  next_values: SiteSettingsHistoryValueMap;
+};
+
 export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   business_address: "",
   contact_phone: "403-926-4063",

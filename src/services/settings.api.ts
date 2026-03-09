@@ -1,9 +1,19 @@
 import { apiFetch } from "@/services/api";
-import { DEFAULT_SITE_SETTINGS, type SiteSettings } from "@/types/site-settings";
+import type { PaginationMeta } from "@/types/pagination";
+import {
+  DEFAULT_SITE_SETTINGS,
+  type SiteSettings,
+  type SiteSettingsHistoryEntry,
+} from "@/types/site-settings";
 
 type SettingsResponse = {
   settings?: Partial<Record<keyof SiteSettings, string | null>>;
   updated?: number;
+  historyEntry?: SiteSettingsHistoryEntry | null;
+};
+
+type SettingsHistoryResponse = Partial<PaginationMeta> & {
+  history?: SiteSettingsHistoryEntry[];
 };
 
 function normalizeSettings(input?: Partial<Record<keyof SiteSettings, string | null>>): SiteSettings {
@@ -23,6 +33,18 @@ function normalizeSettings(input?: Partial<Record<keyof SiteSettings, string | n
 function toPayload(input: Partial<SiteSettings>) {
   const entries = Object.entries(input).map(([key, value]) => [key, value?.trim() ? value.trim() : null]);
   return Object.fromEntries(entries);
+}
+
+function buildQuery(options: Record<string, string | number | undefined>) {
+  const params = new URLSearchParams();
+
+  for (const [key, value] of Object.entries(options)) {
+    if (value == null || value === "") continue;
+    params.set(key, String(value));
+  }
+
+  const query = params.toString();
+  return query ? `?${query}` : "";
 }
 
 export async function listPublicSettings(): Promise<SiteSettings> {
@@ -45,5 +67,32 @@ export async function updateAdminSettings(token: string, input: Partial<SiteSett
   return {
     settings: normalizeSettings(res.settings),
     updated: res.updated ?? 0,
+    historyEntry: res.historyEntry ?? null,
+  };
+}
+
+export async function listAdminSettingsHistory(
+  token: string,
+  options: {
+    page: number;
+    pageSize: number;
+  },
+) {
+  const res = await apiFetch<SettingsHistoryResponse>(
+    `/admin/settings/history${buildQuery({ page: options.page, pageSize: options.pageSize })}`,
+    {
+      method: "GET",
+      token,
+    },
+  );
+
+  const history = res.history ?? [];
+
+  return {
+    history,
+    page: res.page ?? 1,
+    pageSize: res.pageSize ?? Math.max(1, history.length || 1),
+    total: res.total ?? history.length,
+    totalPages: res.totalPages ?? 1,
   };
 }

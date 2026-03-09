@@ -1,15 +1,34 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useDeferredValue, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import AdminPagination from "@/components/admin/AdminPagination";
 import AdminStatCard from "@/components/admin/AdminStatCard";
 import { useAuth } from "@/hooks/useAuth";
 import AdminLayout from "@/layouts/AdminLayout";
-import { deleteAdminMessage, listAdminMessages, updateAdminMessage } from "@/services/messages.api";
+import {
+  deleteAdminMessage,
+  listAdminMessagesPage,
+  updateAdminMessage,
+  type AdminMessagesPage,
+} from "@/services/messages.api";
 import type { Message } from "@/types/message";
 
 type FilterMode = "all" | "unread" | "read";
+const MESSAGES_PER_PAGE = 5;
+const EMPTY_MESSAGES_PAGE: AdminMessagesPage = {
+  messages: [],
+  page: 1,
+  pageSize: MESSAGES_PER_PAGE,
+  total: 0,
+  totalPages: 1,
+  summary: {
+    total: 0,
+    read: 0,
+    unread: 0,
+  },
+};
 
 function formatDate(value: string) {
   const date = new Date(value);
@@ -37,11 +56,18 @@ export default function AdminMessagesPage() {
   const { token } = useAuth();
   const router = useRouter();
 
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messagesPage, setMessagesPage] = useState<AdminMessagesPage>(EMPTY_MESSAGES_PAGE);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<FilterMode>("all");
+  const [page, setPage] = useState(1);
+  const [reloadKey, setReloadKey] = useState(0);
+  const deferredSearch = useDeferredValue(search);
+
+  useEffect(() => {
+    setPage(1);
+  }, [deferredSearch, filter]);
 
   useEffect(() => {
     if (!token) {
@@ -51,10 +77,23 @@ export default function AdminMessagesPage() {
 
     let active = true;
 
-    listAdminMessages(token)
+    setLoading(true);
+
+    listAdminMessagesPage(token, {
+      page,
+      pageSize: MESSAGES_PER_PAGE,
+      search: deferredSearch,
+      filter,
+    })
       .then((data) => {
         if (!active) return;
-        setMessages(data);
+
+        if (data.page !== page) {
+          setPage(data.page);
+          return;
+        }
+
+        setMessagesPage(data);
         setError(null);
         setLoading(false);
       })
@@ -68,54 +107,18 @@ export default function AdminMessagesPage() {
     return () => {
       active = false;
     };
-  }, [token, router]);
+  }, [token, router, page, deferredSearch, filter, reloadKey]);
 
-  const sortedMessages = useMemo(
-    () => [...messages].sort((first, second) => second.created_at.localeCompare(first.created_at)),
-    [messages],
-  );
-
-  const unreadCount = useMemo(() => messages.filter((message) => !message.is_read).length, [messages]);
-  const readCount = useMemo(() => messages.filter((message) => message.is_read).length, [messages]);
-
-  const filteredMessages = useMemo(() => {
-    const normalizedSearch = search.trim().toLowerCase();
-
-    return sortedMessages.filter((message) => {
-      if (filter === "unread" && message.is_read) return false;
-      if (filter === "read" && !message.is_read) return false;
-
-      if (!normalizedSearch) return true;
-
-      return [message.name, message.email ?? "", message.phone ?? "", message.message]
-        .join(" ")
-        .toLowerCase()
-        .includes(normalizedSearch);
-    });
-  }, [filter, search, sortedMessages]);
+  const messages = messagesPage.messages;
 
   const toggleRead = useCallback(
     async (message: Message) => {
       if (!token) return;
 
-      const nextReadState = !message.is_read;
-      setMessages((currentMessages) =>
-        currentMessages.map((currentMessage) =>
-          currentMessage.id === message.id ? { ...currentMessage, is_read: nextReadState } : currentMessage,
-        ),
-      );
-
       try {
-        const updated = await updateAdminMessage(token, message.id, { is_read: nextReadState });
-        setMessages((currentMessages) =>
-          currentMessages.map((currentMessage) => (currentMessage.id === message.id ? updated : currentMessage)),
-        );
+        await updateAdminMessage(token, message.id, { is_read: !message.is_read });
+        setReloadKey((current) => current + 1);
       } catch (toggleError: unknown) {
-        setMessages((currentMessages) =>
-          currentMessages.map((currentMessage) =>
-            currentMessage.id === message.id ? { ...currentMessage, is_read: message.is_read } : currentMessage,
-          ),
-        );
         const maybe = toggleError as { message?: unknown } | null;
         setError(typeof maybe?.message === "string" ? maybe.message : "Update error");
       }
@@ -129,18 +132,19 @@ export default function AdminMessagesPage() {
       const confirmed = window.confirm(`Delete the message from ${message.name}?`);
       if (!confirmed) return;
 
-      const previousMessages = messages;
-      setMessages((currentMessages) => currentMessages.filter((currentMessage) => currentMessage.id !== message.id));
-
       try {
         await deleteAdminMessage(token, message.id);
+        if (messages.length === 1 && page > 1) {
+          setPage((current) => Math.max(1, current - 1));
+        } else {
+          setReloadKey((current) => current + 1);
+        }
       } catch (deleteError: unknown) {
-        setMessages(previousMessages);
         const maybe = deleteError as { message?: unknown } | null;
         setError(typeof maybe?.message === "string" ? maybe.message : "Delete error");
       }
     },
-    [messages, token],
+    [messages.length, page, token],
   );
 
   return (
@@ -162,9 +166,24 @@ export default function AdminMessagesPage() {
         ) : null}
 
         <section className="grid gap-4 md:grid-cols-3">
-          <AdminStatCard label="Total" value={loading ? "--" : String(messages.length)} hint="All received conversations." tone="dark" />
-          <AdminStatCard label="Unread" value={loading ? "--" : String(unreadCount)} hint="Messages still waiting for review." tone="coral" />
-          <AdminStatCard label="Read" value={loading ? "--" : String(readCount)} hint="Messages already processed or reviewed." tone="mint" />
+          <AdminStatCard
+            label="Total"
+            value={loading ? "--" : String(messagesPage.summary.total)}
+            hint="All received conversations."
+            tone="dark"
+          />
+          <AdminStatCard
+            label="Unread"
+            value={loading ? "--" : String(messagesPage.summary.unread)}
+            hint="Messages still waiting for review."
+            tone="coral"
+          />
+          <AdminStatCard
+            label="Read"
+            value={loading ? "--" : String(messagesPage.summary.read)}
+            hint="Messages already processed or reviewed."
+            tone="mint"
+          />
         </section>
 
         <section className="admin-card admin-fade-up overflow-hidden rounded-[26px]">
@@ -232,15 +251,15 @@ export default function AdminMessagesPage() {
                       Loading messages...
                     </td>
                   </tr>
-                ) : filteredMessages.length === 0 ? (
+                ) : messages.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="px-4 py-10 text-center text-[13px] text-muted">
                       No messages found.
                     </td>
                   </tr>
                 ) : (
-                  filteredMessages.map((message) => (
-                      <tr key={message.id} className="admin-table-row text-[13px] text-brand-ink align-top">
+                  messages.map((message) => (
+                    <tr key={message.id} className="admin-table-row text-[13px] text-brand-ink align-top">
                       <td className="border-b border-black/6 px-4 py-5">
                         <div className="flex items-start gap-3">
                           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#eef1f6] text-[12px] font-semibold text-brand-ink shadow-[0_8px_18px_rgba(15,23,52,0.05)]">
@@ -289,6 +308,15 @@ export default function AdminMessagesPage() {
               </tbody>
             </table>
           </div>
+
+          <AdminPagination
+            page={messagesPage.page}
+            totalPages={messagesPage.totalPages}
+            totalItems={messagesPage.total}
+            pageSize={messagesPage.pageSize}
+            itemLabel="messages"
+            onPageChange={setPage}
+          />
         </section>
       </div>
     </AdminLayout>

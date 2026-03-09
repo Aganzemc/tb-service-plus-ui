@@ -1,16 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState, type ChangeEvent } from "react";
+import { useCallback, useDeferredValue, useEffect, useState, type ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
+import AdminPagination from "@/components/admin/AdminPagination";
 import AdminStatCard from "@/components/admin/AdminStatCard";
 import AdminLayout from "@/layouts/AdminLayout";
 import { useAuth } from "@/hooks/useAuth";
 import {
   createAdminService,
   deleteAdminService,
-  listAdminServices,
+  listAdminServicesPage,
   updateAdminService,
+  type AdminServicesPage,
 } from "@/services/services.api";
 import type { Service } from "@/types/service";
 
@@ -37,6 +39,19 @@ const MAX_MEDIA_BYTES = 320 * 1024;
 const MAX_MEDIA_DIMENSION = 1280;
 const MIN_MEDIA_DIMENSION = 720;
 const MIN_MEDIA_QUALITY = 0.52;
+const SERVICES_PER_PAGE = 3;
+const EMPTY_SERVICES_PAGE: AdminServicesPage = {
+  services: [],
+  page: 1,
+  pageSize: SERVICES_PER_PAGE,
+  total: 0,
+  totalPages: 1,
+  summary: {
+    total: 0,
+    active: 0,
+    hidden: 0,
+  },
+};
 
 const serviceTemplates: ServiceTemplate[] = [
   {
@@ -218,7 +233,7 @@ export default function AdminServicesPage() {
   const { token } = useAuth();
   const router = useRouter();
 
-  const [services, setServices] = useState<Service[]>([]);
+  const [servicesPage, setServicesPage] = useState<AdminServicesPage>(EMPTY_SERVICES_PAGE);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -232,44 +247,13 @@ export default function AdminServicesPage() {
   const [editMediaName, setEditMediaName] = useState("");
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | "active" | "hidden">("all");
+  const [page, setPage] = useState(1);
+  const [reloadKey, setReloadKey] = useState(0);
+  const deferredSearch = useDeferredValue(search);
 
-  const sortedServices = useMemo(() => {
-    return [...services].sort((a, b) => {
-      const aOrder = a.sort_order ?? 999999;
-      const bOrder = b.sort_order ?? 999999;
-      if (aOrder !== bOrder) return aOrder - bOrder;
-      return a.created_at.localeCompare(b.created_at);
-    });
-  }, [services]);
-
-  const filteredServices = useMemo(() => {
-    const normalizedSearch = search.trim().toLowerCase();
-
-    return sortedServices.filter((service) => {
-      if (statusFilter === "active" && !service.is_active) return false;
-      if (statusFilter === "hidden" && service.is_active) return false;
-
-      if (!normalizedSearch) return true;
-
-      return [service.title, service.slug, service.short_description ?? "", service.description ?? ""]
-        .join(" ")
-        .toLowerCase()
-        .includes(normalizedSearch);
-    });
-  }, [search, sortedServices, statusFilter]);
-
-  const reload = useCallback(async () => {
-    if (!token) return;
-
-    try {
-      const data = await listAdminServices(token);
-      setServices(data);
-      setError(null);
-    } catch (err: unknown) {
-      const maybe = err as { message?: unknown } | null;
-      setError(typeof maybe?.message === "string" ? maybe.message : "Error");
-    }
-  }, [token]);
+  useEffect(() => {
+    setPage(1);
+  }, [deferredSearch, statusFilter]);
 
   useEffect(() => {
     if (!token) {
@@ -277,9 +261,40 @@ export default function AdminServicesPage() {
       return;
     }
 
+    let active = true;
     setLoading(true);
-    reload().finally(() => setLoading(false));
-  }, [reload, router, token]);
+
+    listAdminServicesPage(token, {
+      page,
+      pageSize: SERVICES_PER_PAGE,
+      search: deferredSearch,
+      status: statusFilter,
+    })
+      .then((data) => {
+        if (!active) return;
+
+        if (data.page !== page) {
+          setPage(data.page);
+          return;
+        }
+
+        setServicesPage(data);
+        setError(null);
+        setLoading(false);
+      })
+      .catch((servicesError: unknown) => {
+        if (!active) return;
+        const maybe = servicesError as { message?: unknown } | null;
+        setError(typeof maybe?.message === "string" ? maybe.message : "Error");
+        setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [token, router, page, deferredSearch, statusFilter, reloadKey]);
+
+  const services = servicesPage.services;
 
   const applyTemplate = useCallback((template: ServiceTemplate) => {
     setCreateState((prev) => ({
@@ -364,7 +379,8 @@ export default function AdminServicesPage() {
       });
 
       resetCreateForm();
-      await reload();
+      setPage(1);
+      setReloadKey((current) => current + 1);
     } catch (err: unknown) {
       const maybe = err as { message?: unknown } | null;
       setError(typeof maybe?.message === "string" ? maybe.message : "Error");
@@ -398,7 +414,7 @@ export default function AdminServicesPage() {
     setError(null);
 
     try {
-      const updated = await updateAdminService(token, editingId, {
+      await updateAdminService(token, editingId, {
         slug: computedSlug,
         title: editState.title.trim() || undefined,
         short_description: editState.short_description.trim() || null,
@@ -408,8 +424,8 @@ export default function AdminServicesPage() {
         sort_order: parseSortOrder(editState.sort_order),
       });
 
-      setServices((prev) => prev.map((service) => (service.id === updated.id ? updated : service)));
       cancelEdit();
+      setReloadKey((current) => current + 1);
     } catch (err: unknown) {
       const maybe = err as { message?: unknown } | null;
       setError(typeof maybe?.message === "string" ? maybe.message : "Error");
@@ -426,14 +442,19 @@ export default function AdminServicesPage() {
 
       try {
         await deleteAdminService(token, service.id);
-        setServices((prev) => prev.filter((item) => item.id !== service.id));
         if (editingId === service.id) cancelEdit();
+
+        if (services.length === 1 && page > 1) {
+          setPage((current) => Math.max(1, current - 1));
+        } else {
+          setReloadKey((current) => current + 1);
+        }
       } catch (err: unknown) {
         const maybe = err as { message?: unknown } | null;
         setError(typeof maybe?.message === "string" ? maybe.message : "Error");
       }
     },
-    [cancelEdit, editingId, token],
+    [cancelEdit, editingId, page, services.length, token],
   );
   return (
     <AdminLayout
@@ -461,25 +482,25 @@ export default function AdminServicesPage() {
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <AdminStatCard
             label="Total services"
-            value={loading ? "--" : String(sortedServices.length)}
+            value={loading ? "--" : String(servicesPage.summary.total)}
             hint="All services configured in the admin."
             tone="dark"
           />
           <AdminStatCard
             label="Active"
-            value={loading ? "--" : String(sortedServices.filter((service) => service.is_active).length)}
+            value={loading ? "--" : String(servicesPage.summary.active)}
             hint="Services currently visible on the website."
             tone="mint"
           />
           <AdminStatCard
             label="Hidden"
-            value={loading ? "--" : String(sortedServices.filter((service) => !service.is_active).length)}
+            value={loading ? "--" : String(servicesPage.summary.hidden)}
             hint="Services currently hidden from the website."
             tone="coral"
           />
           <AdminStatCard
             label="Filtered"
-            value={loading ? "--" : String(filteredServices.length)}
+            value={loading ? "--" : String(servicesPage.total)}
             hint="Rows currently visible in the library."
             tone="primary"
           />
@@ -499,7 +520,7 @@ export default function AdminServicesPage() {
             </div>
 
             <div className="inline-flex items-center rounded-full border border-black/8 bg-[#f8f9fb] px-4 py-2 text-[13px] font-semibold text-brand-ink">
-              {sortedServices.length} services in library
+              {servicesPage.summary.total} services in library
             </div>
           </div>
           </div>
@@ -686,7 +707,7 @@ export default function AdminServicesPage() {
               </p>
             </div>
             <div className="inline-flex items-center rounded-full bg-[#f8f9fb] px-4 py-2 text-[13px] font-semibold text-brand-ink">
-              Total {sortedServices.length}
+              Total {servicesPage.total}
             </div>
           </div>
           </div>
@@ -733,16 +754,16 @@ export default function AdminServicesPage() {
             </div>
           ) : null}
 
-          {!loading && filteredServices.length === 0 ? (
+          {!loading && services.length === 0 ? (
             <div className="mx-5 my-5 rounded-[24px] border border-dashed border-black/12 bg-[#fafbff] px-5 py-12 text-center md:mx-6">
               <p className="text-[1.2rem] font-semibold text-brand-ink">No services found</p>
               <p className="mt-2 text-[15px] text-muted">Adjust the filters or publish a new service from the composer above.</p>
             </div>
           ) : null}
 
-          {!loading && filteredServices.length > 0 ? (
+          {!loading && services.length > 0 ? (
             <div className="grid gap-4 px-5 py-5 xl:grid-cols-2 md:px-6 md:py-6">
-              {filteredServices.map((service) => (
+              {services.map((service) => (
                 <article key={service.id} className="admin-card overflow-hidden rounded-[24px] p-4 transition hover:-translate-y-0.5 md:p-5">
                   {editingId === service.id ? (
                     <div className="space-y-5">
@@ -893,6 +914,15 @@ export default function AdminServicesPage() {
               ))}
             </div>
           ) : null}
+
+          <AdminPagination
+            page={servicesPage.page}
+            totalPages={servicesPage.totalPages}
+            totalItems={servicesPage.total}
+            pageSize={servicesPage.pageSize}
+            itemLabel="services"
+            onPageChange={setPage}
+          />
         </section>
       </div>
     </AdminLayout>
