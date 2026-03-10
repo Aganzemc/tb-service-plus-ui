@@ -20,6 +20,7 @@ const mainNavigation = [
   { href: "/page/admin/dashboard", label: "Dashboard", icon: DashboardIcon },
   { href: "/page/admin/services", label: "Services", icon: LayersIcon },
   { href: "/page/admin/messages", label: "Messages", icon: InboxIcon },
+  { href: "/page/admin/profile", label: "Profile", icon: ProfileIcon },
   { href: "/page/admin/settings", label: "Settings", icon: SettingsIcon },
 ] as const;
 
@@ -621,6 +622,15 @@ function SettingsIcon({ className }: { className?: string }) {
         strokeWidth="1.8"
         strokeLinejoin="round"
       />
+    </svg>
+  );
+}
+
+function ProfileIcon({ className }: { className?: string }) {
+  return (
+    <svg aria-hidden viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M12 12a4 4 0 100-8 4 4 0 000 8z" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M5 20a7 7 0 0114 0" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   );
 }
