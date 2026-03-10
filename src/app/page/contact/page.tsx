@@ -4,8 +4,6 @@ import SocialNetworkIcon from "@/components/SocialNetworkIcon";
 import { getPublicSiteSettings } from "@/services/settings.server";
 import { formatPhoneHref, formatWhatsAppHref, getSocialLinks, hasSettingValue } from "@/utils/site-settings";
 
-const SERVICE_PILLS = ["Moving", "Cleaning", "Delivery", "Junk Removal", "Snow Removal"] as const;
-
 type ContactCard = {
   key: string;
   icon: "location" | "phone" | "whatsapp" | "mail";
@@ -69,7 +67,7 @@ export default async function ContactPage() {
   ];
 
   return (
-    <div className="page-stage page-stage-sharp relative left-1/2 right-1/2 -mt-[104px] w-screen -translate-x-1/2 overflow-hidden bg-[linear-gradient(180deg,#f5f7fb_0%,#ffffff_26%,#f6f8fc_100%)] md:-mt-[112px]">
+    <div className="page-stage page-stage-sharp relative left-1/2 right-1/2 w-screen -translate-x-1/2 overflow-hidden bg-[linear-gradient(180deg,#f7f8fb_0%,#ffffff_28%,#f6f8fc_100%)]">
       <section className="relative isolate overflow-hidden border-b border-white/10 bg-brand-ink text-white">
         <div
           className="absolute inset-0 bg-cover bg-center"
@@ -80,7 +78,7 @@ export default async function ContactPage() {
         />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(95,103,244,0.24),transparent_34%),linear-gradient(120deg,rgba(36,81,209,0.18),transparent_54%)]" />
 
-        <div className="relative mx-auto flex min-h-[420px] max-w-[1280px] items-center justify-center px-6 pb-18 pt-[146px] text-center md:min-h-[500px] md:px-8 md:pb-24 md:pt-[166px]">
+        <div className="relative mx-auto flex min-h-[420px] max-w-[1280px] items-center justify-center px-6 py-18 text-center md:min-h-[500px] md:px-8 md:py-24">
           <div className="max-w-4xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-white/18 bg-white/10 px-4 py-2 text-[12px] font-semibold text-white/88 backdrop-blur-sm">
               <ContactIcon type="mail" className="h-4 w-4" />
@@ -90,59 +88,42 @@ export default async function ContactPage() {
             <p className="public-copy mx-auto mt-5 max-w-3xl text-white/84">
               Reach our team, view the public contact channels, and send a precise request from one cleaner contact page.
             </p>
-
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              {SERVICE_PILLS.map((pill) => (
-                <span
-                  key={pill}
-                  className="rounded-full border border-white/14 bg-white/10 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/82 backdrop-blur-sm"
-                >
-                  {pill}
-                </span>
-              ))}
-            </div>
           </div>
         </div>
       </section>
 
-      <section className="relative z-10 mx-auto -mt-14 max-w-[1280px] px-6 pb-18 md:-mt-18 md:px-8 md:pb-22">
+      <section className="mx-auto max-w-[1280px] px-6 py-16 md:px-8 md:py-20">
         <div className="grid gap-6 xl:grid-cols-[minmax(0,1.45fr)_minmax(320px,0.8fr)]">
-          <article className="rounded-[32px] border border-black/8 bg-white p-6 shadow-[0_24px_64px_rgba(15,23,52,0.08)] md:p-8">
-            <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
-              <div className="max-w-2xl">
-                <div className="flex items-center gap-4">
-                  <span className="flex h-14 w-14 items-center justify-center rounded-full border border-brand-primary/18 bg-brand-primary/8 text-brand-primary">
-                    <ContactIcon type="support" className="h-7 w-7" />
-                  </span>
-                  <div>
-                    <p className="text-[12px] font-semibold uppercase tracking-[0.26em] text-brand-primary/72">Direct support</p>
-                    <h2 className="public-subtitle mt-2 text-brand-ink">We help you through every request.</h2>
-                  </div>
+          <article className="rounded-[28px] border border-black/10 bg-white px-6 py-7 md:px-8 md:py-8">
+            <div className="max-w-3xl">
+              <div className="flex items-start gap-4">
+                <span className="flex h-12 w-12 items-center justify-center rounded-full border border-brand-primary/18 bg-white text-brand-primary">
+                  <ContactIcon type="support" className="h-6 w-6" />
+                </span>
+                <div>
+                  <p className="text-[12px] font-semibold uppercase tracking-[0.26em] text-brand-primary/72">Direct support</p>
+                  <h2 className="public-subtitle mt-2 text-brand-ink">We help you through every request.</h2>
                 </div>
-                <p className="public-copy mt-5 max-w-3xl text-brand-ink/72">
-                  Share the service you need, the location, and the timing. We respond with the next step, the right contact channel,
-                  and a clearer quote path.
-                </p>
               </div>
-
-              <div className="rounded-full border border-brand-primary/10 bg-brand-primary/6 px-4 py-2 text-[13px] font-semibold text-brand-primary">
-                Fast reply workflow
-              </div>
+              <p className="public-copy mt-5 max-w-3xl text-brand-ink/72">
+                Share the service you need, the location, and the timing. We respond with the next step, the right contact channel,
+                and a clearer quote path.
+              </p>
             </div>
 
-            <div className="mt-8 grid gap-4 md:grid-cols-2">
+            <div className="mt-8 space-y-4">
               {supportBullets.map((item) => (
-                <div key={item} className="flex items-start gap-3 rounded-[22px] border border-black/8 bg-[#f8faff] px-4 py-4">
-                  <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-primary/10 text-brand-primary">
+                <div key={item} className="flex items-start gap-3">
+                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-brand-primary/18 bg-white text-brand-primary">
                     <CheckIcon className="h-4 w-4" />
                   </span>
-                  <p className="text-[14px] leading-7 text-brand-ink/72">{item}</p>
+                  <p className="text-[15px] leading-8 text-brand-ink/72">{item}</p>
                 </div>
               ))}
             </div>
           </article>
 
-          <aside className="rounded-[32px] border border-black/8 bg-white p-6 shadow-[0_24px_64px_rgba(15,23,52,0.08)] md:p-8">
+          <aside className="px-1 py-2 md:px-4 md:py-3">
             <p className="text-[12px] font-semibold uppercase tracking-[0.26em] text-brand-primary/72">Stay connected</p>
             <h2 className="public-subtitle mt-3 text-brand-ink">Public links & quick actions</h2>
             <p className="public-copy mt-4 text-brand-ink/68">
@@ -157,16 +138,16 @@ export default async function ContactPage() {
                     href={item.href}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center gap-3 rounded-[18px] border border-black/8 bg-[#f8faff] px-4 py-3 text-[14px] font-semibold text-brand-ink hover:border-brand-primary/24 hover:text-brand-primary"
+                    className="flex items-center gap-3 rounded-[16px] border border-black/12 bg-white px-4 py-3 text-[14px] font-semibold text-brand-ink transition-colors hover:border-brand-primary/28 hover:text-brand-primary"
                   >
-                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-primary/10 text-brand-primary">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full border border-brand-primary/16 bg-white text-brand-primary">
                       <SocialNetworkIcon network={item.key} className="h-4 w-4" />
                     </span>
                     {item.label}
                   </a>
                 ))
               ) : (
-                <div className="rounded-[18px] border border-dashed border-black/12 bg-[#f8faff] px-4 py-5 text-[14px] leading-7 text-brand-ink/62">
+                <div className="rounded-[16px] border border-dashed border-black/12 bg-white px-4 py-5 text-[14px] leading-7 text-brand-ink/62">
                   Add social links from the admin settings to show them here.
                 </div>
               )}
@@ -176,7 +157,7 @@ export default async function ContactPage() {
               {phoneHref ? (
                 <a
                   href={phoneHref}
-                  className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-brand-primary px-5 py-3 text-[15px] font-semibold text-white shadow-[0_16px_34px_rgba(36,81,209,0.24)]"
+                  className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-brand-primary px-5 py-3 text-[15px] font-semibold text-white"
                 >
                   Call us
                 </a>
@@ -186,7 +167,7 @@ export default async function ContactPage() {
                   href={whatsappHref}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-brand-primary/18 bg-[#f4f7fd] px-5 py-3 text-[15px] font-semibold text-brand-primary"
+                  className="inline-flex min-h-[50px] items-center justify-center rounded-full border border-brand-primary/18 bg-white px-5 py-3 text-[15px] font-semibold text-brand-primary"
                 >
                   Open WhatsApp
                 </a>
@@ -194,7 +175,7 @@ export default async function ContactPage() {
               {hasSettingValue(settings.contact_email) ? (
                 <a
                   href={`mailto:${settings.contact_email}`}
-                  className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-black/8 bg-white px-5 py-3 text-[15px] font-semibold text-brand-ink"
+                  className="inline-flex min-h-[50px] items-center justify-center rounded-full border border-black/12 bg-white px-5 py-3 text-[15px] font-semibold text-brand-ink"
                 >
                   Send an email
                 </a>
@@ -211,12 +192,10 @@ export default async function ContactPage() {
           description="Address, phone, WhatsApp, and email stay visible here so the page works as a real contact hub."
         />
 
-        <div className="mt-12 rounded-[32px] border border-black/8 bg-white px-6 py-8 shadow-[0_18px_46px_rgba(15,23,52,0.05)] md:px-8 md:py-10">
-          <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-4">
-            {contactCards.map((card) => (
-              <ContactCardItem key={card.key} card={card} />
-            ))}
-          </div>
+        <div className="mt-14 grid gap-10 md:grid-cols-2 xl:grid-cols-4">
+          {contactCards.map((card) => (
+            <ContactCardItem key={card.key} card={card} />
+          ))}
         </div>
       </section>
 
@@ -240,7 +219,7 @@ export default async function ContactPage() {
       </section>
 
       <section className="mx-auto max-w-[1280px] px-6 pb-20 md:px-8 md:pb-24">
-        <div className="rounded-[32px] border border-black/8 bg-white px-7 py-8 shadow-[0_22px_54px_rgba(15,23,52,0.06)] md:px-10 md:py-10">
+        <div className="rounded-[28px] border border-black/10 bg-white px-7 py-8 md:px-10 md:py-10">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="max-w-3xl">
               <p className="text-[12px] font-semibold uppercase tracking-[0.26em] text-brand-primary/72">Need help now?</p>
@@ -254,12 +233,9 @@ export default async function ContactPage() {
             <div className="flex flex-col gap-3 sm:items-end">
               <Link
                 href="/page/services"
-                className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-brand-primary px-6 py-3 text-[15px] font-semibold text-white shadow-[0_16px_34px_rgba(36,81,209,0.24)]"
+                className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-brand-primary px-6 py-3 text-[15px] font-semibold text-white"
               >
                 Our services
-              </Link>
-              <Link href="/page/home" className="text-[14px] font-semibold text-brand-ink/58 hover:text-brand-primary">
-                Back home
               </Link>
             </div>
           </div>
@@ -333,10 +309,10 @@ function LocationPanel({
   phoneHref?: string;
 }) {
   return (
-    <article className="overflow-hidden rounded-[32px] border border-black/8 bg-white shadow-[0_24px_64px_rgba(15,23,52,0.08)]">
+    <article className="overflow-hidden rounded-[28px] border border-black/10 bg-white">
       <div className="border-b border-black/8 px-6 py-6 md:px-7">
         <div className="flex items-start gap-4">
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-brand-primary/18 bg-brand-primary/8 text-brand-primary">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-brand-primary/18 bg-white text-brand-primary">
             <ContactIcon type="location" className="h-5 w-5" />
           </span>
           <div>
@@ -369,22 +345,20 @@ function LocationPanel({
         </div>
       )}
 
-      <div className="grid gap-3 border-t border-black/8 bg-[#f8faff] px-6 py-5 md:grid-cols-2 md:px-7">
-        <div className="rounded-[18px] border border-black/8 bg-white px-4 py-4">
-          <p className="text-[12px] font-semibold uppercase tracking-[0.22em] text-brand-primary/72">Direct line</p>
-          {phoneHref ? (
-            <a href={phoneHref} className="mt-2 block text-[14px] leading-7 text-brand-ink/76 hover:text-brand-primary">
-              {phone}
-            </a>
-          ) : (
-            <p className="mt-2 text-[14px] leading-7 text-brand-ink/76">{phone || "No phone configured yet."}</p>
-          )}
+      {(phone || email) ? (
+        <div className="border-t border-black/8 bg-[#f8faff] px-6 py-5 md:px-7">
+          <div className="flex flex-col gap-2 text-[14px] leading-7 text-brand-ink/76">
+            {phoneHref ? (
+              <a href={phoneHref} className="hover:text-brand-primary">
+                {phone}
+              </a>
+            ) : phone ? (
+              <p>{phone}</p>
+            ) : null}
+            {email ? <p>{email}</p> : null}
+          </div>
         </div>
-        <div className="rounded-[18px] border border-black/8 bg-white px-4 py-4">
-          <p className="text-[12px] font-semibold uppercase tracking-[0.22em] text-brand-primary/72">Email</p>
-          <p className="mt-2 text-[14px] leading-7 text-brand-ink/76">{email || "No public email configured yet."}</p>
-        </div>
-      </div>
+      ) : null}
     </article>
   );
 }
