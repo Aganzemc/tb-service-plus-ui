@@ -41,7 +41,6 @@ export default function Navbar({ settings }: { settings: SiteSettings }) {
               <p className="text-[1.45rem] font-semibold tracking-[-0.04em] text-brand-ink">
                 <span className="text-brand-primary">TB</span> Service Plus
               </p>
-              <p className="text-[13px] text-muted">Moving . Cleaning . Delivery . Junk Removal . Snow Removal</p>
             </div>
           </Link>
 

@@ -62,7 +62,6 @@ export default function AdminLayout({
     permission: notificationPermission,
     unreadCount,
     newCount,
-    latestNotification,
     recentNotifications,
     markingIds,
     markingAll,
@@ -93,12 +92,11 @@ export default function AdminLayout({
           : "Enable web push for new messages"
       : notificationPermission === "granted"
         ? "Browser alerts enabled"
-        : notificationPermission === "denied"
+      : notificationPermission === "denied"
           ? "Browser alerts blocked"
           : notificationSupported
             ? "Enable browser alerts"
             : "Browser alerts unavailable";
-  const notificationTriggerLabel = unreadCount > 0 ? `Notifications (${unreadCount})` : "Notifications";
 
   function handleLogout() {
     logout();
@@ -260,9 +258,10 @@ export default function AdminLayout({
                     <ChatIcon className="h-4 w-4" />
                   </button>
                   <button
+                    ref={notificationsTriggerRef}
                     type="button"
                     onClick={handleNotificationAction}
-                    className="relative hidden h-11 w-11 items-center justify-center rounded-full border border-black/6 bg-[#fafafa] text-black/60 xl:flex"
+                    className="relative flex h-11 w-11 items-center justify-center rounded-full border border-black/6 bg-[#fafafa] text-black/60"
                     title={notificationStatusLabel}
                   >
                     <BellIcon className={`h-4 w-4 ${notificationPermission === "granted" ? "text-brand-primary" : ""}`} />
@@ -275,29 +274,6 @@ export default function AdminLayout({
                   <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-[#eef1f6] text-[13px] font-semibold text-brand-ink">
                     {(admin?.email ?? "A").slice(0, 1).toUpperCase()}
                   </span>
-                </div>
-
-                <div className="flex w-full flex-wrap items-center gap-2 xl:justify-end">
-                  <button
-                    ref={notificationsTriggerRef}
-                    type="button"
-                    onClick={handleNotificationAction}
-                    className="inline-flex items-center gap-2 rounded-full border border-black/6 bg-[#fafafa] px-4 py-2 text-[12px] font-semibold text-brand-ink"
-                  >
-                    <BellIcon className={`h-4 w-4 ${notificationPermission === "granted" ? "text-brand-primary" : "text-black/55"}`} />
-                    <span>{notificationTriggerLabel}</span>
-                    {unreadCount > 0 ? (
-                      <span className="rounded-full bg-brand-primary px-2 py-0.5 text-[11px] font-semibold text-white">
-                        {unreadCount > 99 ? "99+" : unreadCount}
-                      </span>
-                    ) : null}
-                  </button>
-
-                  {latestNotification ? (
-                    <span className="max-w-[320px] truncate text-[12px] text-muted">
-                      Latest: {latestNotification.message_name}
-                    </span>
-                  ) : null}
                 </div>
 
                 {actions ? <div className="flex w-full flex-wrap gap-2 xl:justify-end">{actions}</div> : null}
