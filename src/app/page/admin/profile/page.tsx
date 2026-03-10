@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import AdminStatCard from "@/components/admin/AdminStatCard";
 import { broadcastAuthUpdate, useAuth } from "@/hooks/useAuth";
 import AdminLayout from "@/layouts/AdminLayout";
 import { getAdminProfile, updateAdminProfile } from "@/services/auth.api";
@@ -141,33 +140,6 @@ export default function AdminProfilePage() {
         {success ? (
           <div className="rounded-[18px] border border-emerald-100 bg-emerald-50 px-4 py-3 text-[13px] text-emerald-700">{success}</div>
         ) : null}
-
-        <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <AdminStatCard
-            label="Email"
-            value={loading ? "--" : profile?.email || "Not set"}
-            hint="Publicly hidden, used only for admin authentication."
-            tone="primary"
-          />
-          <AdminStatCard
-            label="Role"
-            value={loading ? "--" : profile?.role || "Admin"}
-            hint="Current access level for this account."
-            tone="dark"
-          />
-          <AdminStatCard
-            label="Member since"
-            value={loading ? "--" : formatProfileDate(profile?.created_at)}
-            hint="Creation date of the current admin account."
-            tone="mint"
-          />
-          <AdminStatCard
-            label="Session"
-            value={admin?.email ? "Synced" : "Active"}
-            hint="The current session is refreshed after profile updates."
-            tone="coral"
-          />
-        </section>
 
         <section className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
           <article className="admin-card admin-fade-up rounded-[26px] p-5 md:p-6">
