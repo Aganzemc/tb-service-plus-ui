@@ -37,10 +37,10 @@ export default async function ServiceDetailsPage({ params }: { params: Promise<{
             <span className="inline-flex rounded-full border border-white/16 bg-white/10 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-white/82">
               {serviceLabel}
             </span>
-            <h1 className="mt-5 max-w-[11ch] text-[clamp(2.5rem,5vw,4.8rem)] font-semibold leading-[0.94] tracking-[-0.06em]">
+            <h1 className="public-title mt-5 max-w-[11ch]">
               {service.title}
             </h1>
-            <p className="mt-5 max-w-2xl text-[16px] leading-8 text-white/80 md:text-[18px]">{summary}</p>
+            <p className="public-copy mt-5 max-w-2xl text-white/80">{summary}</p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link
@@ -76,8 +76,8 @@ export default async function ServiceDetailsPage({ params }: { params: Promise<{
       <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
         <Reveal delay={90} className="rounded-[32px] border border-black/8 bg-white p-6 shadow-[0_18px_40px_rgba(5,3,47,0.06)] md:p-8">
           <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-brand-ink/42">Description</p>
-          <h2 className="mt-4 text-[clamp(1.9rem,3.5vw,3rem)] font-semibold tracking-[-0.05em] text-brand-ink">This service in detail</h2>
-          <p className="mt-5 text-[16px] leading-8 text-brand-ink/72">{service.description?.trim() || summary}</p>
+          <h2 className="public-subtitle mt-4 text-brand-ink">This service in detail</h2>
+          <p className="public-copy mt-5 text-brand-ink/72">{service.description?.trim() || summary}</p>
         </Reveal>
 
         <Reveal delay={180} variant="left" className="space-y-4">

@@ -1,5 +1,7 @@
 import type { SiteSettings } from "@/types/site-settings";
 
+export type SocialLinkKey = "facebook" | "instagram" | "tiktok" | "linkedin";
+
 export function hasSettingValue(value: string | null | undefined) {
   return Boolean(value?.trim());
 }
@@ -20,5 +22,5 @@ export function getSocialLinks(settings: SiteSettings) {
     { key: "instagram", label: "Instagram", href: settings.instagram_url },
     { key: "tiktok", label: "TikTok", href: settings.tiktok_url },
     { key: "linkedin", label: "LinkedIn", href: settings.linkedin_url },
-  ].filter((item) => hasSettingValue(item.href));
+  ].filter((item): item is { key: SocialLinkKey; label: string; href: string } => hasSettingValue(item.href));
 }

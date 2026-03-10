@@ -28,12 +28,12 @@ export default function Navbar({ settings }: { settings: SiteSettings }) {
 
   return (
     <>
-      <header className="page-enter sticky top-0 z-50 border-b border-black/8 bg-white/95 backdrop-blur">
+      <header className="fixed inset-x-0 top-0 z-50 border-b border-black/8 bg-white shadow-[0_10px_28px_rgba(15,23,52,0.05)]">
         <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-6 px-6 py-4 md:px-8">
           <Link href="/page/home" className="group flex items-center gap-3">
             <BrandMark
               logoUrl={settings.logo_url}
-              className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full transition duration-500 group-hover:-translate-y-1 group-hover:rotate-[-6deg]"
+              className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white transition duration-500 group-hover:-translate-y-1 group-hover:rotate-[-6deg]"
               imageClassName="h-full w-full object-cover"
               fallbackClassName="border border-brand-primary/15 bg-brand-primary/10 text-[15px] font-semibold text-brand-primary shadow-[0_10px_24px_rgba(95,103,244,0.08)] group-hover:bg-brand-primary/14"
             />

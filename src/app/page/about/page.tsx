@@ -47,10 +47,10 @@ export default function AboutPage() {
           <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
             <div className="max-w-2xl">
               <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-brand-ink/42">Next step</p>
-              <h2 className="mt-3 text-[clamp(1.8rem,3vw,2.8rem)] font-semibold tracking-[-0.05em] text-brand-ink">
+              <h2 className="public-subtitle mt-3 text-brand-ink">
                 You can move straight to a quote.
               </h2>
-              <p className="mt-3 text-[15px] leading-7 text-brand-ink/70">
+              <p className="public-copy mt-3 text-brand-ink/70">
                 The site is meant to keep things simple: understand the offer, then book without friction.
               </p>
             </div>
@@ -96,13 +96,13 @@ function AboutHero() {
           </Reveal>
 
           <Reveal delay={90}>
-            <h1 className="mt-8 max-w-[820px] text-[clamp(2.6rem,6vw,4.8rem)] font-semibold leading-[0.94] tracking-[-0.07em] text-white">
+            <h1 className="public-title mt-8 max-w-[820px] text-white">
               TB Service Plus handles the useful jobs that keep daily life moving.
             </h1>
           </Reveal>
 
           <Reveal delay={180}>
-            <p className="mt-6 max-w-3xl text-[17px] leading-8 text-white/82 md:text-[19px] md:leading-9">
+            <p className="public-copy mt-6 max-w-3xl text-white/82">
               The project is built around a simple promise: respond quickly, stay clear, and deliver practical help
               when it is time to move, clean, deliver, clear out, or remove snow.
             </p>

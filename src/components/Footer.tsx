@@ -3,6 +3,7 @@
 import Link from "next/link";
 import BrandMark from "@/components/BrandMark";
 import Reveal from "@/components/Reveal";
+import SocialNetworkIcon from "@/components/SocialNetworkIcon";
 import type { SiteSettings } from "@/types/site-settings";
 import { formatPhoneHref, formatWhatsAppHref, getSocialLinks, hasSettingValue } from "@/utils/site-settings";
 
@@ -142,6 +143,7 @@ export default function Footer({ settings }: { settings: SiteSettings }) {
                 rel="noreferrer"
                 className="surface-lift inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-[15px] font-semibold text-white/85 hover:bg-white/10 hover:text-white"
               >
+                <SocialNetworkIcon network={item.key} className="h-4 w-4" />
                 {item.label}
               </a>
             ))}

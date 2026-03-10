@@ -50,13 +50,13 @@ function ServicesHero() {
           </Reveal>
 
           <Reveal delay={90}>
-            <h1 className="mt-8 max-w-[860px] text-[clamp(2.6rem,6vw,5rem)] font-semibold leading-[0.94] tracking-[-0.07em] text-white">
+            <h1 className="public-title mt-8 max-w-[860px] text-white">
               Explore the services available through TB Service Plus.
             </h1>
           </Reveal>
 
           <Reveal delay={180}>
-            <p className="mt-6 max-w-3xl text-[17px] leading-8 text-white/82 md:text-[19px] md:leading-9">
+            <p className="public-copy mt-6 max-w-3xl text-white/82">
               Review the active offers, compare the jobs we handle, and move directly to contact when you are ready to
               request a quote.
             </p>

@@ -61,13 +61,13 @@ function HeroSection() {
           </Reveal>
 
           <Reveal delay={90}>
-            <h1 className="mt-8 max-w-[820px] text-[clamp(2.6rem,6.9vw,5.2rem)] font-semibold leading-[0.93] tracking-[-0.08em] text-white">
+            <h1 className="public-title mt-8 max-w-[820px] text-white">
               One call for moving, cleaning, delivery, junk removal, and snow removal.
             </h1>
           </Reveal>
 
           <Reveal delay={180}>
-            <p className="mt-6 max-w-3xl text-[17px] leading-8 text-white/82 md:text-[20px] md:leading-9">
+            <p className="public-copy mt-6 max-w-3xl text-white/82">
               TB Service Plus helps homes and small businesses with dependable local support, direct communication, and
               practical service for the jobs that need to get done.
             </p>
@@ -108,10 +108,10 @@ function ContactSection({ settings }: { settings: SiteSettings }) {
           <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
             <div>
               <SectionLabel tone="dark">Ready to book</SectionLabel>
-              <h2 className="mt-5 max-w-3xl text-[clamp(2.35rem,5vw,4.4rem)] font-semibold leading-[1] tracking-[-0.06em]">
+              <h2 className="public-subtitle mt-5 max-w-3xl">
                 Need help moving, cleaning, delivering, clearing out, or removing snow?
               </h2>
-              <p className="mt-6 max-w-2xl text-[16px] leading-8 text-white/84 md:text-[18px]">
+              <p className="public-copy mt-6 max-w-2xl text-white/84">
                 Call now, write on WhatsApp, or use the contact form to request a quote that fits your job.
               </p>
 

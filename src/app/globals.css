@@ -58,6 +58,40 @@ body {
   font-family: var(--font-geist-sans), sans-serif;
 }
 
+.public-site,
+.public-site input,
+.public-site textarea,
+.public-site select,
+.public-site button {
+  font-family: var(--font-public-body), sans-serif;
+}
+
+.public-title,
+.public-subtitle {
+  font-family: var(--font-public-display), sans-serif;
+}
+
+.public-title {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.06em;
+}
+
+.public-subtitle {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.05em;
+}
+
+.public-copy {
+  font-family: var(--font-public-body), sans-serif;
+  font-size: 1.125rem;
+  font-weight: 400;
+  line-height: 1.75;
+}
+
 .contact-reference-type,
 .contact-reference-type input,
 .contact-reference-type textarea,
@@ -498,5 +532,20 @@ select {
 
   .page-stage::before {
     display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .public-title {
+    font-size: clamp(2.3rem, 8vw, 3rem);
+  }
+
+  .public-subtitle {
+    font-size: clamp(1.625rem, 5.8vw, 2rem);
+  }
+
+  .public-copy {
+    font-size: 1rem;
+    line-height: 1.7;
   }
 }
