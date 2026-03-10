@@ -4,6 +4,8 @@ import SocialNetworkIcon from "@/components/SocialNetworkIcon";
 import { getPublicSiteSettings } from "@/services/settings.server";
 import { formatPhoneHref, formatWhatsAppHref, getSocialLinks, hasSettingValue } from "@/utils/site-settings";
 
+const PUBLIC_GOOGLE_MAPS_IFRAME_SRC = "https://www.google.com/maps?q=TB%20Service%20Plus&z=15&output=embed";
+
 type ContactCard = {
   key: string;
   icon: "location" | "phone" | "whatsapp" | "mail";
@@ -16,11 +18,7 @@ type ContactCard = {
 export default async function ContactPage() {
   const settings = await getPublicSiteSettings();
   const businessAddress = settings.business_address;
-  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_API_KEY;
-  const mapQuery = businessAddress || "TB Service Plus";
-  const mapSrc = apiKey
-    ? `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${encodeURIComponent(mapQuery)}`
-    : null;
+  const mapSrc = PUBLIC_GOOGLE_MAPS_IFRAME_SRC;
   const phoneHref = formatPhoneHref(settings.contact_phone);
   const whatsappHref = formatWhatsAppHref(settings.whatsapp_phone);
   const socialLinks = getSocialLinks(settings);
@@ -318,7 +316,7 @@ function LocationPanel({
   phoneHref,
 }: {
   businessAddress: string | null;
-  mapSrc: string | null;
+  mapSrc: string;
   phone: string | null;
   email: string | null;
   phoneHref?: string;
@@ -334,31 +332,20 @@ function LocationPanel({
             <p className="text-[12px] font-semibold uppercase tracking-[0.26em] text-brand-primary/72">Our location</p>
             <h3 className="mt-2 text-[1.6rem] font-semibold tracking-[-0.05em] text-brand-ink">Map & address context</h3>
             <p className="mt-2 text-[15px] leading-7 text-brand-primary">
-              {businessAddress || "Add your business address from admin settings to show the exact location here."}
+              {businessAddress || "Add your business address from admin settings to show the location context here."}
             </p>
           </div>
         </div>
       </div>
 
-      {mapSrc ? (
-        <iframe
-          title="TB Service Plus location map"
-          src={mapSrc}
-          className="h-[360px] w-full border-0 md:h-[540px]"
-          loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
-          allowFullScreen
-        />
-      ) : (
-        <div className="flex min-h-[360px] items-center justify-center bg-[linear-gradient(135deg,#f8fbff_0%,#eef3ff_100%)] px-6 py-10 text-center md:min-h-[540px]">
-          <div className="max-w-md">
-            <p className="text-[1.1rem] font-semibold text-brand-ink">Map preview will appear here</p>
-            <p className="mt-3 text-[14px] leading-7 text-brand-ink/66">
-              Add `NEXT_PUBLIC_GOOGLE_MAPS_EMBED_API_KEY` to show the live map panel.
-            </p>
-          </div>
-        </div>
-      )}
+      <iframe
+        title="TB Service Plus location map"
+        src={mapSrc}
+        className="h-[360px] w-full border-0 md:h-[540px]"
+        loading="lazy"
+        referrerPolicy="no-referrer-when-downgrade"
+        allowFullScreen
+      />
 
       {(phone || email) ? (
         <div className="border-t border-black/8 bg-[#f8faff] px-6 py-5 md:px-7">
