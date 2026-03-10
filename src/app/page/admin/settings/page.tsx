@@ -9,6 +9,8 @@ import BrandMark from "@/components/BrandMark";
 import { useAuth } from "@/hooks/useAuth";
 import AdminLayout from "@/layouts/AdminLayout";
 import {
+  clearAdminSettingsHistory,
+  deleteAdminSettingsHistoryEntry,
   getAdminSettings,
   listAdminSettingsHistory,
   updateAdminSettings,
@@ -185,10 +187,12 @@ export default function AdminSettingsPage() {
   const [success, setSuccess] = useState<string | null>(null);
   const [logoName, setLogoName] = useState("");
   const [historyState, setHistoryState] = useState(EMPTY_SETTINGS_HISTORY);
-  const [historyLoading, setHistoryLoading] = useState(true);
+  const [historyLoading, setHistoryLoading] = useState(false);
   const [historyError, setHistoryError] = useState<string | null>(null);
   const [historyPage, setHistoryPage] = useState(1);
   const [historyReloadKey, setHistoryReloadKey] = useState(0);
+  const [historyVisible, setHistoryVisible] = useState(false);
+  const [historyActionId, setHistoryActionId] = useState<string | "all" | null>(null);
 
   const phoneHref = formatPhoneHref(settings.contact_phone);
   const whatsappHref = formatWhatsAppHref(settings.whatsapp_phone);
@@ -211,7 +215,7 @@ export default function AdminSettingsPage() {
   }, [token]);
 
   const loadHistory = useCallback(async () => {
-    if (!token) return;
+    if (!token || !historyVisible) return;
 
     try {
       const data = await listAdminSettingsHistory(token, {
@@ -230,7 +234,7 @@ export default function AdminSettingsPage() {
       const maybe = loadError as { message?: unknown } | null;
       setHistoryError(typeof maybe?.message === "string" ? maybe.message : "History loading error");
     }
-  }, [historyPage, token]);
+  }, [historyPage, historyVisible, token]);
 
   useEffect(() => {
     if (!token) {
@@ -242,18 +246,85 @@ export default function AdminSettingsPage() {
   }, [loadSettings, router, token]);
 
   useEffect(() => {
+    if (!historyVisible) {
+      return;
+    }
+
     if (!token) {
       router.push("/page/admin/login");
       return;
     }
 
+    setHistoryLoading(true);
     loadHistory().finally(() => setHistoryLoading(false));
-  }, [historyReloadKey, historyPage, loadHistory, router, token]);
+  }, [historyReloadKey, historyPage, historyVisible, loadHistory, router, token]);
 
   const setField = useCallback((key: keyof SiteSettings, value: string) => {
     setSettings((current) => ({ ...current, [key]: value }));
     setSuccess(null);
   }, []);
+
+  const toggleHistory = useCallback(() => {
+    setHistoryError(null);
+    setHistoryVisible((current) => !current);
+  }, []);
+
+  const onClearHistory = useCallback(async () => {
+    if (!token || historyActionId) return;
+    if (!window.confirm("Delete the full settings history?")) return;
+
+    setHistoryActionId("all");
+    setHistoryError(null);
+
+    try {
+      const result = await clearAdminSettingsHistory(token);
+      setHistoryState({ ...EMPTY_SETTINGS_HISTORY });
+      setHistoryPage(1);
+      setSuccess(result.deleted > 0 ? `${result.deleted} history entries removed.` : "Settings history is already empty.");
+    } catch (actionError: unknown) {
+      const maybe = actionError as { message?: unknown } | null;
+      setHistoryError(typeof maybe?.message === "string" ? maybe.message : "Unable to clear history");
+    } finally {
+      setHistoryActionId(null);
+      setHistoryLoading(false);
+    }
+  }, [historyActionId, token]);
+
+  const onDeleteHistoryEntry = useCallback(
+    async (historyId: string) => {
+      if (!token || historyActionId) return;
+      if (!window.confirm("Delete this history entry?")) return;
+
+      setHistoryActionId(historyId);
+      setHistoryError(null);
+      setHistoryLoading(true);
+
+      try {
+        const result = await deleteAdminSettingsHistoryEntry(token, historyId);
+
+        if (result.deleted === 0) {
+          setHistoryError("History entry not found.");
+          setHistoryLoading(false);
+          return;
+        }
+
+        setSuccess("History entry deleted.");
+
+        if (historyState.history.length === 1 && historyPage > 1) {
+          setHistoryPage((current) => Math.max(1, current - 1));
+        } else {
+          setHistoryReloadKey((current) => current + 1);
+        }
+      } catch (actionError: unknown) {
+        const maybe = actionError as { message?: unknown } | null;
+        setHistoryError(typeof maybe?.message === "string" ? maybe.message : "Unable to delete history entry");
+        setHistoryLoading(false);
+      } finally {
+        setHistoryActionId(null);
+      }
+    },
+    [historyActionId, historyPage, historyState.history.length, token],
+  );
 
   const onLogoChange = useCallback(async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -611,79 +682,120 @@ export default function AdminSettingsPage() {
               </p>
             </div>
 
-            <div className="inline-flex items-center rounded-full bg-[#f8f9fb] px-4 py-2 text-[13px] font-semibold text-brand-ink">
-              {historyState.total} changes logged
+            <div className="flex flex-wrap items-center gap-3">
+              {historyVisible ? (
+                <>
+                  <div className="inline-flex items-center rounded-full bg-[#f8f9fb] px-4 py-2 text-[13px] font-semibold text-brand-ink">
+                    {historyState.total} changes logged
+                  </div>
+                  <button
+                    type="button"
+                    onClick={onClearHistory}
+                    disabled={historyLoading || historyActionId !== null || historyState.total === 0}
+                    className="inline-flex h-11 items-center justify-center rounded-[14px] border border-red-200 bg-red-50 px-4 text-[13px] font-semibold text-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {historyActionId === "all" ? "Cleaning..." : "Clear history"}
+                  </button>
+                </>
+              ) : null}
+
+              <button
+                type="button"
+                onClick={toggleHistory}
+                className="inline-flex h-11 items-center justify-center rounded-[14px] border border-black/8 bg-[#fafafa] px-4 text-[13px] font-semibold text-brand-ink"
+              >
+                {historyVisible ? "Hide history" : "View history"}
+              </button>
             </div>
           </div>
 
-          {historyError ? (
-            <div className="mx-5 mt-5 rounded-[18px] border border-red-100 bg-red-50 px-4 py-3 text-[13px] text-red-700 md:mx-6">
-              {historyError}
-            </div>
-          ) : null}
-
-          {historyLoading ? (
-            <div className="px-5 py-10 text-center text-[14px] text-muted md:px-6">Loading history...</div>
-          ) : historyState.history.length === 0 ? (
-            <div className="px-5 py-10 text-center md:px-6">
-              <p className="text-[1.05rem] font-semibold text-brand-ink">No settings history yet</p>
-              <p className="mt-2 text-[14px] text-muted">The first successful save will appear here.</p>
+          {!historyVisible ? (
+            <div className="px-5 py-8 md:px-6">
+              <p className="text-[14px] leading-7 text-muted">
+                History is hidden by default. Use <span className="font-semibold text-brand-ink">View history</span> to inspect changes,
+                remove one entry, or clear the full log.
+              </p>
             </div>
           ) : (
-            <div className="grid gap-4 px-5 py-5 md:px-6 md:py-6">
-              {historyState.history.map((entry) => (
-                <article key={entry.id} className="rounded-[24px] border border-black/8 bg-[#fcfcfd] p-4 shadow-[0_12px_30px_rgba(15,23,52,0.05)]">
-                  <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-                    <div>
-                      <p className="text-[15px] font-semibold text-brand-ink">
-                        {entry.changed_by_email || entry.changed_by_admin_id || "Unknown admin"}
-                      </p>
-                      <p className="mt-1 text-[13px] text-muted">{formatHistoryDate(entry.changed_at)}</p>
-                    </div>
+            <>
+              {historyError ? (
+                <div className="mx-5 mt-5 rounded-[18px] border border-red-100 bg-red-50 px-4 py-3 text-[13px] text-red-700 md:mx-6">
+                  {historyError}
+                </div>
+              ) : null}
 
-                    <div className="flex flex-wrap gap-2">
-                      {entry.changed_keys.map((key) => (
-                        <span
-                          key={`${entry.id}-${key}`}
-                          className="inline-flex items-center rounded-full bg-brand-sand px-3 py-1 text-[12px] font-semibold text-brand-ink"
-                        >
-                          {SETTING_LABELS[key]}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
+              {historyLoading ? (
+                <div className="px-5 py-10 text-center text-[14px] text-muted md:px-6">Loading history...</div>
+              ) : historyState.history.length === 0 ? (
+                <div className="px-5 py-10 text-center md:px-6">
+                  <p className="text-[1.05rem] font-semibold text-brand-ink">No settings history yet</p>
+                  <p className="mt-2 text-[14px] text-muted">The first successful save will appear here.</p>
+                </div>
+              ) : (
+                <div className="grid gap-4 px-5 py-5 md:px-6 md:py-6">
+                  {historyState.history.map((entry) => (
+                    <article key={entry.id} className="rounded-[24px] border border-black/8 bg-[#fcfcfd] p-4 shadow-[0_12px_30px_rgba(15,23,52,0.05)]">
+                      <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                        <div>
+                          <p className="text-[15px] font-semibold text-brand-ink">
+                            {entry.changed_by_email || entry.changed_by_admin_id || "Unknown admin"}
+                          </p>
+                          <p className="mt-1 text-[13px] text-muted">{formatHistoryDate(entry.changed_at)}</p>
+                        </div>
 
-                  <div className="mt-4 grid gap-3 md:grid-cols-2">
-                    {entry.changed_keys.map((key) => (
-                      <div key={key} className="rounded-[18px] border border-black/8 bg-white p-4">
-                        <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-black/35">{SETTING_LABELS[key]}</p>
-                        <div className="mt-3 space-y-2 text-[13px] text-muted">
-                          <p>
-                            <span className="font-semibold text-brand-ink">Before:</span> {formatHistoryValue(entry.previous_values[key])}
-                          </p>
-                          <p>
-                            <span className="font-semibold text-brand-ink">After:</span> {formatHistoryValue(entry.next_values[key])}
-                          </p>
+                        <div className="flex flex-wrap items-center gap-2">
+                          {entry.changed_keys.map((key) => (
+                            <span
+                              key={`${entry.id}-${key}`}
+                              className="inline-flex items-center rounded-full bg-brand-sand px-3 py-1 text-[12px] font-semibold text-brand-ink"
+                            >
+                              {SETTING_LABELS[key]}
+                            </span>
+                          ))}
+
+                          <button
+                            type="button"
+                            onClick={() => onDeleteHistoryEntry(entry.id)}
+                            disabled={historyActionId !== null}
+                            className="inline-flex h-9 items-center justify-center rounded-[12px] border border-red-200 bg-white px-3 text-[12px] font-semibold text-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+                          >
+                            {historyActionId === entry.id ? "Deleting..." : "Delete"}
+                          </button>
                         </div>
                       </div>
-                    ))}
-                  </div>
-                </article>
-              ))}
-            </div>
-          )}
 
-          <AdminPagination
-            page={historyState.page}
-            totalPages={historyState.totalPages}
-            totalItems={historyState.total}
-            pageSize={historyState.pageSize}
-            itemLabel="changes"
-            onPageChange={(nextPage) => {
-              setHistoryLoading(true);
-              setHistoryPage(nextPage);
-            }}
-          />
+                      <div className="mt-4 grid gap-3 md:grid-cols-2">
+                        {entry.changed_keys.map((key) => (
+                          <div key={key} className="rounded-[18px] border border-black/8 bg-white p-4">
+                            <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-black/35">{SETTING_LABELS[key]}</p>
+                            <div className="mt-3 space-y-2 text-[13px] text-muted">
+                              <p>
+                                <span className="font-semibold text-brand-ink">Before:</span> {formatHistoryValue(entry.previous_values[key])}
+                              </p>
+                              <p>
+                                <span className="font-semibold text-brand-ink">After:</span> {formatHistoryValue(entry.next_values[key])}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              )}
+
+              <AdminPagination
+                page={historyState.page}
+                totalPages={historyState.totalPages}
+                totalItems={historyState.total}
+                pageSize={historyState.pageSize}
+                itemLabel="changes"
+                onPageChange={(nextPage) => {
+                  setHistoryPage(nextPage);
+                }}
+              />
+            </>
+          )}
         </section>
       </div>
     </AdminLayout>

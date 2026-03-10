@@ -16,6 +16,10 @@ type SettingsHistoryResponse = Partial<PaginationMeta> & {
   history?: SiteSettingsHistoryEntry[];
 };
 
+type SettingsHistoryDeleteResponse = {
+  deleted?: number;
+};
+
 function normalizeSettings(input?: Partial<Record<keyof SiteSettings, string | null>>): SiteSettings {
   return {
     business_address: input?.business_address?.trim() ?? DEFAULT_SITE_SETTINGS.business_address,
@@ -94,5 +98,27 @@ export async function listAdminSettingsHistory(
     pageSize: res.pageSize ?? Math.max(1, history.length || 1),
     total: res.total ?? history.length,
     totalPages: res.totalPages ?? 1,
+  };
+}
+
+export async function deleteAdminSettingsHistoryEntry(token: string, id: string) {
+  const res = await apiFetch<SettingsHistoryDeleteResponse>(`/admin/settings/history/${encodeURIComponent(id)}`, {
+    method: "DELETE",
+    token,
+  });
+
+  return {
+    deleted: res.deleted ?? 0,
+  };
+}
+
+export async function clearAdminSettingsHistory(token: string) {
+  const res = await apiFetch<SettingsHistoryDeleteResponse>("/admin/settings/history", {
+    method: "DELETE",
+    token,
+  });
+
+  return {
+    deleted: res.deleted ?? 0,
   };
 }
