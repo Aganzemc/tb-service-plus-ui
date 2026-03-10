@@ -130,6 +130,8 @@ export default function AdminProfilePage() {
       title="Profile"
       description="Manage your admin identity, email, and password from one place."
       eyebrow="Admin profile"
+      titleClassName="public-title mt-2 text-[3rem] leading-[1.08] tracking-[-0.06em] md:text-[3rem]"
+      descriptionClassName="public-copy mt-4 max-w-3xl text-[1.125rem] leading-[1.75] text-muted"
     >
       <div className="page-stage page-stage-sharp page-stage-admin space-y-6">
         {error ? (
@@ -171,10 +173,10 @@ export default function AdminProfilePage() {
           <article className="admin-card admin-fade-up rounded-[26px] p-5 md:p-6">
             <div className="border-b border-black/6 pb-5">
               <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-black/35">Profile settings</p>
-              <h2 className="mt-3 text-[1.35rem] font-semibold tracking-[-0.04em] text-brand-ink md:text-[1.55rem]">
+              <h2 className="public-subtitle mt-3 text-brand-ink">
                 Update your login identity securely.
               </h2>
-              <p className="mt-2 max-w-2xl text-[14px] leading-7 text-muted">
+              <p className="public-copy mt-4 max-w-2xl text-muted">
                 Change your admin email or password. The current password is required before any profile update is accepted.
               </p>
             </div>
@@ -267,8 +269,8 @@ export default function AdminProfilePage() {
 
           <article className="admin-card admin-fade-up rounded-[26px] p-5 md:p-6">
             <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-black/35">Current account</p>
-            <h2 className="mt-3 text-[1.35rem] font-semibold tracking-[-0.04em] text-brand-ink">Session summary</h2>
-            <p className="mt-2 text-[14px] leading-7 text-muted">A quick snapshot of the account currently connected to the admin panel.</p>
+            <h2 className="public-subtitle mt-3 text-brand-ink">Session summary</h2>
+            <p className="public-copy mt-4 text-muted">A quick snapshot of the account currently connected to the admin panel.</p>
 
             <div className="mt-6 rounded-[28px] border border-black/8 bg-[linear-gradient(180deg,#0f1538_0%,#181e56_100%)] p-5 text-white shadow-[0_24px_60px_rgba(15,23,52,0.16)]">
               <div className="flex items-center gap-4">
@@ -289,8 +291,8 @@ export default function AdminProfilePage() {
             </div>
 
             <div className="mt-5 rounded-[22px] border border-black/8 bg-[#fafbff] p-4">
-              <p className="text-[13px] font-semibold text-brand-ink">Notes</p>
-              <ul className="mt-3 space-y-2 text-[13px] leading-6 text-muted">
+              <p className="public-subtitle text-[2rem] text-brand-ink">Notes</p>
+              <ul className="public-copy mt-4 space-y-2 text-muted">
                 <li>Changing the email updates the active access token immediately.</li>
                 <li>The current password is required before any profile change is saved.</li>
                 <li>Leave the new password fields empty if you only want to change the email.</li>

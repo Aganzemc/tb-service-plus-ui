@@ -14,6 +14,9 @@ type AdminLayoutProps = {
   description?: string;
   eyebrow?: string;
   actions?: ReactNode;
+  titleClassName?: string;
+  descriptionClassName?: string;
+  eyebrowClassName?: string;
 };
 
 const mainNavigation = [
@@ -48,6 +51,9 @@ export default function AdminLayout({
   description,
   eyebrow = "Admin dashboard",
   actions,
+  titleClassName,
+  descriptionClassName,
+  eyebrowClassName,
 }: AdminLayoutProps) {
   const pathname = usePathname();
   const router = useRouter();
@@ -237,9 +243,15 @@ export default function AdminLayout({
                   </button>
 
                   <div className="min-w-0">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-black/35 md:text-[11px]">{eyebrow}</p>
-                    <h1 className="mt-1 text-[1.55rem] font-semibold tracking-[-0.04em] text-brand-ink md:mt-2 md:text-[2rem]">{resolvedTitle}</h1>
-                    <p className="mt-1 max-w-3xl text-[12px] leading-5 text-muted md:text-[14px] md:leading-6">{resolvedDescription}</p>
+                    <p className={["text-[10px] font-semibold uppercase tracking-[0.22em] text-black/35 md:text-[11px]", eyebrowClassName].filter(Boolean).join(" ")}>
+                      {eyebrow}
+                    </p>
+                    <h1 className={["mt-1 text-[1.55rem] font-semibold tracking-[-0.04em] text-brand-ink md:mt-2 md:text-[2rem]", titleClassName].filter(Boolean).join(" ")}>
+                      {resolvedTitle}
+                    </h1>
+                    <p className={["mt-1 max-w-3xl text-[12px] leading-5 text-muted md:text-[14px] md:leading-6", descriptionClassName].filter(Boolean).join(" ")}>
+                      {resolvedDescription}
+                    </p>
                   </div>
                 </div>
               </div>
