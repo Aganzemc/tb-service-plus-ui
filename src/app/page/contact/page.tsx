@@ -76,16 +76,16 @@ export default async function ContactPage() {
               "linear-gradient(180deg, rgba(5, 3, 47, 0.52) 0%, rgba(5, 3, 47, 0.82) 100%), url('/hero-port-scene.svg')",
           }}
         />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(95,103,244,0.24),transparent_34%),linear-gradient(120deg,rgba(36,81,209,0.18),transparent_54%)]" />
+        <div className="contact-hero-glow absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(95,103,244,0.24),transparent_34%),linear-gradient(120deg,rgba(36,81,209,0.18),transparent_54%)]" />
 
         <div className="relative mx-auto flex min-h-[420px] max-w-[1280px] items-center justify-center px-6 py-18 text-center md:min-h-[500px] md:px-8 md:py-24">
           <div className="max-w-4xl">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/18 bg-white/10 px-4 py-2 text-[12px] font-semibold text-white/88 backdrop-blur-sm">
+            <span className="contact-rise contact-delay-1 inline-flex items-center gap-2 rounded-full border border-white/18 bg-white/10 px-4 py-2 text-[12px] font-semibold text-white/88 backdrop-blur-sm">
               <ContactIcon type="mail" className="h-4 w-4" />
               Contact & location
             </span>
-            <h1 className="public-title mt-6 text-white">Let&apos;s plan your next service clearly.</h1>
-            <p className="public-copy mx-auto mt-5 max-w-3xl text-white/84">
+            <h1 className="public-title contact-rise contact-delay-2 mt-6 text-white">Let&apos;s plan your next service clearly.</h1>
+            <p className="public-copy contact-rise contact-delay-3 mx-auto mt-5 max-w-[34rem] text-white/84">
               Reach our team, view the public contact channels, and send a precise request from one cleaner contact page.
             </p>
           </div>
@@ -94,7 +94,7 @@ export default async function ContactPage() {
 
       <section className="mx-auto max-w-[1280px] px-6 py-16 md:px-8 md:py-20">
         <div className="grid gap-6 xl:grid-cols-[minmax(0,1.45fr)_minmax(320px,0.8fr)]">
-          <article className="rounded-[28px] border border-black/10 bg-white px-6 py-7 md:px-8 md:py-8">
+          <article className="contact-rise-left contact-delay-2 rounded-[28px] border border-black/10 bg-white px-6 py-7 md:px-8 md:py-8">
             <div className="max-w-3xl">
               <div className="flex items-start gap-4">
                 <span className="flex h-12 w-12 items-center justify-center rounded-full border border-brand-primary/18 bg-white text-brand-primary">
@@ -123,7 +123,7 @@ export default async function ContactPage() {
             </div>
           </article>
 
-          <aside className="px-1 py-2 md:px-4 md:py-3">
+          <aside className="contact-rise-right contact-delay-3 px-1 py-2 md:px-4 md:py-3">
             <p className="text-[12px] font-semibold uppercase tracking-[0.26em] text-brand-primary/72">Stay connected</p>
             <h2 className="public-subtitle mt-3 text-brand-ink">Public links & quick actions</h2>
             <p className="public-copy mt-4 text-brand-ink/68">
@@ -186,40 +186,48 @@ export default async function ContactPage() {
       </section>
 
       <section className="mx-auto max-w-[1280px] px-6 pb-18 md:px-8 md:pb-22">
-        <SectionHeading
-          eyebrow="Contact details"
-          title="Reach us through the right channel."
-          description="Address, phone, WhatsApp, and email stay visible here so the page works as a real contact hub."
-        />
+        <div className="contact-rise contact-delay-2">
+          <SectionHeading
+            eyebrow="Contact details"
+            title="Reach us through the right channel."
+            description="Address, phone, WhatsApp, and email stay visible here so the page works as a real contact hub."
+          />
+        </div>
 
         <div className="mt-14 grid gap-10 md:grid-cols-2 xl:grid-cols-4">
-          {contactCards.map((card) => (
-            <ContactCardItem key={card.key} card={card} />
+          {contactCards.map((card, index) => (
+            <ContactCardItem key={card.key} card={card} animationClass={CONTACT_ITEM_ANIMATION[index] ?? "contact-rise contact-delay-3"} />
           ))}
         </div>
       </section>
 
       <section className="mx-auto max-w-[1280px] px-6 pb-18 md:px-8 md:pb-22">
-        <SectionHeading
-          eyebrow="Send a request"
-          title="Write to us and pin the location."
-          description="Use the form to describe the work, then check the address area or map block before we confirm the next step."
-        />
+        <div className="contact-rise contact-delay-2">
+          <SectionHeading
+            eyebrow="Send a request"
+            title="Write to us and pin the location."
+            description="Use the form to describe the work, then check the address area or map block before we confirm the next step."
+          />
+        </div>
 
         <div className="mt-12 grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-          <ContactForm />
-          <LocationPanel
-            businessAddress={businessAddress}
-            mapSrc={mapSrc}
-            phone={settings.contact_phone}
-            email={settings.contact_email}
-            phoneHref={phoneHref ?? undefined}
-          />
+          <div className="contact-rise-left contact-delay-3">
+            <ContactForm />
+          </div>
+          <div className="contact-rise-right contact-delay-4">
+            <LocationPanel
+              businessAddress={businessAddress}
+              mapSrc={mapSrc}
+              phone={settings.contact_phone}
+              email={settings.contact_email}
+              phoneHref={phoneHref ?? undefined}
+            />
+          </div>
         </div>
       </section>
 
       <section className="mx-auto max-w-[1280px] px-6 pb-20 md:px-8 md:pb-24">
-        <div className="rounded-[28px] border border-black/10 bg-white px-7 py-8 md:px-10 md:py-10">
+        <div className="contact-rise contact-delay-3 rounded-[28px] border border-black/10 bg-white px-7 py-8 md:px-10 md:py-10">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="max-w-3xl">
               <p className="text-[12px] font-semibold uppercase tracking-[0.26em] text-brand-primary/72">Need help now?</p>
@@ -245,6 +253,13 @@ export default async function ContactPage() {
   );
 }
 
+const CONTACT_ITEM_ANIMATION = [
+  "contact-rise contact-delay-2",
+  "contact-rise contact-delay-3",
+  "contact-rise contact-delay-4",
+  "contact-rise contact-delay-5",
+] as const;
+
 function SectionHeading({
   eyebrow,
   title,
@@ -264,9 +279,9 @@ function SectionHeading({
   );
 }
 
-function ContactCardItem({ card }: { card: ContactCard }) {
+function ContactCardItem({ card, animationClass }: { card: ContactCard; animationClass?: string }) {
   const content = (
-    <div className="flex items-start gap-4">
+    <div className={[animationClass, "flex items-start gap-4"].filter(Boolean).join(" ")}>
       <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-brand-primary/22 bg-white text-brand-primary">
         <ContactIcon type={card.icon} className="h-5 w-5" />
       </span>

@@ -42,13 +42,13 @@ export default function ServicesShowcase({
                 <WrenchIcon className="h-4 w-4" />
                 {badge}
               </span>
-              <h2 className="public-title mt-6 max-w-[7ch] text-[#241710]">
+              <h2 className="public-title text-balance mt-6 max-w-[14ch] leading-[0.96] text-[#241710]">
                 {heading}
               </h2>
             </Reveal>
 
-            <Reveal delay={120} variant="left" className="max-w-[560px] lg:ml-auto lg:pt-18 xl:pt-20">
-              <p className="public-copy text-[#5d4c40]">{description}</p>
+            <Reveal delay={120} variant="left" className="max-w-[32rem] lg:ml-auto lg:pt-18 xl:pt-20">
+              <p className="public-copy max-w-[31rem] text-[#5d4c40]">{description}</p>
               <Link
                 href={ctaHref}
                 className="surface-lift mt-8 inline-flex items-center gap-4 rounded-full border border-[#b39576] bg-[#d6bf9e] px-6 py-3 text-[16px] font-semibold text-[#2c1d15] shadow-[0_16px_36px_rgba(80,55,34,0.12)]"

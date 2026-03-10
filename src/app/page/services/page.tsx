@@ -56,7 +56,7 @@ function ServicesHero() {
           </Reveal>
 
           <Reveal delay={180}>
-            <p className="public-copy mt-6 max-w-3xl text-white/82">
+            <p className="public-copy mt-6 max-w-[34rem] text-white/82">
               Review the active offers, compare the jobs we handle, and move directly to contact when you are ready to
               request a quote.
             </p>

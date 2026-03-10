@@ -4,7 +4,7 @@ import { FormEvent, useState } from "react";
 import { createPublicMessage } from "@/services/messages.api";
 
 const inputClassName =
-  "w-full rounded-[16px] border border-[#d6dced] bg-[#f8faff] px-4 py-3 text-[16px] leading-[1.4] text-brand-ink outline-none placeholder:text-brand-ink/34 focus:border-brand-primary/45 focus:bg-white focus:shadow-[0_0_0_4px_rgba(95,103,244,0.08)]";
+  "w-full rounded-[14px] border border-[#d4d9e6] bg-white px-4 py-3 text-[16px] leading-[1.4] text-brand-ink outline-none placeholder:text-brand-ink/34 focus:border-brand-primary/45 focus:shadow-[0_0_0_4px_rgba(95,103,244,0.08)]";
 
 export default function ContactForm() {
   const [name, setName] = useState("");
@@ -58,9 +58,9 @@ export default function ContactForm() {
   const isSuccess = status === "Your message has been sent.";
 
   return (
-    <form onSubmit={onSubmit} className="rounded-[30px] border border-black/8 bg-white p-6 shadow-[0_24px_64px_rgba(15,23,52,0.08)] md:p-7">
+    <form onSubmit={onSubmit} className="rounded-[28px] border border-black/10 bg-white p-6 md:p-7">
       <div className="flex items-center gap-4">
-        <span className="flex h-13 w-13 items-center justify-center rounded-full border border-brand-primary/18 bg-brand-primary/8 text-brand-primary">
+        <span className="flex h-13 w-13 items-center justify-center rounded-full border border-brand-primary/18 bg-white text-brand-primary">
           <MailIcon className="h-5 w-5" />
         </span>
         <div>
@@ -160,7 +160,7 @@ export default function ContactForm() {
 
         <button
           disabled={loading}
-          className="mt-5 inline-flex min-h-[56px] w-full items-center justify-center gap-2 rounded-[18px] bg-brand-primary px-6 py-3 text-[16px] font-semibold text-white shadow-[0_16px_34px_rgba(36,81,209,0.24)] disabled:cursor-not-allowed disabled:opacity-50"
+          className="mt-5 inline-flex min-h-[56px] w-full items-center justify-center gap-2 rounded-[18px] bg-brand-primary px-6 py-3 text-[16px] font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
           type="submit"
         >
           <SendIcon className="h-4 w-4" />
